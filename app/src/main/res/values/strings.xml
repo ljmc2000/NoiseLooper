@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">NoiseLooper</string>
+
+    <string name="header_antisound">Anti Sound</string>
+    <string name="header_nature">Nature</string>
+    <string name="header_travel">Travel</string>
+    <string name="header_interiors">Interiors</string>
+
+
+    <string name="birds">Birds</string>
+    <string name="brown_noise">Brown Noise</string>
+    <string name="boat">Boat</string>
+    <string name="city">City</string>
+    <string name="coffee_shop">Coffee Shop</string>
+    <string name="fireplace">Fireplace</string>
+    <string name="pink_noise">Pink Noise</string>
+    <string name="rain">Rain</string>
+    <string name="storm">Storm</string>
+    <string name="stream">Stream</string>
+    <string name="summer_night">Summer Night</string>
+    <string name="train">Train</string>
+    <string name="waves">Waves</string>
+    <string name="white_noise">White Noise</string>
+    <string name="wind">Wind</string>
+
 </resources>

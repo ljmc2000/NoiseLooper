@@ -1,0 +1,63 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+  <path
+      android:pathData="M10,30A1,1 0,0 0,9 31L9,38A1,1 0,0 0,10 39A1,1 0,0 0,11 38L11,31A1,1 0,0 0,10 30z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="1.99999"
+      android:fillColor="#77767b"
+      android:strokeColor="#00000000"
+      android:fillType="nonZero"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M17,26A1,1 0,0 0,16 27L16,41A1,1 0,0 0,17 42A1,1 0,0 0,18 41L18,27A1,1 0,0 0,17 26z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="1.99999"
+      android:fillColor="#77767b"
+      android:strokeColor="#00000000"
+      android:fillType="nonZero"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M25,15A1,1 0,0 0,24 16L24,49A1,1 0,0 0,25 50A1,1 0,0 0,26 49L26,16A1,1 0,0 0,25 15z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="1.99999"
+      android:fillColor="#77767b"
+      android:strokeColor="#00000000"
+      android:fillType="nonZero"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M32,23A1,1 0,0 0,31 24L31,41A1,1 0,0 0,32 42A1,1 0,0 0,33 41L33,24A1,1 0,0 0,32 23z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="1.99999"
+      android:fillColor="#77767b"
+      android:strokeColor="#00000000"
+      android:fillType="nonZero"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M40,19A1,1 0,0 0,39 20L39,44A1,1 0,0 0,40 45A1,1 0,0 0,41 44L41,20A1,1 0,0 0,40 19z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="1.99999"
+      android:fillColor="#77767b"
+      android:strokeColor="#00000000"
+      android:fillType="nonZero"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M47,23A1,1 0,0 0,46 24L46,41A1,1 0,0 0,47 42A1,1 0,0 0,48 41L48,24A1,1 0,0 0,47 23z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="1.99999"
+      android:fillColor="#77767b"
+      android:strokeColor="#00000000"
+      android:fillType="nonZero"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M54,30A1,1 0,0 0,53 31L53,38A1,1 0,0 0,54 39A1,1 0,0 0,55 38L55,31A1,1 0,0 0,54 30z"
+      android:strokeLineJoin="miter"
+      android:strokeWidth="1.99999"
+      android:fillColor="#77767b"
+      android:strokeColor="#00000000"
+      android:fillType="nonZero"
+      android:strokeLineCap="round"/>
+</vector>
