@@ -2,7 +2,10 @@ package ie.delilahsthings.soothingloop;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.res.Resources;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -10,18 +13,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private AudioManager audioManager;
     private LinearLayout noise_list;
     private Resources resources;
+    private SoundPool soundPool;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        resources=getResources();
         noise_list=this.findViewById(R.id.noise_list);
+        resources=getResources();
+
+        audioManager=(AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        soundPool=new SoundPool(32, AudioManager.STREAM_MUSIC, 0);
 
         populateNoiselist();
     }
@@ -43,16 +53,19 @@ public class MainActivity extends AppCompatActivity {
         noise_list.addView(text);
     }
 
-    void addItem(int icon_id, int name_id, int sound_id)
+    void addItem(int iconId, int nameId, int soundId)
     {
         ViewGroup view = new LinearLayout(this);
         View.inflate(this, R.layout.noise_config_item, view);
         noise_list.addView(view);
 
         TextView noiseName = view.findViewById(R.id.noise_name);
-        noiseName.setText(resources.getString(name_id));
+        noiseName.setText(resources.getString(nameId));
         ImageView icon = view.findViewById(R.id.icon);
-        icon.setImageDrawable(resources.getDrawable(icon_id));
+        icon.setImageDrawable(resources.getDrawable(iconId));
+        SeekBar volume = view.findViewById(R.id.volume);
+        SoundEffectVolumeManager manager=new SoundEffectVolumeManager(getBaseContext(),audioManager,soundPool,soundId);
+        volume.setOnSeekBarChangeListener(manager);
     }
 
     void populateNoiselist()
