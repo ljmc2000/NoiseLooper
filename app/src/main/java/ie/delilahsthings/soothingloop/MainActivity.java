@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     void populateNoiselist()
     {
         addHeader(resources.getString(R.string.header_antisound));
-        addItem(R.drawable.brown_noise,R.string.brown_noise,R.raw.brown_noise);
+        //addItem(R.drawable.brown_noise,R.string.brown_noise,R.raw.brown_noise);   //unapproved upstream, for personal use
         addItem(R.drawable.pink_noise,R.string.pink_noise,R.raw.pink_noise);
         addItem(R.drawable.white_noise,R.string.white_noise,R.raw.white_noise);
         addDivider();
