@@ -44,4 +44,10 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
     public void onStopTrackingTouch(SeekBar seekBar) {
 
     }
+
+    void stop()
+    {
+        soundPool.stop(playbackId);
+        playbackId=-1;
+    }
 }

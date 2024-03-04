@@ -16,12 +16,15 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     private AudioManager audioManager;
     private LinearLayout noise_list;
     private Resources resources;
     private SoundPool soundPool;
+    private ArrayList<SoundEffectVolumeManager> managers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         icon.setImageDrawable(resources.getDrawable(iconId));
         SeekBar volume = view.findViewById(R.id.volume);
         SoundEffectVolumeManager manager=new SoundEffectVolumeManager(getBaseContext(),audioManager,soundPool,soundId);
+        managers.add(manager);
         volume.setOnSeekBarChangeListener(manager);
     }
 
@@ -97,5 +101,19 @@ public class MainActivity extends AppCompatActivity {
         addItem(R.drawable.coffee_shop,R.string.coffee_shop,R.raw.coffee_shop);
         addItem(R.drawable.fireplace,R.string.fireplace,R.raw.fireplace);
         addDivider();
+    }
+
+    public void silenceAll(View sender)
+    {
+        SeekBar v;
+
+        for(int i=0; i<noise_list.getChildCount(); i++)
+        {
+            v=noise_list.getChildAt(i).findViewById(R.id.volume);
+            if(v!=null)
+            {
+                v.setProgress(0);
+            }
+        }
     }
 }

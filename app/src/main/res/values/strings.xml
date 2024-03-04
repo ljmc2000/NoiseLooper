@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">NoiseLooper</string>
 
+    <string name="stop_button_label">Stop All</string>
+
     <string name="header_antisound">Anti Sound</string>
     <string name="header_nature">Nature</string>
     <string name="header_travel">Travel</string>
