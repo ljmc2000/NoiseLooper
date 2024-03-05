@@ -1,19 +1,16 @@
 package ie.delilahsthings.soothingloop;
 
 import android.content.Context;
-import android.media.AudioManager;
 import android.media.SoundPool;
 import android.widget.SeekBar;
 
 public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener {
 
-    private AudioManager audioManager;
     private int playbackId=-1;
     private int soundPoolIndex;
     private SoundPool soundPool;
 
-    public SoundEffectVolumeManager(Context context, AudioManager audioManager, SoundPool soundPool, int soundId) {
-        this.audioManager=audioManager;
+    public SoundEffectVolumeManager(Context context, SoundPool soundPool, int soundId) {
         this.soundPool=soundPool;
         this.soundPoolIndex=soundPool.load(context, soundId, 1);
     }
@@ -43,11 +40,5 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
-    }
-
-    void stop()
-    {
-        soundPool.stop(playbackId);
-        playbackId=-1;
     }
 }

@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView icon = view.findViewById(R.id.icon);
         icon.setImageDrawable(resources.getDrawable(iconId));
         SeekBar volume = view.findViewById(R.id.volume);
-        SoundEffectVolumeManager manager=new SoundEffectVolumeManager(getBaseContext(),audioManager,soundPool,soundId);
+        SoundEffectVolumeManager manager=new SoundEffectVolumeManager(getBaseContext(),soundPool,soundId);
         managers.add(manager);
         volume.setOnSeekBarChangeListener(manager);
     }
