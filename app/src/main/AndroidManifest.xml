@@ -13,6 +13,9 @@
         android:theme="@style/Theme.NoiseLooper"
         tools:targetApi="31">
         <activity
+            android:name=".CreditsActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

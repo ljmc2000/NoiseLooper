@@ -9,7 +9,7 @@ Just download and import to android studio. No extra libraries should be needed.
 - [X] Enable playback and mixing of static assets
 - [X] Emergency stop button to silence everything
 - [ ] Implement profiles to restore state on reboot or crash
-- [ ] Add credits screen to application itself
+- [X] Add credits screen to application itself
 - [ ] Allow importing of custom assets
 - [ ] Request app be published on [F-Droid](https://f-droid.org/)
 

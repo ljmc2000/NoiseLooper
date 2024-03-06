@@ -1,0 +1,70 @@
+Upstream application and icons:
+    Rafael Mardojai
+
+Sounds:
+    Birds:
+        author: kvgarlic
+        editor: Porrumentzio
+        license: CC0
+
+    Boat:
+        author: Falcet
+        editor: Porrumentzio
+        license: CC0
+
+    Brown Noise:
+        author: Kieff
+        license: Public Domain
+
+    City:
+        author: gezortenplotz
+        editor: Porrumentzio
+        license: CC BY
+
+    Coffee Shop:
+        author: stephan
+        license: Public Domain
+
+    Fireplace:
+        author: ezwa
+        license: Public Domain
+
+    Pink noise:
+        author: Omegatron
+        license: CC BY-SA
+
+    Rain:
+        author: alex36917
+        editor: Porrumentzio
+        license: CC BY
+
+    Summer night:
+        author: Lisa Redfern
+        license: Public Domain
+
+    Storm:
+        author: Digifish music
+        editor: Porrumentzio
+        license: CC BY
+
+    Stream:
+        author: gluckose
+        license: CC0
+
+    Train:
+        author: SDLx
+        license: CC BY 3.0
+
+    Waves:
+        author: Luftrum
+        editor: Porrumentzio
+        license: CC BY
+
+    White noise:
+        author: Jorge Stolfi
+        license: CC BY-SA
+
+    Wind:
+        author: felix.blume
+        editor: Porrumentzio
+        license: CC0

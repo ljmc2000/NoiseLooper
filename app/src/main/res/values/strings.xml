@@ -2,6 +2,7 @@
     <string name="app_name">NoiseLooper</string>
 
     <string name="stop_button_label">Stop All</string>
+    <string name="credits_label">Credits</string>
 
     <string name="header_antisound">Anti Sound</string>
     <string name="header_nature">Nature</string>
@@ -24,5 +25,4 @@
     <string name="waves">Waves</string>
     <string name="white_noise">White Noise</string>
     <string name="wind">Wind</string>
-
 </resources>

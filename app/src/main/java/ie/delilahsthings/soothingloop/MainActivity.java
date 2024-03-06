@@ -1,13 +1,18 @@
 package ie.delilahsthings.soothingloop;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(mainToolbar);
+
         noise_list=this.findViewById(R.id.noise_list);
         resources=getResources();
 
@@ -36,6 +44,14 @@ public class MainActivity extends AppCompatActivity {
         soundPool=new SoundPool(32, AudioManager.STREAM_MUSIC, 0);
 
         populateNoiselist();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_menu, menu);
+        return true;
     }
 
     void addDivider()
@@ -102,7 +118,13 @@ public class MainActivity extends AppCompatActivity {
         addDivider();
     }
 
-    public void silenceAll(View sender)
+    public void displayCredits(MenuItem sender)
+    {
+        Intent showCredits = new Intent(this, CreditsActivity.class);
+        startActivity(showCredits);
+    }
+
+    public void silenceAll(MenuItem sender)
     {
         SeekBar v;
 
