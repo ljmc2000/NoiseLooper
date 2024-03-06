@@ -5,6 +5,7 @@
 | :-:  | :-: | :-: | :-:
 | [Birds](https://freesound.org/people/kvgarlic/sounds/156826/) | kvgarlic | Porrumentzio | CC0
 | [Boat](https://freesound.org/people/Falcet/sounds/439365/) | Falcet | Porrumentzio | CC0
+| [Brown Noise](https://es.wikipedia.org/wiki/Archivo:Brownnoise.ogg)**| Kieff | - | Public Domain
 | [City](https://freesound.org/people/gezortenplotz/sounds/44796/) | gezortenplotz | Porrumentzio | CC BY
 | [Coffee Shop](https://soundbible.com/1664-Restaurant-Ambiance.html) | stephan | - | Public Domain
 | [Fireplace](https://soundbible.com/1543-Fireplace.html) | ezwa | - | Public Domain
@@ -18,4 +19,5 @@
 | [White noise](https://commons.wikimedia.org/w/index.php?title=File%3AWhite-noise-sound-20sec-mono-44100Hz.ogg) | Jorge Stolfi | - | CC BY-SA |
 | [Wind](https://freesound.org/people/felix.blume/sounds/217506/) | felix.blume | Porrumentzio | CC0
 
-(*) Editing implies making the sound meet [this guidelines](https://github.com/rafaelmardojai/blanket/blob/master/CONTRIBUTING.md#sounds).
+(*) Editing implies making the sound meet [this guidelines](https://github.com/rafaelmardojai/blanket/blob/master/CONTRIBUTING.md#sounds).  
+(**) Not availible in upstream and does not appear by default. Added by personal preference.
