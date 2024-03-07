@@ -3,8 +3,13 @@
     <string name="persist_key"></string>
 
     <string name="stop_button_label">Stop All</string>
+    <string name="save">Save</string>
+    <string name="load">Load</string>
+    <string name="cancel">Cancel</string>
     <string name="save_default">Save Default Profile</string>
     <string name="load_default">Load Default Profile</string>
+    <string name="save_custom">Save Custom Profile</string>
+    <string name="load_custom">Load Custom Profile</string>
     <string name="credits_label">Credits</string>
 
     <string name="header_antisound">Anti Sound</string>

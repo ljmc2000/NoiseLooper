@@ -16,18 +16,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.prefs.Preferences;
 
 public class MainActivity extends AppCompatActivity {
 
     private AudioManager audioManager;
-    SharedPreferences defaultPref;
+    SharedPreferences defaultProfile;
     private LinearLayout noise_list;
     private Resources resources;
     private SoundPool soundPool;
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         resources=getResources();
 
         audioManager=(AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        defaultPref=getSharedPreferences("default",MODE_PRIVATE);
+        defaultProfile=getSharedPreferences("default",MODE_PRIVATE);
         soundPool=new SoundPool(32, AudioManager.STREAM_MUSIC, 0);
 
         populateNoiselist();
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         try {
             Thread.sleep(1000);
-            loadDefaults();
+            loadProfile(defaultProfile);
         }
         catch (InterruptedException e){
         }
@@ -142,10 +144,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadDefaults(MenuItem sender){
-        loadDefaults();
+        loadProfile(defaultProfile);
     }
 
-    private void loadDefaults()
+    private void loadProfile(SharedPreferences profile)
     {
         SeekBar v;
         String persistKey;
@@ -156,16 +158,41 @@ public class MainActivity extends AppCompatActivity {
             if(v!=null)
             {
                 persistKey=(String) v.getTag(R.string.persist_key);
-                v.setProgress(defaultPref.getInt(persistKey,0));
+                v.setProgress(profile.getInt(persistKey,0));
             }
         }
     }
 
+    public void promptLoadCustomProfile(MenuItem sender)
+    {
+        ArrayList<String> files=new ArrayList<>();
+        for(String file: SaveLoadDialog.listProfiles(this))
+        {
+            if(file.startsWith(SaveLoadDialog.prefix))
+                files.add(file.substring(SaveLoadDialog.prefix_length,file.length()-4));
+        }
+
+        Spinner spinner = new Spinner(this);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, files);
+        spinner.setAdapter(spinnerArrayAdapter);
+        new SaveLoadDialog(this, spinner, R.string.load_custom, R.string.load,(profileName)->loadProfile(getSharedPreferences(profileName,MODE_PRIVATE)));
+    }
+
+    public void promptSaveCustomProfile(MenuItem sender)
+    {
+        new SaveLoadDialog(this, new EditText(this), R.string.save_custom, R.string.save,(profileName)->saveProfile(getSharedPreferences(profileName,MODE_PRIVATE)));
+    }
+
     public void saveDefaults(MenuItem sender)
+    {
+        saveProfile(defaultProfile);
+    }
+
+    public void saveProfile(SharedPreferences profile)
     {
         SeekBar v;
         String persistKey;
-        SharedPreferences.Editor editor = defaultPref.edit();
+        SharedPreferences.Editor editor = profile.edit();
 
         for(int i=0; i<noise_list.getChildCount(); i++)
         {

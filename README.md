@@ -8,7 +8,7 @@ Just download and import to android studio. No extra libraries should be needed.
 - [X] Import default audio assets from Blanket
 - [X] Enable playback and mixing of default assets
 - [X] Emergency stop button to silence everything
-- [ ] Implement profiles to restore state on reboot or crash
+- [X] Implement profiles to restore state on reboot or crash
 - [X] Add credits screen to application itself
 - [ ] Allow importing of custom assets
 - [ ] Request app be published on [F-Droid](https://f-droid.org/)

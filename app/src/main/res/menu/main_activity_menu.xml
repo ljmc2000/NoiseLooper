@@ -14,6 +14,14 @@
         android:title="@string/load_default" />
 
     <item
+        android:onClick="promptSaveCustomProfile"
+        android:title="@string/save_custom" />
+
+    <item
+        android:onClick="promptLoadCustomProfile"
+        android:title="@string/load_custom" />
+
+    <item
         android:onClick="displayCredits"
         android:title="@string/credits_label" />
 </menu>
