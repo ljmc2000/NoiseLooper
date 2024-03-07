@@ -6,7 +6,7 @@ import android.widget.SeekBar;
 
 public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener {
 
-    private int playbackId=-1;
+    private int playbackId=0;
     private int soundPoolIndex;
     private SoundPool soundPool;
 
@@ -16,16 +16,16 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int volume, boolean b) {
+    public void onProgressChanged(SeekBar seekBar, int volume, boolean z) {
         float volumeF=volume/100f;
-        if(playbackId==-1) {
+        if(playbackId==0) {
             if (volume != 0) {
                 playbackId=soundPool.play(soundPoolIndex, volumeF, volumeF, 1, -1, 1f);
             }
         }
         else if(volume==0) {
             soundPool.stop(playbackId);
-            playbackId=-1;
+            playbackId=0;
         }
         else {
             soundPool.setVolume(playbackId, volumeF, volumeF);

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        Toolbar mainToolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(mainToolbar);
 
         noise_list=this.findViewById(R.id.noise_list);
@@ -47,21 +48,21 @@ public class MainActivity extends AppCompatActivity {
 
         audioManager=(AudioManager) getSystemService(Context.AUDIO_SERVICE);
         defaultProfile=getSharedPreferences("default",MODE_PRIVATE);
-        soundPool=new SoundPool(32, AudioManager.STREAM_MUSIC, 0);
+        SoundPool.Builder spBuilder = new SoundPool.Builder();
+        AudioAttributes.Builder aaBuilder = new AudioAttributes.Builder();
+        aaBuilder.setUsage(AudioAttributes.USAGE_MEDIA);
+        aaBuilder.setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION);
+        spBuilder.setAudioAttributes(aaBuilder.build());
+        soundPool=spBuilder.build();
 
         populateNoiselist();
     }
 
     @Override
-    public void onStart()
+    public void onStop()
     {
-        super.onStart();
-        try {
-            Thread.sleep(1000);
-            loadProfile(defaultProfile);
-        }
-        catch (InterruptedException e){
-        }
+        super.onStop();
+        saveProfile(defaultProfile);
     }
 
     @Override
