@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/stopButton"
         android:onClick="silenceAll"
         android:title="@string/stop_button_label"
         android:icon="@drawable/stop_square" />
 
     <item
-        android:id="@+id/credits_menu_item"
+        android:onClick="saveDefaults"
+        android:title="@string/save_default" />
+
+    <item
+        android:onClick="loadDefaults"
+        android:title="@string/load_default" />
+
+    <item
         android:onClick="displayCredits"
         android:title="@string/credits_label" />
 </menu>
