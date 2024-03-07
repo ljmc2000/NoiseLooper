@@ -5,8 +5,8 @@ Play soothing sound effects to help you relax and drown out background noise. In
 Just download and import to android studio. No extra libraries should be needed.
 
 # TODO
-- [X] Import static audio assets from Blanket
-- [X] Enable playback and mixing of static assets
+- [X] Import default audio assets from Blanket
+- [X] Enable playback and mixing of default assets
 - [X] Emergency stop button to silence everything
 - [ ] Implement profiles to restore state on reboot or crash
 - [X] Add credits screen to application itself
