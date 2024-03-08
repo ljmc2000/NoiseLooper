@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.NoiseLooper" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/dark_primary</item>
+        <item name="colorPrimary">#1F1D36</item>
     </style>
 </resources>
