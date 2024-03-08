@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:onClick="promptAddSound"
     android:orientation="vertical"
     tools:context=".SettingsActivity">
 
@@ -25,7 +26,32 @@
             android:id="@+id/profiles"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"></LinearLayout>
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/custom_sounds_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?colorPrimary"
+            android:text="@string/edit_custom_sounds"
+            android:textSize="36sp" />
+
+        <LinearLayout
+            android:id="@+id/custom_sounds"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="54sp"
+            android:clickable="true"
+            android:onClick="promptAddCustomSound"
+            app:srcCompat="@drawable/plus_sign" />
 
     </LinearLayout>
 </android.widget.ScrollView>
