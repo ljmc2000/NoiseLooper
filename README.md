@@ -14,5 +14,5 @@ Just download and import to android studio. No extra libraries should be needed.
 - [ ] Request app be published on [F-Droid](https://f-droid.org/)
 
 # Credits
-Big thank you to [Rafael Mardojai](https://github.com/rafaelmardojai) (the author of [Blanket](https://github.com/rafaelmardojai/blanket)) and his volenteers, who designed the icons and sourced the sounds. Licences and credits for all sounds are listed in [SOUNDS_LICENSING.md](SOUNDS_LICENSING.md).
+Big thank you to [Rafael Mardojai](https://github.com/rafaelmardojai) (the author of [Blanket](https://github.com/rafaelmardojai/blanket)) and his volenteers, who designed the icons and sourced the sounds. Licences and credits for all sounds are listed in [credits.xml](app/src/main/res/raw/credits.xml).
 
