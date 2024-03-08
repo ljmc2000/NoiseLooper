@@ -14,11 +14,11 @@
     <string name="settings_label">Settings</string>
     <string name="credits_label">Credits</string>
 
+
     <string name="header_antisound">Anti Sound</string>
     <string name="header_nature">Nature</string>
     <string name="header_travel">Travel</string>
     <string name="header_interiors">Interiors</string>
-
 
     <string name="birds">Birds</string>
     <string name="brown_noise">Brown Noise</string>
@@ -36,6 +36,7 @@
     <string name="white_noise">White Noise</string>
     <string name="wind">Wind</string>
 
+
     <string name="credits_error">Error loading credits…</string>
     <string name="credits_header">%s: </string>
     <string name="other_credits">Upstream application and icons</string>
@@ -43,4 +44,8 @@
     <string name="author">Author</string>
     <string name="editor">Editor</string>
     <string name="license">License</string>
+
+
+    <string name="confirm_delete_profile">Confirm deletion of profile "%s"?</string>
+    <string name="confirm">Confirm</string>
 </resources>
