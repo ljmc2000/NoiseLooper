@@ -174,15 +174,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void promptLoadCustomProfile(MenuItem sender)
     {
-        ArrayList<String> files=new ArrayList<>();
-        for(String file: ProfileManager.listProfiles(this))
-        {
-            if(file.startsWith(ProfileManager.prefix))
-                files.add(file.substring(ProfileManager.prefix_length,file.length()-ProfileManager.suffix_length));
-        }
-
         Spinner spinner = new Spinner(this);
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, files);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, ProfileManager.listProfiles(this));
         spinner.setAdapter(spinnerArrayAdapter);
         new SaveLoadDialog(this, spinner, R.string.load_custom, R.string.load,(profileName)->loadProfile(getSharedPreferences(profileName,MODE_PRIVATE)));
     }
