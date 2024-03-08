@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -176,10 +175,10 @@ public class MainActivity extends AppCompatActivity {
     public void promptLoadCustomProfile(MenuItem sender)
     {
         ArrayList<String> files=new ArrayList<>();
-        for(String file: SaveLoadDialog.listProfiles(this))
+        for(String file: ProfileManager.listProfiles(this))
         {
-            if(file.startsWith(SaveLoadDialog.prefix))
-                files.add(file.substring(SaveLoadDialog.prefix_length,file.length()-4));
+            if(file.startsWith(ProfileManager.prefix))
+                files.add(file.substring(ProfileManager.prefix_length,file.length()-ProfileManager.suffix_length));
         }
 
         Spinner spinner = new Spinner(this);

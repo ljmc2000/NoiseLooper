@@ -3,7 +3,6 @@ package ie.delilahsthings.soothingloop;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Environment;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Spinner;
@@ -15,8 +14,6 @@ public class SaveLoadDialog implements DialogInterface.OnClickListener {
 
     protected View input;
     protected Listener listener;
-    final public static String prefix="profile-";
-    final public static int prefix_length=prefix.length();
 
     protected SaveLoadDialog(Context context, View input, int title, int actionName, Listener listener)
     {
@@ -43,22 +40,15 @@ public class SaveLoadDialog implements DialogInterface.OnClickListener {
     public void onClick(DialogInterface dialogInterface, int i) {
         String filename="default";
         if(input instanceof TextView) {
-            filename = prefix + ((TextView)input).getText().toString();
+            filename = ProfileManager.prefix + ((TextView)input).getText().toString();
         }
         else if(input instanceof Spinner) {
-            filename = prefix + ((Spinner)input).getSelectedItem().toString();
+            filename = ProfileManager.prefix + ((Spinner)input).getSelectedItem().toString();
         }
         listener.action(filename);
     }
 
-    public interface Listener
-    {
+    public interface Listener {
         void action(String filename);
-    }
-
-    public static String[] listProfiles(Context context)
-    {
-        String path = Environment.getDataDirectory().getPath()+"/data/"+context.getPackageName()+"/shared_prefs";
-        return new File(path).list();
     }
 }
