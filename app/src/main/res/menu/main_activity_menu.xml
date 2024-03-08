@@ -28,6 +28,10 @@
         android:title="@string/save_custom" />
 
     <item
+        android:onClick="displaySettings"
+        android:title="@string/settings_label" />
+
+    <item
         android:onClick="displayCredits"
         android:title="@string/credits_label" />
 </menu>

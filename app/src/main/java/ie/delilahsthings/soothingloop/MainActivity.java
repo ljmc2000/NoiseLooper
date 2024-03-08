@@ -147,6 +147,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(showCredits);
     }
 
+    public void displaySettings(MenuItem sender)
+    {
+        Intent showCredits = new Intent(this, SettingsActivity.class);
+        startActivity(showCredits);
+    }
+
     public void loadDefaults(MenuItem sender){
         loadProfile(defaultProfile);
     }
