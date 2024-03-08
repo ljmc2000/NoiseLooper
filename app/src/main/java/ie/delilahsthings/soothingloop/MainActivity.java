@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences defaultProfile;
     private LinearLayout noise_list;
     private Resources resources;
-    private SoundPool soundPool;
     private ArrayList<SoundEffectVolumeManager> managers = new ArrayList<>();
 
     @Override
@@ -48,20 +47,24 @@ public class MainActivity extends AppCompatActivity {
 
         audioManager=(AudioManager) getSystemService(Context.AUDIO_SERVICE);
         defaultProfile=getSharedPreferences("default",MODE_PRIVATE);
-        SoundPool.Builder spBuilder = new SoundPool.Builder();
-        AudioAttributes.Builder aaBuilder = new AudioAttributes.Builder();
-        aaBuilder.setUsage(AudioAttributes.USAGE_MEDIA);
-        aaBuilder.setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION);
-        spBuilder.setAudioAttributes(aaBuilder.build());
-        soundPool=spBuilder.build();
+        if(SoundEffectVolumeManager.soundPool!=null)
+        {
+            SoundEffectVolumeManager.soundPool.release();
+        }
+        SoundEffectVolumeManager.soundPool=new SoundPool(32, AudioManager.STREAM_MUSIC,0);
 
         populateNoiselist();
+        loadProfile(defaultProfile);
     }
 
     @Override
-    public void onStop()
-    {
-        super.onStop();
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        loadProfile(defaultProfile);
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         saveProfile(defaultProfile);
     }
 
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView icon = view.findViewById(R.id.icon);
         icon.setImageDrawable(resources.getDrawable(iconId));
         SeekBar volume = view.findViewById(R.id.volume);
-        SoundEffectVolumeManager manager=new SoundEffectVolumeManager(getBaseContext(),soundPool,soundId);
+        SoundEffectVolumeManager manager=new SoundEffectVolumeManager(getBaseContext(),soundId);
         managers.add(manager);
         volume.setOnSeekBarChangeListener(manager);
         volume.setTag(R.string.persist_key,persistKey);
@@ -209,6 +212,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void silenceAll(MenuItem sender)
+    {
+        saveProfile(defaultProfile);
+        silenceAll();
+    }
+
+    public void silenceAll()
     {
         SeekBar v;
 

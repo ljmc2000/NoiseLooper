@@ -8,10 +8,9 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
 
     private int playbackId=0;
     private int soundPoolIndex;
-    private SoundPool soundPool;
+    public static SoundPool soundPool;
 
-    public SoundEffectVolumeManager(Context context, SoundPool soundPool, int soundId) {
-        this.soundPool=soundPool;
+    public SoundEffectVolumeManager(Context context, int soundId) {
         this.soundPoolIndex=soundPool.load(context, soundId, 1);
     }
 
@@ -20,7 +19,17 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
         float volumeF=volume/100f;
         if(playbackId==0) {
             if (volume != 0) {
-                playbackId=soundPool.play(soundPoolIndex, volumeF, volumeF, 1, -1, 1f);
+                for(int i=0; i<10; i++) {
+                    playbackId = soundPool.play(soundPoolIndex, volumeF, volumeF, 1, -1, 1f);
+                    if(playbackId!=0)
+                        return;
+                    try{
+                        Thread.sleep(500);
+                    }
+                    catch (InterruptedException e) {
+                    }
+                }
+                seekBar.setProgress(0);
             }
         }
         else if(volume==0) {
