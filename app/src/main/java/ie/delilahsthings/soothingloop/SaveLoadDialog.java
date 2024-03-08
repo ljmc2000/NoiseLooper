@@ -28,12 +28,7 @@ public class SaveLoadDialog implements DialogInterface.OnClickListener {
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        //workaround for both buttons having bad colours
-        TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(android.R.attr.colorForeground, typedValue, true);
-        int color = typedValue.data;
-        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(color);
-        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(color);
+        Workarounds.fixBadDialogButtonColours(context, dialog);
     }
 
     @Override
