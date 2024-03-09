@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AudioManager audioManager;
     SharedPreferences defaultProfile;
-    private LinearLayout noise_list;
+    private LinearLayout[] noise_lists;
     private LinearLayout stock_noise_list;
     private LinearLayout custom_noise_list;
     private Resources resources;
@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar mainToolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(mainToolbar);
 
-        noise_list=this.findViewById(R.id.noise_list);
         stock_noise_list=this.findViewById(R.id.stock_noise_list);
         custom_noise_list=this.findViewById(R.id.custom_noise_list);
+        noise_lists=new LinearLayout[]{stock_noise_list,custom_noise_list};
         resources=getResources();
 
         audioManager=(AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -201,13 +201,13 @@ public class MainActivity extends AppCompatActivity {
         SeekBar v;
         String persistKey;
 
-        for(int i=0; i<noise_list.getChildCount(); i++)
-        {
-            v=noise_list.getChildAt(i).findViewById(R.id.volume);
-            if(v!=null)
-            {
-                persistKey=(String) v.getTag(R.string.persist_key);
-                v.setProgress(profile.getInt(persistKey,0));
+        for(ViewGroup noise_list: noise_lists) {
+            for (int i = 0; i < noise_list.getChildCount(); i++) {
+                v = noise_list.getChildAt(i).findViewById(R.id.volume);
+                if (v != null) {
+                    persistKey = (String) v.getTag(R.string.persist_key);
+                    v.setProgress(profile.getInt(persistKey, 0));
+                }
             }
         }
     }
@@ -236,13 +236,13 @@ public class MainActivity extends AppCompatActivity {
         String persistKey;
         SharedPreferences.Editor editor = profile.edit();
 
-        for(int i=0; i<noise_list.getChildCount(); i++)
-        {
-            v=noise_list.getChildAt(i).findViewById(R.id.volume);
-            if(v!=null)
-            {
-                persistKey=(String) v.getTag(R.string.persist_key);
-                editor.putInt(persistKey,v.getProgress());
+        for(LinearLayout noise_list: noise_lists) {
+            for (int i = 0; i < noise_list.getChildCount(); i++) {
+                v = noise_list.getChildAt(i).findViewById(R.id.volume);
+                if (v != null) {
+                    persistKey = (String) v.getTag(R.string.persist_key);
+                    editor.putInt(persistKey, v.getProgress());
+                }
             }
         }
 
@@ -259,12 +259,12 @@ public class MainActivity extends AppCompatActivity {
     {
         SeekBar v;
 
-        for(int i=0; i<noise_list.getChildCount(); i++)
-        {
-            v=noise_list.getChildAt(i).findViewById(R.id.volume);
-            if(v!=null)
-            {
-                v.setProgress(0);
+        for(LinearLayout noise_list: noise_lists) {
+            for (int i = 0; i < noise_list.getChildCount(); i++) {
+                v = noise_list.getChildAt(i).findViewById(R.id.volume);
+                if (v != null) {
+                    v.setProgress(0);
+                }
             }
         }
     }
