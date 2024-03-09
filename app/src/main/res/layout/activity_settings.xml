@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?colorPrimary"
-            android:text="@string/edit_custom_sounds"
+            android:text="@string/custom_sounds"
             android:textSize="36sp" />
 
         <LinearLayout

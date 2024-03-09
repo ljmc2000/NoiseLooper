@@ -4,6 +4,8 @@ import android.content.Context;
 import android.media.SoundPool;
 import android.widget.SeekBar;
 
+import java.io.File;
+
 public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener {
 
     private int playbackId=0;
@@ -12,6 +14,10 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
 
     public SoundEffectVolumeManager(Context context, int soundId) {
         this.soundPoolIndex=soundPool.load(context, soundId, 1);
+    }
+
+    public SoundEffectVolumeManager(String sound) {
+        this.soundPoolIndex=soundPool.load(sound, 1);
     }
 
     @Override

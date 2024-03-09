@@ -31,8 +31,12 @@ public class MainActivity extends AppCompatActivity {
     private AudioManager audioManager;
     SharedPreferences defaultProfile;
     private LinearLayout noise_list;
+    private LinearLayout stock_noise_list;
+    private LinearLayout custom_noise_list;
     private Resources resources;
     private ArrayList<SoundEffectVolumeManager> managers = new ArrayList<>();
+    private static int TEXT_SIZE=38;
+    final static String CUSTOM_NOISE_PREFIX="custom_";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mainToolbar);
 
         noise_list=this.findViewById(R.id.noise_list);
+        stock_noise_list=this.findViewById(R.id.stock_noise_list);
+        custom_noise_list=this.findViewById(R.id.custom_noise_list);
         resources=getResources();
 
         audioManager=(AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -53,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         SoundEffectVolumeManager.soundPool=new SoundPool(32, AudioManager.STREAM_MUSIC,0);
 
         populateNoiselist();
+        populateCustomNoiselist();
         loadProfile(defaultProfile);
     }
 
@@ -79,15 +86,15 @@ public class MainActivity extends AppCompatActivity {
     {
         ViewGroup view = new LinearLayout(this);
         View.inflate(this, R.layout.hline, view);
-        noise_list.addView(view);
+        stock_noise_list.addView(view);
     }
 
-    void addHeader(String name)
+    void addHeader(ViewGroup noise_list, String name)
     {
         TextView text = new TextView(this);
         text.setText(name);
         text.setGravity(Gravity.CENTER);
-        text.setTextSize(38);
+        text.setTextSize(TEXT_SIZE);
         text.setPadding(0,0,0,10);
         noise_list.addView(text);
     }
@@ -96,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     {
         ViewGroup view = new LinearLayout(this);
         View.inflate(this, R.layout.noise_config_item, view);
-        noise_list.addView(view);
+        stock_noise_list.addView(view);
 
         TextView noiseName = view.findViewById(R.id.noise_name);
         noiseName.setText(resources.getString(nameId));
@@ -109,15 +116,48 @@ public class MainActivity extends AppCompatActivity {
         volume.setTag(R.string.persist_key,persistKey);
     }
 
+    void populateCustomNoiselist()
+    {
+        String[] customNoises = ProfileManager.listCustomSounds(this);
+        if(customNoises.length==0)
+        {
+            return;
+        }
+
+        //header
+        TextView text = new TextView(this);
+        text.setText(getString(R.string.custom_sounds));
+        text.setGravity(Gravity.CENTER);
+        text.setTextSize(TEXT_SIZE);
+        text.setPadding(0,0,0,10);
+        custom_noise_list.addView(text);
+
+        ViewGroup view;
+        for(String sound: customNoises)
+        {
+            view = new LinearLayout(this);
+            View.inflate(this, R.layout.noise_config_item, view);
+            custom_noise_list.addView(view);
+
+            TextView noiseName = view.findViewById(R.id.noise_name);
+            noiseName.setText(sound);
+            SeekBar volume = view.findViewById(R.id.volume);
+            SoundEffectVolumeManager manager=new SoundEffectVolumeManager(ProfileManager.getSoundPath(this)+sound);
+            managers.add(manager);
+            volume.setOnSeekBarChangeListener(manager);
+            volume.setTag(R.string.persist_key,CUSTOM_NOISE_PREFIX+sound);
+        }
+    }
+
     void populateNoiselist()
     {
-        addHeader(resources.getString(R.string.header_antisound));
+        addHeader(stock_noise_list,resources.getString(R.string.header_antisound));
         //addItem(R.drawable.brown_noise,R.string.brown_noise,R.raw.brown_noise,"brown_noise");   //unapproved upstream, for personal use
         addItem(R.drawable.pink_noise,R.string.pink_noise,R.raw.pink_noise,"pink_noise");
         addItem(R.drawable.white_noise,R.string.white_noise,R.raw.white_noise, "white_noise");
         addDivider();
 
-        addHeader(resources.getString(R.string.header_nature));
+        addHeader(stock_noise_list,resources.getString(R.string.header_nature));
         addItem(R.drawable.rain,R.string.rain,R.raw.rain,"rain");
         addItem(R.drawable.storm,R.string.storm,R.raw.storm,"storm");
         addItem(R.drawable.wind,R.string.wind,R.raw.wind,"wind");
@@ -128,13 +168,13 @@ public class MainActivity extends AppCompatActivity {
 
         addDivider();
 
-        addHeader(resources.getString(R.string.header_travel));
+        addHeader(stock_noise_list,resources.getString(R.string.header_travel));
         addItem(R.drawable.train,R.string.train,R.raw.train,"train");
         addItem(R.drawable.boat,R.string.boat,R.raw.boat,"boat");
         addItem(R.drawable.city,R.string.city,R.raw.city,"city");
         addDivider();
 
-        addHeader(resources.getString(R.string.header_interiors));
+        addHeader(stock_noise_list,resources.getString(R.string.header_interiors));
         addItem(R.drawable.coffee_shop,R.string.coffee_shop,R.raw.coffee_shop,"coffee_shop");
         addItem(R.drawable.fireplace,R.string.fireplace,R.raw.fireplace,"fireplace");
         addDivider();
