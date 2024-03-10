@@ -1,23 +1,48 @@
 package ie.delilahsthings.soothingloop;
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.media.SoundPool;
 import android.widget.SeekBar;
 
 import java.io.File;
+import java.util.HashMap;
 
 public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener {
 
+    final static int MAX_STREAMS=32;
     private int playbackId=0;
     private int soundPoolIndex;
-    public static SoundPool soundPool;
+    private static SoundPool soundPool=new SoundPool(SoundEffectVolumeManager.MAX_STREAMS, AudioManager.STREAM_MUSIC,0);;
+    private static HashMap<String,SoundEffectVolumeManager> cache = new HashMap<>();
 
-    public SoundEffectVolumeManager(Context context, int soundId) {
+    private SoundEffectVolumeManager(Context context, int soundId) {
         this.soundPoolIndex=soundPool.load(context, soundId, 1);
     }
 
-    public SoundEffectVolumeManager(String sound) {
+    private SoundEffectVolumeManager(String sound) {
         this.soundPoolIndex=soundPool.load(sound, 1);
+    }
+
+    public static SoundEffectVolumeManager get(Context context, String persistKey, int soundId){
+        if(cache.containsKey(persistKey)) {
+            return cache.get(persistKey);
+        }
+        else {
+            SoundEffectVolumeManager manager = new SoundEffectVolumeManager(context, soundId);
+            cache.put(persistKey,manager);
+            return manager;
+        }
+    }
+    public static SoundEffectVolumeManager get(String sound){
+        if(cache.containsKey(sound)) {
+            return cache.get(sound);
+        }
+        else {
+            SoundEffectVolumeManager manager = new SoundEffectVolumeManager(sound);
+            cache.put(sound,manager);
+            return manager;
+        }
     }
 
     @Override

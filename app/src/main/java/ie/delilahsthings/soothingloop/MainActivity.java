@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout stock_noise_list;
     private LinearLayout custom_noise_list;
     private Resources resources;
-    private ArrayList<SoundEffectVolumeManager> managers = new ArrayList<>();
     private static int TEXT_SIZE=38;
     final static String CUSTOM_NOISE_PREFIX="custom_";
 
@@ -51,11 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
         defaultProfile=getSharedPreferences("default",MODE_PRIVATE);
         preferences=getSharedPreferences("preferences",MODE_PRIVATE);
-        if(SoundEffectVolumeManager.soundPool!=null)
-        {
-            SoundEffectVolumeManager.soundPool.release();
-        }
-        SoundEffectVolumeManager.soundPool=new SoundPool(32, AudioManager.STREAM_MUSIC,0);
 
         populateNoiselist();
         populateCustomNoiselist();
@@ -113,8 +107,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView icon = view.findViewById(R.id.icon);
         icon.setImageDrawable(resources.getDrawable(iconId));
         SeekBar volume = view.findViewById(R.id.volume);
-        SoundEffectVolumeManager manager=new SoundEffectVolumeManager(getBaseContext(),soundId);
-        managers.add(manager);
+        SoundEffectVolumeManager manager=SoundEffectVolumeManager.get(getBaseContext(),persistKey,soundId);
         volume.setOnSeekBarChangeListener(manager);
         volume.setTag(R.string.persist_key,persistKey);
     }
@@ -145,8 +138,7 @@ public class MainActivity extends AppCompatActivity {
             TextView noiseName = view.findViewById(R.id.noise_name);
             noiseName.setText(sound);
             SeekBar volume = view.findViewById(R.id.volume);
-            SoundEffectVolumeManager manager=new SoundEffectVolumeManager(ProfileManager.getSoundPath(this)+sound);
-            managers.add(manager);
+            SoundEffectVolumeManager manager=SoundEffectVolumeManager.get(ProfileManager.getSoundPath(this)+sound);
             volume.setOnSeekBarChangeListener(manager);
             volume.setTag(R.string.persist_key,CUSTOM_NOISE_PREFIX+sound);
         }
