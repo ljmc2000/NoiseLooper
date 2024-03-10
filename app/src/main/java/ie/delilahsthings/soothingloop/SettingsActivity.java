@@ -1,6 +1,7 @@
 package ie.delilahsthings.soothingloop;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -26,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
         this.profilesView=findViewById(R.id.profiles);
         this.customSoundsView=findViewById(R.id.custom_sounds);
         this.getNewSound=registerForActivityResult(new ActivityResultContracts.GetContent(), (uri)->addCustomSound(uri));
@@ -45,6 +47,9 @@ public class SettingsActivity extends AppCompatActivity {
             image.setOnClickListener((v)->promptDeleteCustomSound(view, sound));
 
             customSoundsView.addView(view);
+            Intent intent = new Intent();
+            intent.setAction(MainActivity.INVALIDATE_ACTION);
+            sendBroadcast(intent);
         }
         catch (IOException e)
         {
@@ -100,6 +105,9 @@ public class SettingsActivity extends AppCompatActivity {
         builder.setPositiveButton(getString(R.string.confirm),(dialogInterface, i) -> {
             ProfileManager.deleteCustomSound(this,sound);
             customSoundsView.removeView(sender);
+            Intent intent = new Intent();
+            intent.setAction(MainActivity.INVALIDATE_ACTION);
+            sendBroadcast(intent);
         });
 
         AlertDialog dialog = builder.create();

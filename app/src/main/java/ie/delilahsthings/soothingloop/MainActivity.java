@@ -1,10 +1,13 @@
 package ie.delilahsthings.soothingloop;
 
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.media.AudioManager;
@@ -35,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private Resources resources;
     private static int TEXT_SIZE=38;
     final static String CUSTOM_NOISE_PREFIX="custom_";
+    final static String INVALIDATE_ACTION="ie.delilahsthings.noiselooper.invalidate_custom";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,16 @@ public class MainActivity extends AppCompatActivity {
         populateNoiselist();
         populateCustomNoiselist();
 
+        IntentFilter intentFilter = new IntentFilter(INVALIDATE_ACTION);
+        BroadcastReceiver invalidator = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                populateCustomNoiselist();
+            }
+        };
+        registerReceiver(invalidator,intentFilter);
+
+        //TODO allow load on start as option
         if(preferences.getBoolean("load_default_on_start",false))
         {
             loadProfile(defaultProfile);
@@ -114,6 +128,8 @@ public class MainActivity extends AppCompatActivity {
 
     void populateCustomNoiselist()
     {
+        custom_noise_list.removeAllViews();
+
         String[] customNoises = ProfileManager.listCustomSounds(this);
         if(customNoises.length==0)
         {
