@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +25,18 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -156,33 +168,68 @@ public class MainActivity extends AppCompatActivity {
 
     void populateNoiselist()
     {
-        addHeader(stock_noise_list,resources.getString(R.string.header_antisound));
-        //addItem(R.drawable.brown_noise,R.string.brown_noise,R.raw.brown_noise,"brown_noise");   //unapproved upstream, for personal use
-        addItem(R.drawable.pink_noise,R.string.pink_noise,R.raw.pink_noise,"pink_noise");
-        addItem(R.drawable.white_noise,R.string.white_noise,R.raw.white_noise, "white_noise");
-        addDivider();
+        try {
+            Resources r=getResources();
+            String pkg = getPackageName();
 
-        addHeader(stock_noise_list,resources.getString(R.string.header_nature));
-        addItem(R.drawable.rain,R.string.rain,R.raw.rain,"rain");
-        addItem(R.drawable.storm,R.string.storm,R.raw.storm,"storm");
-        addItem(R.drawable.wind,R.string.wind,R.raw.wind,"wind");
-        addItem(R.drawable.waves,R.string.waves,R.raw.waves,"waves");
-        addItem(R.drawable.stream,R.string.stream,R.raw.stream,"stream");
-        addItem(R.drawable.birds,R.string.birds,R.raw.birds,"birds");
-        addItem(R.drawable.summer_night,R.string.summer_night,R.raw.summer_night,"summer_night");
+            InputStream creditsFile = getResources().openRawResource(R.raw.credits);
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document document = db.parse(creditsFile);
+            Element node;
 
-        addDivider();
+            ArrayList<String> anti_sounds = new ArrayList<>();
+            ArrayList<String> nature = new ArrayList<>();
+            ArrayList<String> travel = new ArrayList<>();
+            ArrayList<String> interiors = new ArrayList<>();
 
-        addHeader(stock_noise_list,resources.getString(R.string.header_travel));
-        addItem(R.drawable.train,R.string.train,R.raw.train,"train");
-        addItem(R.drawable.boat,R.string.boat,R.raw.boat,"boat");
-        addItem(R.drawable.city,R.string.city,R.raw.city,"city");
-        addDivider();
+            NodeList sounds = document.getElementsByTagName("sound");
+            for(int i=0; i<sounds.getLength(); i++) {
+                node = (Element) sounds.item(i);
+                switch(node.getAttribute("class"))
+                {
+                    case "anti_sound":
+                        anti_sounds.add(node.getAttribute("name"));
+                        break;
+                    case "nature":
+                        nature.add(node.getAttribute("name"));
+                        break;
+                    case "travel":
+                        travel.add(node.getAttribute("name"));
+                        break;
+                    case "interiors":
+                        interiors.add(node.getAttribute("name"));
+                        break;
 
-        addHeader(stock_noise_list,resources.getString(R.string.header_interiors));
-        addItem(R.drawable.coffee_shop,R.string.coffee_shop,R.raw.coffee_shop,"coffee_shop");
-        addItem(R.drawable.fireplace,R.string.fireplace,R.raw.fireplace,"fireplace");
-        addDivider();
+                    default:
+                        break;
+                }
+            }
+
+            for(Pair<Integer,ArrayList<String>> _p: new Pair[]{
+                    new Pair<>(R.string.header_antisound,anti_sounds),
+                    new Pair<>(R.string.header_nature,nature),
+                    new Pair<>(R.string.header_travel,travel),
+                    new Pair<>(R.string.header_interiors,interiors),
+            })
+            {
+                addHeader(stock_noise_list, getString(_p.first));
+                for(String sound: _p.second)
+                {
+                    addItem(
+                            r.getIdentifier(sound,"drawable",pkg),
+                            r.getIdentifier(sound,"string",pkg),
+                            r.getIdentifier(sound,"raw",pkg),
+                            sound
+                    );
+                }
+                addDivider();
+            }
+        }
+        catch (ParserConfigurationException | IOException | SAXException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     public void displayCredits(MenuItem sender)
