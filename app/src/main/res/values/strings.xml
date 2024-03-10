@@ -38,10 +38,12 @@
 
 
     <string name="credits_error">Error loading credits…</string>
-    <string name="credits_header">%s: </string>
-    <string name="other_credits">Upstream application and icons</string>
+    <string name="credits_header">"%s: "</string>
+    <string name="developers">Developers</string>
+    <string name="upstream_application">Upstream application</string>
     <string name="sounds">Sounds</string>
     <string name="author">Author</string>
+    <string name="icon">Icon</string>
     <string name="editor">Editor</string>
     <string name="license">License</string>
 

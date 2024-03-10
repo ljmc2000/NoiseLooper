@@ -51,18 +51,27 @@ public class CreditsActivity extends AppCompatActivity {
         Document document = db.parse(creditsFile);
         Element node;
 
-        NodeList otherCredits=document.getElementsByTagName("other");
-        credits+=String.format(header,getString(R.string.other_credits))+"\n";
-        for(int i=0; i<otherCredits.getLength(); i++) {
-            node=(Element) otherCredits.item(i);
+        NodeList developerCredits=document.getElementsByTagName("developer");
+        credits+=String.format(header,getString(R.string.developers))+"\n";
+        for(int i=0; i<developerCredits.getLength(); i++) {
+            node=(Element) developerCredits.item(i);
+            credits+=Tab+node.getTextContent()+"\n";
+        }
+        credits+="\n";
+
+        NodeList upstreamCredits=document.getElementsByTagName("upstream_developer");
+        credits+=String.format(header,getString(R.string.upstream_application))+"\n";
+        for(int i=0; i<upstreamCredits.getLength(); i++) {
+            node=(Element) upstreamCredits.item(i);
             credits+=Tab+node.getTextContent()+"\n";
         }
         credits+="\n";
 
         String Author = String.format(header,getString(R.string.author));
         String Editor = String.format(header,getString(R.string.editor));
+        String Icon = String.format(header,getString(R.string.icon));
         String License = String.format(header,getString(R.string.license));
-        String author, editor, license;
+        String author, editor, icon, license;
 
         credits+=String.format(header,getString(R.string.sounds))+"\n";
         NodeList sounds = document.getElementsByTagName("sound");
@@ -74,11 +83,14 @@ public class CreditsActivity extends AppCompatActivity {
             credits += (Tab + String.format(header, getString(nameId)) + "\n");
             author = node.getAttribute("author");
             editor = node.getAttribute("editor");
+            icon = node.getAttribute("icon");
             license = node.getAttribute("license");
             if (!author.isEmpty())
                 credits += (Tab2 + Author + author + "\n");
             if (!editor.isEmpty())
                 credits += (Tab2 + Editor + editor + "\n");
+            if (!icon.isEmpty())
+                credits += (Tab2 + Icon + icon + "\n");
             if (!license.isEmpty())
                 credits += (Tab2 + License + license + "\n");
         }
