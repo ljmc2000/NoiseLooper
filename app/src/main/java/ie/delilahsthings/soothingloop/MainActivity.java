@@ -28,8 +28,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AudioManager audioManager;
-    SharedPreferences defaultProfile;
+    SharedPreferences defaultProfile, preferences;
     private LinearLayout[] noise_lists;
     private LinearLayout stock_noise_list;
     private LinearLayout custom_noise_list;
@@ -50,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
         noise_lists=new LinearLayout[]{stock_noise_list,custom_noise_list};
         resources=getResources();
 
-        audioManager=(AudioManager) getSystemService(Context.AUDIO_SERVICE);
         defaultProfile=getSharedPreferences("default",MODE_PRIVATE);
+        preferences=getSharedPreferences("preferences",MODE_PRIVATE);
         if(SoundEffectVolumeManager.soundPool!=null)
         {
             SoundEffectVolumeManager.soundPool.release();
@@ -60,17 +59,22 @@ public class MainActivity extends AppCompatActivity {
 
         populateNoiselist();
         populateCustomNoiselist();
+
+        if(preferences.getBoolean("load_default_on_start",false))
+        {
+            loadProfile(defaultProfile);
+        }
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        //loadProfile(defaultProfile);
+        loadState(savedInstanceState);
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        //saveProfile(defaultProfile);
+        saveState(outState);
     }
 
     @Override
@@ -211,6 +215,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void loadState(Bundle state)
+    {
+        SeekBar v;
+        String persistKey;
+
+        for(ViewGroup noise_list: noise_lists) {
+            for (int i = 0; i < noise_list.getChildCount(); i++) {
+                v = noise_list.getChildAt(i).findViewById(R.id.volume);
+                if (v != null) {
+                    persistKey = (String) v.getTag(R.string.persist_key);
+                    v.setProgress(state.getInt(persistKey, 0));
+                }
+            }
+        }
+    }
+
     public void promptLoadCustomProfile(MenuItem sender)
     {
         Spinner spinner = new Spinner(this);
@@ -246,6 +266,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         editor.commit();
+    }
+
+    public void saveState(Bundle state)
+    {
+        SeekBar v;
+        String persistKey;
+
+        for(LinearLayout noise_list: noise_lists) {
+            for (int i = 0; i < noise_list.getChildCount(); i++) {
+                v = noise_list.getChildAt(i).findViewById(R.id.volume);
+                if (v != null) {
+                    persistKey = (String) v.getTag(R.string.persist_key);
+                    state.putInt(persistKey, v.getProgress());
+                }
+            }
+        }
     }
 
     public void silenceAll(MenuItem sender)
