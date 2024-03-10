@@ -28,7 +28,6 @@
                 android:textSize="32sp" />
 
             <CheckBox
-                app:buttonTint="?attr/colorSecondary"
                 android:layout_width="128dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

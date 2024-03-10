@@ -2,6 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.NoiseLooper" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">#FDF6E3</item>
+        <item name="checkboxStyle">@style/Widget.App.CheckBox</item>
     </style>
 
     <style name="Theme.NoiseLooper" parent="Base.Theme.NoiseLooper" />
