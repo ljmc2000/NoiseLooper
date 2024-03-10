@@ -5,7 +5,6 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.widget.SeekBar;
 
-import java.io.File;
 import java.util.HashMap;
 
 public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener {
