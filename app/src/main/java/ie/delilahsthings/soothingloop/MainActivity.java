@@ -294,5 +294,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+
+        SoundEffectVolumeManager.stopAll(new SeekBar(this));
     }
 }

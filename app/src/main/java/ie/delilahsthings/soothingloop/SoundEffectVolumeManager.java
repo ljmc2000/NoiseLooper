@@ -45,6 +45,14 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
         }
     }
 
+    public static void stopAll(SeekBar seekbar)
+    {
+        for(SoundEffectVolumeManager manager: cache.values())
+        {
+            manager.onProgressChanged(seekbar,0,false);
+        }
+    }
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int volume, boolean z) {
         float volumeF=volume/100f;
