@@ -5,7 +5,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="promptAddSound"
     android:orientation="vertical"
     tools:context=".SettingsActivity">
 
@@ -28,6 +27,7 @@
                 android:textSize="32sp" />
 
             <CheckBox
+                android:id="@+id/toggle_autostart"
                 android:layout_width="128dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

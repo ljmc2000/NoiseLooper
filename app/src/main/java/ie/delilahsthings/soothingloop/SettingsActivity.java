@@ -1,11 +1,13 @@
 package ie.delilahsthings.soothingloop;
 
-import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,6 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private ViewGroup profilesView;
     private ViewGroup customSoundsView;
+    private SharedPreferences settings;
     private ActivityResultLauncher<String> getNewSound;
 
     @Override
@@ -33,6 +36,11 @@ public class SettingsActivity extends AppCompatActivity {
         this.profilesView=findViewById(R.id.profiles);
         this.customSoundsView=findViewById(R.id.custom_sounds);
         this.getNewSound=registerForActivityResult(new ActivityResultContracts.GetContent(), (uri)->addCustomSound(uri));
+        this.settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
+
+        CheckBox loadOnStart = ((CheckBox)findViewById(R.id.toggle_autostart));
+        loadOnStart.setChecked(settings.getBoolean(Constants.LOAD_DEFAULT_ON_START, false));
+        loadOnStart.setOnCheckedChangeListener((box,checked)->toggleLoadDefaultOnStart(box,checked));
         populateCustomProfiles();
         populateCustomSounds();
     }
@@ -50,7 +58,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             customSoundsView.addView(view);
             Intent intent = new Intent();
-            intent.setAction(MainActivity.INVALIDATE_ACTION);
+            intent.setAction(Constants.INVALIDATE_ACTION);
             sendBroadcast(intent);
         }
         catch (IOException e)
@@ -108,7 +116,7 @@ public class SettingsActivity extends AppCompatActivity {
             ProfileManager.deleteCustomSound(this,sound);
             customSoundsView.removeView(sender);
             Intent intent = new Intent();
-            intent.setAction(MainActivity.INVALIDATE_ACTION);
+            intent.setAction(Constants.INVALIDATE_ACTION);
             sendBroadcast(intent);
         });
 
@@ -126,5 +134,12 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    public void toggleLoadDefaultOnStart(CompoundButton box, boolean checked)
+    {
+        SharedPreferences.Editor editor=settings.edit();
+        editor.putBoolean(Constants.LOAD_DEFAULT_ON_START,checked);
+        editor.commit();
     }
 }

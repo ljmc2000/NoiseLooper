@@ -31,14 +31,12 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    SharedPreferences defaultProfile, preferences;
+    SharedPreferences defaultProfile, settings;
     private LinearLayout[] noise_lists;
     private LinearLayout stock_noise_list;
     private LinearLayout custom_noise_list;
     private Resources resources;
     private static int TEXT_SIZE=38;
-    final static String CUSTOM_NOISE_PREFIX="custom_";
-    final static String INVALIDATE_ACTION="ie.delilahsthings.noiselooper.invalidate_custom";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +50,13 @@ public class MainActivity extends AppCompatActivity {
         noise_lists=new LinearLayout[]{stock_noise_list,custom_noise_list};
         resources=getResources();
 
-        defaultProfile=getSharedPreferences("default",MODE_PRIVATE);
-        preferences=getSharedPreferences("preferences",MODE_PRIVATE);
+        defaultProfile=getSharedPreferences(Constants.DEFAULT_PROFILE,MODE_PRIVATE);
+        settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
 
         populateNoiselist();
         populateCustomNoiselist();
 
-        IntentFilter intentFilter = new IntentFilter(INVALIDATE_ACTION);
+        IntentFilter intentFilter = new IntentFilter(Constants.INVALIDATE_ACTION);
         BroadcastReceiver invalidator = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -67,8 +65,7 @@ public class MainActivity extends AppCompatActivity {
         };
         registerReceiver(invalidator,intentFilter);
 
-        //TODO allow load on start as option
-        if(preferences.getBoolean("load_default_on_start",false))
+        if(settings.getBoolean(Constants.LOAD_DEFAULT_ON_START,false))
         {
             loadProfile(defaultProfile);
         }
@@ -156,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
             SeekBar volume = view.findViewById(R.id.volume);
             SoundEffectVolumeManager manager=SoundEffectVolumeManager.get(ProfileManager.getSoundPath(this)+sound);
             volume.setOnSeekBarChangeListener(manager);
-            volume.setTag(R.string.persist_key,CUSTOM_NOISE_PREFIX+sound);
+            volume.setTag(R.string.persist_key,Constants.CUSTOM_NOISE_PREFIX+sound);
         }
     }
 
