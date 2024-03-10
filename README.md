@@ -4,6 +4,13 @@ Play soothing sound effects to help you relax and drown out background noise. In
 # Building
 Just download and import to android studio. No extra libraries should be needed.
 
+# Adding new sounds
+To add a sound called "FOO"
+* Import a vector asset called `FOO.xml` to drawable. Android studio will allow you to import SVGs for this end.
+* Add a line like `<string name="FOO">The Sound of FOO</string>` to strings.xml.
+* Add `FOO.ogg` to the raw assets list.
+* Add an entry in `credits.xml`. No really, that's not optional, the list in MainActivity.java is loaded from there.
+
 # TODO
 - [X] Import default audio assets from Blanket
 - [X] Enable playback and mixing of default assets
