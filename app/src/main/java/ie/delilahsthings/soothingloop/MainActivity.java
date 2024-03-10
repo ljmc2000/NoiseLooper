@@ -60,18 +60,17 @@ public class MainActivity extends AppCompatActivity {
 
         populateNoiselist();
         populateCustomNoiselist();
-        loadProfile(defaultProfile);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        loadProfile(defaultProfile);
+        //loadProfile(defaultProfile);
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        saveProfile(defaultProfile);
+        //saveProfile(defaultProfile);
     }
 
     @Override
