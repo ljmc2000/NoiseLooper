@@ -1,14 +1,12 @@
 package ie.delilahsthings.soothingloop;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.io.File;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class SaveLoadDialog implements DialogInterface.OnClickListener {
 
@@ -20,15 +18,12 @@ public class SaveLoadDialog implements DialogInterface.OnClickListener {
         this.input=input;
         this.listener=listener;
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
         builder.setTitle(title);
         builder.setView(input);
         builder.setPositiveButton(actionName,this);
         builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-        Workarounds.fixBadDialogButtonColours(context, dialog);
+        builder.show();
     }
 
     @Override

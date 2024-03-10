@@ -3,4 +3,8 @@
     <style name="Base.Theme.NoiseLooper" parent="Base.Theme.NoiseLooper.NoiseLooperAbstract">
         <item name="colorPrimary">#1F1D36</item>
     </style>
+
+    <style name="alertButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">#ffffff</item>
+    </style>
 </resources>

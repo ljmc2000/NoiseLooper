@@ -15,6 +15,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.io.IOException;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -99,7 +101,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void promptDeleteCustomSound(View sender, String sound)
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(String.format(getString(R.string.confirm_delete_custom_sound),sound));
         builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
         builder.setPositiveButton(getString(R.string.confirm),(dialogInterface, i) -> {
@@ -110,15 +112,12 @@ public class SettingsActivity extends AppCompatActivity {
             sendBroadcast(intent);
         });
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-        Workarounds.fixBadDialogButtonColours(this, dialog);
+        builder.show();
     }
 
     void promptDeleteProfile(View sender, String profileName)
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(String.format(getString(R.string.confirm_delete_profile),profileName));
         builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
         builder.setPositiveButton(getString(R.string.confirm),(dialogInterface, i) -> {
@@ -126,9 +125,6 @@ public class SettingsActivity extends AppCompatActivity {
             profilesView.removeView(sender);
         });
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
-
-        Workarounds.fixBadDialogButtonColours(this, dialog);
+        builder.show();
     }
 }
