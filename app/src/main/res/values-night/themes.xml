@@ -1,7 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.NoiseLooper" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.NoiseLooper" parent="Base.Theme.NoiseLooper.NoiseLooperAbstract">
         <item name="colorPrimary">#1F1D36</item>
-        <item name="checkboxStyle">@style/Widget.App.CheckBox</item>
     </style>
 </resources>

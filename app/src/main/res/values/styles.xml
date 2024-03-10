@@ -1,4 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.NoiseLooper.NoiseLooperAbstract" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="checkboxStyle">@style/Widget.App.CheckBox</item>
+    </style>
+
     <style name="Widget.App.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.CheckBox</item>
     </style>
@@ -7,4 +11,6 @@
         <item name="buttonTint">?attr/colorSecondary</item>
         <item name="buttonIconTint">?attr/colorOnSecondary</item>
     </style>
+
+    <style name="Theme.NoiseLooper" parent="Base.Theme.NoiseLooper" />
 </resources>
