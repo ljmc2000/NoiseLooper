@@ -14,6 +14,28 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:id="@+id/autostart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/autoload_default_profile"
+                android:textSize="32sp" />
+
+            <CheckBox
+                app:buttonTint="?attr/colorSecondary"
+                android:layout_width="128dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scaleX="2"
+                android:scaleY="2" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/profiles_header"
             android:layout_width="match_parent"

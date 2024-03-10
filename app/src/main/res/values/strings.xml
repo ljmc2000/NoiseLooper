@@ -48,6 +48,7 @@
     <string name="license">License</string>
 
 
+    <string name="autoload_default_profile">Load default profile on startup?</string>
     <string name="edit_profiles">Custom Profiles</string>
     <string name="confirm_delete_profile">Confirm deletion of profile "%s"?</string>
     <string name="confirm_delete_custom_sound">Confirm deletion of sound "%s"?</string>
