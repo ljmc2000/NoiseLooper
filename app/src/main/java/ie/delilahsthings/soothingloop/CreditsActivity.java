@@ -73,7 +73,7 @@ public class CreditsActivity extends AppCompatActivity {
         int nameId;
         for(int i=0; i<sounds.getLength(); i++) {
             node = (Element) sounds.item(i);
-            nameId = getResources().getIdentifier(node.getAttribute("name"), "string", getPackageName());
+            nameId = getResources().getIdentifier(node.getAttribute("id"), "string", getPackageName());
             credits += (Tab + String.format(header, getString(nameId)) + "\n");
             author = node.getAttribute("author");
             editor = node.getAttribute("editor");

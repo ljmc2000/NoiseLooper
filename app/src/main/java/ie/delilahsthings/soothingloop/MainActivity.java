@@ -171,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             Resources r=getResources();
             String pkg = getPackageName();
+            String id;
 
             InputStream creditsFile = getResources().openRawResource(R.raw.credits);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -186,19 +187,20 @@ public class MainActivity extends AppCompatActivity {
             NodeList sounds = document.getElementsByTagName("sound");
             for(int i=0; i<sounds.getLength(); i++) {
                 node = (Element) sounds.item(i);
+                id=node.getAttribute("id");
                 switch(node.getAttribute("class"))
                 {
                     case "anti_sound":
-                        anti_sounds.add(node.getAttribute("name"));
+                        anti_sounds.add(id);
                         break;
                     case "nature":
-                        nature.add(node.getAttribute("name"));
+                        nature.add(id);
                         break;
                     case "travel":
-                        travel.add(node.getAttribute("name"));
+                        travel.add(id);
                         break;
                     case "interiors":
-                        interiors.add(node.getAttribute("name"));
+                        interiors.add(id);
                         break;
 
                     default:
