@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NoiseLooper</string>
+    <string name="app_name">Soothing Noise Player</string>
     <string name="persist_key">PersistKey</string>
 
     <string name="stop_button_label">Stop All</string>
