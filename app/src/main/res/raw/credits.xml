@@ -10,7 +10,7 @@
     <sound author="gezortenplotz" id="city" class="travel" editor="Porrumentzio" icon="Jakub Steiner" license="CC BY" source="https://freesound.org/people/gezortenplotz/sounds/44796/"/>
     <sound author="gluckose" id="stream" class="nature" icon="Jakub Steiner" license="CC0" source="https://freesound.org/people/gluckose/sounds/333987/"/>
     <sound author="Jorge Stolfi" id="white_noise" class="anti_sound" icon="Jakub Steiner" license="CC BY-SA" source="https://commons.wikimedia.org/w/index.php?title=File%3AWhite-noise-sound-20sec-mono-44100Hz.ogg"/>
-    <!--sound author="Kieff" id="brown_noise" class="anti_sound" icon="ljmc2000" license="Public Domain" source="https://es.wikipedia.org/wiki/Archivo:Brownnoise.ogg"/-->
+    <sound author="Kieff" id="brown_noise" class="anti_sound" icon="ljmc2000" license="Public Domain" source="https://es.wikipedia.org/wiki/Archivo:Brownnoise.ogg"/>
     <sound author="kvgarlic" id="birds" class="nature" editor="Porrumentzio" icon="Jakub Steiner" license="CC0" source="https://freesound.org/people/kvgarlic/sounds/156826/"/>
     <sound author="Lisa Redfern" id="summer_night" class="nature" icon="Jakub Steiner" license="Public Domain" source="https://soundbible.com/2083-Crickets-Chirping-At-Night.html"/>
     <sound author="Luftrum" id="waves" class="nature" editor="Porrumentzio" icon="Jakub Steiner" license="CC BY" source="https://freesound.org/people/Luftrum/sounds/48412/"/>
