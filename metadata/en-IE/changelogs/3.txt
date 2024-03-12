@@ -1,7 +1,9 @@
 <ul>
     <li>Changed app name to "Soothing Noise Player"</li>
     <li>Changed app icon to something non default</li>
+    <li>Added brownian noise (it was actually always included, but hidden)
     <li>Build the main screen using credits.xml so contributors can add new default sounds without knowing java</li>
+    <li>Schema of credits.xml changed, and sounds reordered alphabetically by author name</li>
     <li>Minor UI tweaks</li>
     <li>Added some metadata for f-droid to draw on</li>
 </ul>
