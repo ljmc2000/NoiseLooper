@@ -1,0 +1,11 @@
+Play soothing sound effects to help you relax and drown out background noise. Intended to be an android port of <a href="https://github.com/rafaelmardojai/blanket">Blanket</a>.
+
+Features:
+<ul>
+	<li>Play any combination of 15 calming noises on loop mixed at volumes of your chosing</li>
+	<li>Import custom audio assets</li>
+	<li>Save your favorite combinations and load them later</li>
+	<li>Start default profile on launch (optional)</li>
+</ul>
+
+Based on <a href="https://github.com/rafaelmardojai/blanket">Blanket</a>, available on <a href="https://flathub.org/apps/com.rafaelmardojai.Blanket">flathub</a>.
