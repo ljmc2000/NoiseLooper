@@ -337,7 +337,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void silenceAll(MenuItem sender)
     {
-        saveProfile(defaultProfile);
         silenceAll();
     }
 
