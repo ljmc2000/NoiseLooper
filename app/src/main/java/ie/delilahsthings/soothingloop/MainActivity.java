@@ -287,11 +287,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void onPlaySounds() {
         Toolbar mainToolbar = findViewById(R.id.main_toolbar);
-        MenuItem playPauseButton = mainToolbar.getMenu().findItem(R.id.play_pause_button);
-        pausedSounds.putBoolean(Constants.ANY_PLAYING,true);
-        playPauseButton.setVisible(true);
-        playPauseButton.setIcon(R.drawable.pause);
-        playPauseButton.setTitle(R.string.pause_button_label);
+        Menu mainMenu = mainToolbar.getMenu();
+        MenuItem playPauseButton;
+        try {
+            playPauseButton = mainMenu.findItem(R.id.play_pause_button);
+            pausedSounds.putBoolean(Constants.ANY_PLAYING, true);
+            playPauseButton.setVisible(true);
+            playPauseButton.setIcon(R.drawable.pause);
+            playPauseButton.setTitle(R.string.pause_button_label);
+        }
+        catch (NullPointerException e) {
+        }
     }
 
     public void playPause(MenuItem sender)
