@@ -1,0 +1,3 @@
+* Replaced separate stop and play buttons with one playpause button that will resume what you paused not load the default profile
+* Reduced font sizes across the board and also changed the units to "sp" so they should scale with user's font size setting better
+* Some other minor QOL changes
