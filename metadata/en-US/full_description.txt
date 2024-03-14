@@ -1,4 +1,4 @@
-Play soothing sound effects to help you relax and drown out background noise. Intended to be an android port of <a href="https://github.com/rafaelmardojai/blanket">Blanket</a>.
+Intended to be an android port of <a href="https://github.com/rafaelmardojai/blanket">Blanket</a>.
 
 Features:
 <ul>
