@@ -66,12 +66,9 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
                         EVER_PLAYED=true;
                         return;
                     }
-                    try{
-                        Thread.sleep(500);
-                    }
-                    catch (InterruptedException e) {
-                    }
+                    Util.sleep(500);
                 }
+
                 seekBar.setProgress(0);
             }
         }
