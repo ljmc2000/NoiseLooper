@@ -19,5 +19,27 @@
         <item name="buttonIconTint">?attr/colorOnSecondary</item>
     </style>
 
+    <style name="header">
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="standardText">
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="standardTextContainer">
+        <item name="android:layout_height">24sp</item>
+    </style>
+
+    <style name="largeHeader">
+        <item name="android:textSize">48sp</item>
+    </style>
+
+    <style name="largeText">
+        <item name="android:textSize">32sp</item>
+    </style>
+    <style name="largeTextContainer">
+        <item name="android:layout_height">48sp</item>
+    </style>
+
     <style name="Theme.NoiseLooper" parent="Base.Theme.NoiseLooper" />
 </resources>

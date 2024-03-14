@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout custom_noise_list;
     private Resources resources;
     private SharedPreferences defaultProfile, settings;
-    private static int TEXT_SIZE=38;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         TextView text = new TextView(this);
         text.setText(name);
         text.setGravity(Gravity.CENTER);
-        text.setTextSize(TEXT_SIZE);
+        text.setTextAppearance(this,R.style.header);
         text.setPadding(0,0,0,10);
         noise_list.addView(text);
     }
@@ -150,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         TextView text = new TextView(this);
         text.setText(getString(R.string.custom_sounds));
         text.setGravity(Gravity.CENTER);
-        text.setTextSize(TEXT_SIZE);
+        text.setTextAppearance(this,R.style.header);
         text.setPadding(0,0,0,10);
         custom_noise_list.addView(text);
 

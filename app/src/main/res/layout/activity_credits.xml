@@ -9,12 +9,11 @@
     tools:context=".CreditsActivity" >
 
     <TextView
+        style="@style/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:gravity="center"
-        android:text="@string/credits_label"
-        android:textSize="48sp" />
+        android:text="@string/credits_label" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -23,8 +22,8 @@
 
         <TextView
             android:id="@+id/sound_credits"
+            style="@style/standardText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="24sp" />
+            android:layout_height="wrap_content" />
     </ScrollView>
 </LinearLayout>
