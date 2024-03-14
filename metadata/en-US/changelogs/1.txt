@@ -1,8 +1,6 @@
-<ul>
-    <li>Created the app</li>
-    <li>Added stock assets from Blanket</li>
-    <li>Added a button that should stop all playback streams</li>
-    <li>Implemented profiles for maintaining state between launches</li>
-    <li>Added credits</li>
-    <li>Allow users to import their own audio assets</li>
-</ul>
+* Created the app
+* Added stock assets from Blanket
+* Added a button that should stop all playback streams
+* Implemented profiles for maintaining state between launches
+* Added credits
+* Allow users to import their own audio assets

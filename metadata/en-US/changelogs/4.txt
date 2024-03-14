@@ -1,5 +1,3 @@
-<ul>
-    <li>Revamp light theme to be easier on eyes</li>
-    <li>Stop all button no longer overwrites the default profile</li>
-    <li>Updated metadata based on advice from fdroid's bot</li>
-</ul>
+* Revamp light theme to be easier on eyes
+* Stop all button no longer overwrites the default profile
+* Updated metadata based on advice from fdroid's bot

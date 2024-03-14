@@ -1,8 +1,6 @@
-<ul>
-    <li>Fixed icons being wrongly credited to author of upstream and not the actual designer, Jakub Steiner</li>
-    <li>Added myself to credits</li>
-    <li>Looping is no longer interrupted when you rotate your device</li>
-    <li>The stop button will now stop phantom noises, such as sounds that were playing when they were deleted</li>
-    <li>Added an option in settings for whether to resume the default profile when opening the app</li>
-    <li>Autosaving of default profile heavily reduced</li>
-</ul>
+* Fixed icons being wrongly credited to author of upstream and not the actual designer, Jakub Steiner
+* Added myself to credits
+* Looping is no longer interrupted when you rotate your device
+* The stop button will now stop phantom noises, such as sounds that were playing when they were deleted
+* Added an option in settings for whether to resume the default profile when opening the app
+* Autosaving of default profile heavily reduced
