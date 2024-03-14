@@ -40,7 +40,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         CheckBox loadOnStart = ((CheckBox)findViewById(R.id.toggle_autostart));
         loadOnStart.setChecked(settings.getBoolean(Constants.LOAD_DEFAULT_ON_START, false));
-        loadOnStart.setOnCheckedChangeListener((box,checked)->toggleLoadDefaultOnStart(box,checked));
         populateCustomProfiles();
         populateCustomSounds();
     }
@@ -136,10 +135,13 @@ public class SettingsActivity extends AppCompatActivity {
         builder.show();
     }
 
-    public void toggleLoadDefaultOnStart(CompoundButton box, boolean checked)
+    public void toggleLoadDefaultOnStart(View sender)
     {
+        CompoundButton box = sender.findViewById(R.id.toggle_autostart);
+        boolean checked = !box.isChecked();
         SharedPreferences.Editor editor=settings.edit();
         editor.putBoolean(Constants.LOAD_DEFAULT_ON_START,checked);
+        box.toggle();
         editor.commit();
     }
 }

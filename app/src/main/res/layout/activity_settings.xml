@@ -17,7 +17,9 @@
             android:id="@+id/autostart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:onClick="toggleLoadDefaultOnStart">
 
             <TextView
                 android:layout_width="match_parent"
