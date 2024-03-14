@@ -2,7 +2,8 @@
     <string name="app_name">Soothing Noise Player</string>
     <string name="persist_key">PersistKey</string>
 
-    <string name="stop_button_label">Stop All</string>
+    <string name="pause_button_label">Stop All</string>
+    <string name="resume_button_label">Resume</string>
     <string name="save">Save</string>
     <string name="load">Load</string>
     <string name="cancel">Cancel</string>

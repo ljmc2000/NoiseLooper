@@ -1,6 +1,7 @@
 package ie.delilahsthings.soothingloop;
 
 public abstract class Constants {
+    public final static String ANY_PLAYING="any_playing";
     public final static String APP_SETTINGS = "app_settings";
     public final static String CUSTOM_NOISE_PREFIX = "custom_";
     public final static String DEFAULT_PROFILE = "default";

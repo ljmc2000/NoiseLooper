@@ -12,8 +12,10 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
     final static int MAX_STREAMS=32;
     private int playbackId=0;
     private int soundPoolIndex;
+    private static Runnable onPlayCallback;
     private static SoundPool soundPool=new SoundPool(SoundEffectVolumeManager.MAX_STREAMS, AudioManager.STREAM_MUSIC,0);;
     private static HashMap<String,SoundEffectVolumeManager> cache = new HashMap<>();
+    public static boolean EVER_PLAYED=false;
 
     private SoundEffectVolumeManager(Context context, int soundId) {
         this.soundPoolIndex=soundPool.load(context, soundId, 1);
@@ -23,7 +25,7 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
         this.soundPoolIndex=soundPool.load(sound, 1);
     }
 
-    public static SoundEffectVolumeManager get(Context context, String persistKey, int soundId){
+    public static SoundEffectVolumeManager get(Context context, String persistKey, int soundId) {
         if(cache.containsKey(persistKey)) {
             return cache.get(persistKey);
         }
@@ -59,8 +61,11 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
             if (volume != 0) {
                 for(int i=0; i<10; i++) {
                     playbackId = soundPool.play(soundPoolIndex, volumeF, volumeF, 1, -1, 1f);
-                    if(playbackId!=0)
+                    if(playbackId!=0) {
+                        onPlayCallback.run();
+                        EVER_PLAYED=true;
                         return;
+                    }
                     try{
                         Thread.sleep(500);
                     }
@@ -77,6 +82,11 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
         else {
             soundPool.setVolume(playbackId, volumeF, volumeF);
         }
+    }
+
+    public static void setOnPlayCallback(Runnable onPlayCallback)
+    {
+        SoundEffectVolumeManager.onPlayCallback=onPlayCallback;
     }
 
     @Override

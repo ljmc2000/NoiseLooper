@@ -40,11 +40,12 @@ import javax.xml.parsers.ParserConfigurationException;
 
 public class MainActivity extends AppCompatActivity {
 
-    SharedPreferences defaultProfile, settings;
+    private Bundle pausedSounds = new Bundle();
     private LinearLayout[] noise_lists;
     private LinearLayout stock_noise_list;
     private LinearLayout custom_noise_list;
     private Resources resources;
+    private SharedPreferences defaultProfile, settings;
     private static int TEXT_SIZE=38;
 
     @Override
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         defaultProfile=getSharedPreferences(Constants.DEFAULT_PROFILE,MODE_PRIVATE);
         settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
 
+        SoundEffectVolumeManager.setOnPlayCallback(()->onPlaySounds());
         populateNoiselist();
         populateCustomNoiselist();
 
@@ -96,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
     {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_activity_menu, menu);
+        MenuItem playPauseButton = menu.findItem(R.id.play_pause_button);
+        setPauseVisibility(playPauseButton);
         return true;
     }
 
@@ -282,6 +286,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void onPlaySounds() {
+        Toolbar mainToolbar = findViewById(R.id.main_toolbar);
+        MenuItem playPauseButton = mainToolbar.getMenu().findItem(R.id.play_pause_button);
+        pausedSounds.putBoolean(Constants.ANY_PLAYING,true);
+        playPauseButton.setVisible(true);
+        playPauseButton.setIcon(R.drawable.pause);
+        playPauseButton.setTitle(R.string.pause_button_label);
+    }
+
+    public void playPause(MenuItem sender)
+    {
+        if(pausedSounds.getBoolean(Constants.ANY_PLAYING,true)) {
+            saveState(pausedSounds);
+            silenceAll();
+            sender.setIcon(R.drawable.play_triangle);
+            sender.setTitle(R.string.resume_button_label);
+            pausedSounds.putBoolean(Constants.ANY_PLAYING,false);
+        }
+
+        else {
+            loadState(pausedSounds);
+            sender.setIcon(R.drawable.pause);
+            sender.setTitle(R.string.pause_button_label);
+            pausedSounds.putBoolean(Constants.ANY_PLAYING,true);
+        }
+    }
+
     public void promptLoadCustomProfile(MenuItem sender)
     {
         Spinner spinner = new Spinner(this);
@@ -323,21 +354,39 @@ public class MainActivity extends AppCompatActivity {
     {
         SeekBar v;
         String persistKey;
+        int volume;
+        boolean anyPlaying=false;
 
         for(LinearLayout noise_list: noise_lists) {
             for (int i = 0; i < noise_list.getChildCount(); i++) {
                 v = noise_list.getChildAt(i).findViewById(R.id.volume);
                 if (v != null) {
                     persistKey = (String) v.getTag(R.string.persist_key);
-                    state.putInt(persistKey, v.getProgress());
+                    volume=v.getProgress();
+                    state.putInt(persistKey, volume);
+                    if(volume!=0)
+                        anyPlaying=true;
                 }
             }
         }
+
+        state.putBoolean(Constants.ANY_PLAYING,anyPlaying);
     }
 
-    public void silenceAll(MenuItem sender)
+    void setPauseVisibility(MenuItem playPauseButton)
     {
-        silenceAll();
+        playPauseButton.setVisible(SoundEffectVolumeManager.EVER_PLAYED);
+
+        if(pausedSounds.getBoolean(Constants.ANY_PLAYING,true))
+        {
+            playPauseButton.setTitle(R.string.pause_button_label);
+            playPauseButton.setIcon(R.drawable.pause);
+        }
+        else
+        {
+            playPauseButton.setTitle(R.string.resume_button_label);
+            playPauseButton.setIcon(R.drawable.play_triangle);
+        }
     }
 
     public void silenceAll()
