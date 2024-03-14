@@ -41,5 +41,15 @@
         <item name="android:layout_height">48sp</item>
     </style>
 
+    <style name="noiseConfigItem" parent="standardText">
+        <item name="android:paddingLeft">20sp</item>
+        <item name="android:paddingBottom">5sp</item>
+    </style>
+
+    <style name="hline">
+        <item name="android:layout_marginTop">20sp</item>
+        <item name="android:layout_marginBottom">10sp</item>
+    </style>
+
     <style name="Theme.NoiseLooper" parent="Base.Theme.NoiseLooper" />
 </resources>

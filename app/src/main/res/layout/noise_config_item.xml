@@ -26,7 +26,7 @@
             android:paddingLeft="20dp"
             android:paddingBottom="5dp"
             android:text="TextView"
-            style="@style/standardText" />
+            style="@style/noiseConfigItem" />
 
         <SeekBar
             android:id="@+id/volume"
