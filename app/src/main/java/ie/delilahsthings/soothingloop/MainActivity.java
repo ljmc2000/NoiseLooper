@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -321,9 +322,15 @@ public class MainActivity extends AppCompatActivity {
     public void promptLoadCustomProfile(MenuItem sender)
     {
         Spinner spinner = new Spinner(this);
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, ProfileManager.listProfiles(this));
-        spinner.setAdapter(spinnerArrayAdapter);
-        new SaveLoadDialog(this, spinner, R.string.load_custom, R.string.load,(profileName)->loadProfile(getSharedPreferences(profileName,MODE_PRIVATE)));
+        String profiles[] = ProfileManager.listProfiles(this);
+        if(profiles.length!=0) {
+            ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, profiles);
+            spinner.setAdapter(spinnerArrayAdapter);
+            new SaveLoadDialog(this, spinner, R.string.load_custom, R.string.load, (profileName) -> loadProfile(getSharedPreferences(profileName, MODE_PRIVATE)));
+        }
+        else {
+            Toast.makeText(this,R.string.no_profiles_saved,Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void promptSaveCustomProfile(MenuItem sender)
