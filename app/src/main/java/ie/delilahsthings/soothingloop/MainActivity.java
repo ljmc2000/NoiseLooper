@@ -295,26 +295,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setPaused()
-    {
-        Toolbar mainToolbar = findViewById(R.id.main_toolbar);
-        Menu mainMenu = mainToolbar.getMenu();
-        MenuItem playPauseButton;
-        try {
-            playPauseButton = mainMenu.findItem(R.id.play_pause_button);
-            pausedSounds.putBoolean(Constants.ANY_PLAYING, false);
-            playPauseButton.setIcon(R.drawable.play_triangle);
-            playPauseButton.setTitle(R.string.resume_button_label);
-        }
-        catch (NullPointerException e) {
-        }
-    }
-
     public void playPause(MenuItem sender)
     {
         if(pausedSounds.getBoolean(Constants.ANY_PLAYING,true)) {
-            saveState(pausedSounds);
-            silenceAll();
+            silenceAll(sender);
             sender.setIcon(R.drawable.play_triangle);
             sender.setTitle(R.string.resume_button_label);
             pausedSounds.putBoolean(Constants.ANY_PLAYING,false);
@@ -362,8 +346,6 @@ public class MainActivity extends AppCompatActivity {
         BroadcastReceiver onAudioDeviceChange=new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                saveState(pausedSounds);
-                setPaused();
                 silenceAll();
             }
         };
@@ -435,6 +417,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void silenceAll()
     {
+        Toolbar mainToolbar = findViewById(R.id.main_toolbar);
+        Menu mainMenu = mainToolbar.getMenu();
+        MenuItem playPauseButton;
+        try {
+            playPauseButton = mainMenu.findItem(R.id.play_pause_button);
+            silenceAll(playPauseButton);
+        }
+        catch (NullPointerException e) {
+        }
+    }
+    public void silenceAll(MenuItem playPauseButton)
+    {
+        if(pausedSounds.getBoolean(Constants.ANY_PLAYING,true)) {
+            saveState(pausedSounds);
+            playPauseButton.setIcon(R.drawable.play_triangle);
+            playPauseButton.setTitle(R.string.resume_button_label);
+            pausedSounds.putBoolean(Constants.ANY_PLAYING, false);
+        }
+
         SeekBar v;
 
         for(LinearLayout noise_list: noise_lists) {
