@@ -295,6 +295,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void setPaused()
+    {
+        Toolbar mainToolbar = findViewById(R.id.main_toolbar);
+        Menu mainMenu = mainToolbar.getMenu();
+        MenuItem playPauseButton;
+        try {
+            playPauseButton = mainMenu.findItem(R.id.play_pause_button);
+            pausedSounds.putBoolean(Constants.ANY_PLAYING, false);
+            playPauseButton.setIcon(R.drawable.play_triangle);
+            playPauseButton.setTitle(R.string.resume_button_label);
+        }
+        catch (NullPointerException e) {
+        }
+    }
+
     public void playPause(MenuItem sender)
     {
         if(pausedSounds.getBoolean(Constants.ANY_PLAYING,true)) {
@@ -347,6 +362,8 @@ public class MainActivity extends AppCompatActivity {
         BroadcastReceiver onAudioDeviceChange=new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                saveState(pausedSounds);
+                setPaused();
                 silenceAll();
             }
         };
