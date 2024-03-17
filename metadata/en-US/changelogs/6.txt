@@ -1,0 +1,3 @@
+* Pause automatically when headphones are disconnected
+* Do not show the profiles menu if none are availible
+* Custom overflow menu icon for colour consistency with play pause button
