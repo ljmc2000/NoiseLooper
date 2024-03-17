@@ -2,6 +2,7 @@
     <style name="Base.Theme.NoiseLooper.NoiseLooperAbstract" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="checkboxStyle">@style/Widget.App.CheckBox</item>
         <item name="materialAlertDialogTheme">@style/AlertDialogTheme</item>
+        <item name="android:actionOverflowButtonStyle">@style/MyActionButtonOverflow</item>
     </style>
 
     <style name="AlertDialogTheme" parent="Theme.Material3.DayNight.Dialog.Alert">
@@ -18,6 +19,8 @@
         <item name="buttonTint">?attr/colorSecondary</item>
         <item name="buttonIconTint">?attr/colorOnSecondary</item>
     </style>
+
+
 
     <style name="header">
         <item name="android:textSize">24sp</item>
@@ -49,6 +52,11 @@
     <style name="hline">
         <item name="android:layout_marginTop">20sp</item>
         <item name="android:layout_marginBottom">10sp</item>
+    </style>
+
+    <style name="MyActionButtonOverflow" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">
+        <item name="android:src">@drawable/overflow_menu_icon</item>
+        <item name="android:background">?android:attr/actionBarItemBackground</item>
     </style>
 
     <style name="Theme.NoiseLooper" parent="Base.Theme.NoiseLooper" />
