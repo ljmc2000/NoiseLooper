@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.Gravity;
@@ -67,14 +68,7 @@ public class MainActivity extends AppCompatActivity {
         populateNoiselist();
         populateCustomNoiselist();
 
-        IntentFilter intentFilter = new IntentFilter(Constants.INVALIDATE_ACTION);
-        BroadcastReceiver invalidator = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                populateCustomNoiselist();
-            }
-        };
-        registerReceiver(invalidator,intentFilter);
+        registerBroadcastReceivers();
 
         if(settings.getBoolean(Constants.LOAD_DEFAULT_ON_START,false))
         {
@@ -336,6 +330,27 @@ public class MainActivity extends AppCompatActivity {
     public void promptSaveCustomProfile(MenuItem sender)
     {
         new SaveLoadDialog(this, new EditText(this), R.string.save_custom, R.string.save,(profileName)->saveProfile(getSharedPreferences(profileName,MODE_PRIVATE)));
+    }
+
+    void registerBroadcastReceivers()
+    {
+        //custom sounds list changed
+        BroadcastReceiver onNoiseListChange = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                populateCustomNoiselist();
+            }
+        };
+        registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION));
+
+        //headphones unplugged
+        BroadcastReceiver onAudioDeviceChange=new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                silenceAll();
+            }
+        };
+        registerReceiver(onAudioDeviceChange, new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
     }
 
     public void saveDefaults(MenuItem sender)
