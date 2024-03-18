@@ -40,6 +40,7 @@
 
 
     <string name="credits_error">Error loading credits…</string>
+    <string name="big_file_warning">Warning: sound effects should be a megabyte or less</string>
     <string name="credits_header">"%s: "</string>
     <string name="developers">Developers</string>
     <string name="upstream_application">Upstream application</string>

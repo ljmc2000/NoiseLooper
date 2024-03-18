@@ -51,7 +51,8 @@ public abstract class ProfileManager {
         return files.toArray(new String[0]);
     }
 
-    public static String addCustomSound(Context context, Uri uri) throws IOException {
+    public static AddedSoundResult addCustomSound(Context context, Uri uri) throws IOException {
+        AddedSoundResult result=new AddedSoundResult();
         String path = getSoundPath(context);
         File dir = new File(path);
         dir.mkdirs();
@@ -59,8 +60,9 @@ public abstract class ProfileManager {
         InputStream inputStream = context.getContentResolver().openInputStream(uri);
         File dest = new File(path+getFileName(context,uri));
         dest.createNewFile();
-        copy(inputStream,dest);
-        return dest.getName();
+        result.size = copy(inputStream,dest);
+        result.name=dest.getName();
+        return result;
     }
 
     public static boolean deleteCustomSound(Context context, String sound)
@@ -77,14 +79,16 @@ public abstract class ProfileManager {
         return dir.list();
     }
 
-    static void copy(InputStream in, File dst) throws IOException {
+    static int copy(InputStream in, File dst) throws IOException {
         try (OutputStream out = new FileOutputStream(dst)) {
             // Transfer bytes from in to out
             byte[] buf = new byte[1024];
-            int len;
+            int len, total=0;
             while ((len = in.read(buf)) > 0) {
                 out.write(buf, 0, len);
+                total++;
             }
+            return total;
         }
     }
 
@@ -109,5 +113,11 @@ public abstract class ProfileManager {
             }
         }
         return result;
+    }
+
+    public static class AddedSoundResult
+    {
+        public String name;
+        public int size;
     }
 }

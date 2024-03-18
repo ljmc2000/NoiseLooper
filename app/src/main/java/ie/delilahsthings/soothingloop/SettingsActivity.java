@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -48,13 +49,19 @@ public class SettingsActivity extends AppCompatActivity {
     void addCustomSound(Uri uri)
     {
         try {
-            String sound=ProfileManager.addCustomSound(this,uri);
+            ProfileManager.AddedSoundResult sound=ProfileManager.addCustomSound(this,uri);
+
+            if(sound.size>1024)
+            {
+                Toast.makeText(this,getString(R.string.big_file_warning),Toast.LENGTH_SHORT).show();
+            }
+
             ViewGroup view = new LinearLayout(this);
             View.inflate(this, R.layout.profile_config_item, view);
             TextView text=view.findViewById(R.id.title);
-            text.setText(sound);
+            text.setText(sound.name);
             ImageView image=view.findViewById(R.id.delete_button);
-            image.setOnClickListener((v)->promptDeleteCustomSound(view, sound));
+            image.setOnClickListener((v)->promptDeleteCustomSound(view, sound.name));
 
             customSoundsView.addView(view);
             Intent intent = new Intent();
