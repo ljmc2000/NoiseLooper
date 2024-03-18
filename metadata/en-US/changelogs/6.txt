@@ -1,3 +1,4 @@
 * Pause automatically when headphones are disconnected
+* Warn user when they add sound effects larger than a megabyte
 * Do not show the profiles menu if none are availible
 * Custom overflow menu icon for colour consistency with play pause button
