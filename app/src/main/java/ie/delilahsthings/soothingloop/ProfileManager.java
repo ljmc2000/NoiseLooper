@@ -86,7 +86,7 @@ public abstract class ProfileManager {
             int len, total=0;
             while ((len = in.read(buf)) > 0) {
                 out.write(buf, 0, len);
-                total++;
+                total+=len;
             }
             return total;
         }

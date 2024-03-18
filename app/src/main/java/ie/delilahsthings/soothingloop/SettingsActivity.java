@@ -51,7 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
         try {
             ProfileManager.AddedSoundResult sound=ProfileManager.addCustomSound(this,uri);
 
-            if(sound.size>1024)
+            if(sound.size>Constants.ONE_MEGABYTE)
             {
                 Toast.makeText(this,getString(R.string.big_file_warning),Toast.LENGTH_SHORT).show();
             }

@@ -7,4 +7,5 @@ public abstract class Constants {
     public final static String DEFAULT_PROFILE = "default";
     public final static String INVALIDATE_ACTION = "ie.delilahsthings.soothingloop.invalidate_custom";
     public final static String LOAD_DEFAULT_ON_START = "load_default_on_start";
+    public static final int ONE_MEGABYTE = 1024*1024;
 }
