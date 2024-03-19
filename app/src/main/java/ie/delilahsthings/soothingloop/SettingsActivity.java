@@ -72,6 +72,9 @@ public class SettingsActivity extends AppCompatActivity {
         {
             Toast.makeText(this,getString(R.string.add_sound_problem),Toast.LENGTH_SHORT).show();
         }
+        catch (NullPointerException e)
+        {
+        }
     }
 
     void populateCustomProfiles()
