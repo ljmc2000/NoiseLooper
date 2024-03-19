@@ -56,5 +56,5 @@
     <string name="confirm_delete_profile">Confirm deletion of profile "%s"?</string>
     <string name="confirm_delete_custom_sound">Confirm deletion of sound "%s"?</string>
     <string name="custom_sounds">Custom Sounds</string>
-    <string name="add_sound_problem">Problem adding sound %s</string>
+    <string name="add_sound_problem">Problem adding sound</string>
 </resources>
