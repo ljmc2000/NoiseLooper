@@ -13,6 +13,7 @@
     <string name="save_custom">Save Custom Profile</string>
     <string name="load_custom">Load Custom Profile</string>
     <string name="no_profiles_saved">No profiles available to load</string>
+    <string name="bad_profile_name_warning">Profile name must not be blank</string>
     <string name="settings_label">Settings</string>
     <string name="credits_label">Credits</string>
 

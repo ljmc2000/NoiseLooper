@@ -5,16 +5,19 @@ import android.content.DialogInterface;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class SaveLoadDialog implements DialogInterface.OnClickListener {
 
+    protected Context context;
     protected View input;
     protected Listener listener;
 
     protected SaveLoadDialog(Context context, View input, int title, int actionName, Listener listener)
     {
+        this.context=context;
         this.input=input;
         this.listener=listener;
 
@@ -28,14 +31,21 @@ public class SaveLoadDialog implements DialogInterface.OnClickListener {
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-        String filename="default";
-        if(input instanceof TextView) {
-            filename = ProfileManager.prefix + ((TextView)input).getText().toString();
+        try {
+            String profileName = "";
+            if (input instanceof TextView) {
+                profileName = ((TextView) input).getText().toString();
+                profileName = ProfileManager.validateProfileName(profileName);
+            } else if (input instanceof Spinner) {
+                profileName = ((Spinner) input).getSelectedItem().toString();
+            }
+
+            listener.action(ProfileManager.prefix + profileName);
         }
-        else if(input instanceof Spinner) {
-            filename = ProfileManager.prefix + ((Spinner)input).getSelectedItem().toString();
+        catch (ProfileManager.BadProfileNameException ex)
+        {
+            Toast.makeText(context, R.string.bad_profile_name_warning, Toast.LENGTH_SHORT).show();
         }
-        listener.action(filename);
     }
 
     public interface Listener {
