@@ -352,7 +352,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= 26) {
             registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION), Context.RECEIVER_NOT_EXPORTED);
-            registerReceiver(onAudioDeviceChange,new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY), Context.RECEIVER_NOT_EXPORTED);
+            registerReceiver(onAudioDeviceChange,new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY), Context.RECEIVER_EXPORTED);
         }
         else
         {
