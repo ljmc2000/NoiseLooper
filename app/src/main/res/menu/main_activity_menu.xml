@@ -28,6 +28,10 @@
         android:title="@string/load_custom" />
 
     <item
+        android:onClick="promptSleepTimer"
+        android:title="@string/sleep_timer" />
+
+    <item
         android:onClick="displaySettings"
         android:title="@string/settings_label" />
 

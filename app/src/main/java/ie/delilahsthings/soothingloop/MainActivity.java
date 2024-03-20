@@ -331,6 +331,13 @@ public class MainActivity extends AppCompatActivity {
         new SaveLoadDialog(this, new EditText(this), R.string.save_custom, R.string.save,(profileName)->saveProfile(getSharedPreferences(profileName,MODE_PRIVATE)));
     }
 
+    public void promptSleepTimer(MenuItem sender)
+    {
+        View view = View.inflate(this,R.layout.timespan_input,null);
+        new TimerInput(this, view);
+        new SaveLoadDialog(this, view, R.string.sleep_timer,R.string.confirm,(foo)->{});
+    }
+
     void registerBroadcastReceivers()
     {
         //custom sounds list changed

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/hours_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/hours_hint"
+            android:inputType="number"
+            android:maxEms="2"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="@string/time_separator" />
+
+        <EditText
+            android:id="@+id/minutes_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/minutes_hint"
+            android:inputType="number"
+            android:maxEms="2"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:text="@string/time_separator" />
+
+        <EditText
+            android:id="@+id/seconds_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/seconds_hint"
+            android:inputType="number"
+            android:maxEms="2"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/real_time_input"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_weight="0"
+        android:inputType="number"
+        android:maxEms="2"
+        android:textAlignment="center" />
+
+</LinearLayout>
