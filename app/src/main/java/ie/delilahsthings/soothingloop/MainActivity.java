@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         registerBroadcastReceivers();
 
-        SleepTimerThread.get().subscribe(this);
+        SleepTimerThread.subscribe(this);
 
         if(settings.getBoolean(Constants.LOAD_DEFAULT_ON_START,false))
         {
@@ -347,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(R.string.sleep_timer);
         builder.setView(view);
-        builder.setPositiveButton(R.string.confirm, (dialogInterface, i) -> SleepTimerThread.get().setTime(timerInput.getSeconds()));
+        builder.setPositiveButton(R.string.confirm, (dialogInterface, i) -> SleepTimerThread.setTime(timerInput.getSeconds()));
         builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
         builder.show();
     }
@@ -489,10 +489,9 @@ public class MainActivity extends AppCompatActivity {
             pausedSounds.putBoolean(Constants.ANY_PLAYING, false);
         }
 
-        SeekBar v = new SeekBar(this);
-        SoundEffectVolumeManager.stopAll(v);
+        SoundEffectVolumeManager.stopAll();
 
-
+        SeekBar v;
         for(LinearLayout noise_list: noise_lists) {
             for (int i = 0; i < noise_list.getChildCount(); i++) {
                 v = noise_list.getChildAt(i).findViewById(R.id.volume);

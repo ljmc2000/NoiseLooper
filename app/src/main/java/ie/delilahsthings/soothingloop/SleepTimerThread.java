@@ -4,50 +4,50 @@ import android.content.Context;
 import android.content.Intent;
 
 public class SleepTimerThread  extends Thread{
-    static SleepTimerThread singleton = new SleepTimerThread();
+    static SleepTimerThread singleton = null;
 
-    private Context context;
-    private long remainingTime=-1;
+    public static volatile Context context;
+    private volatile long remainingTime=-1;
 
     private SleepTimerThread()
     {
-        start();
     }
 
     @Override
-    public void run()
+    public synchronized void run()
     {
         Intent intent;
 
-        while(true)
-        {
-            if(remainingTime>=0) {
-                if (context != null) {
-                    intent = new Intent(Constants.TIMER_EVENT);
-                    intent.putExtra(Constants.REMAINING_TIME, remainingTime);
-                    intent.setPackage(context.getPackageName());
-                    context.sendBroadcast(intent);
-                }
-
-                remainingTime--;
+        while(remainingTime>=0) {
+            if (context != null) {
+                intent = new Intent(Constants.TIMER_EVENT);
+                intent.putExtra(Constants.REMAINING_TIME, remainingTime);
+                intent.setPackage(context.getPackageName());
+                context.sendBroadcast(intent);
             }
 
+            remainingTime--;
             Util.sleep(1000);
+        }
+
+        singleton=null;
+    }
+
+    public static synchronized void setTime(long timeout)
+    {
+        if(singleton==null) {
+            singleton = new SleepTimerThread();
+            singleton.remainingTime=timeout;
+            singleton.start();
+        }
+        else {
+            singleton.remainingTime=timeout;
         }
     }
 
-    public void setTime(long timeout)
+    public static void subscribe(Context context)
     {
-        this.remainingTime=timeout;
+        SleepTimerThread.context=context;
     }
 
-    public void subscribe(Context context)
-    {
-        this.context=context;
-    }
-
-    public static SleepTimerThread get()
-    {
-        return singleton;
-    }
 }
