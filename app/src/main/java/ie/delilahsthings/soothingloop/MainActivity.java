@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.Gravity;
@@ -340,7 +341,6 @@ public class MainActivity extends AppCompatActivity {
                 populateCustomNoiselist();
             }
         };
-        registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION));
 
         //headphones unplugged
         BroadcastReceiver onAudioDeviceChange=new BroadcastReceiver() {
@@ -349,7 +349,16 @@ public class MainActivity extends AppCompatActivity {
                 silenceAll();
             }
         };
-        registerReceiver(onAudioDeviceChange, new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
+
+        if (Build.VERSION.SDK_INT >= 26) {
+            registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION), Context.RECEIVER_NOT_EXPORTED);
+            registerReceiver(onAudioDeviceChange,new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY), Context.RECEIVER_EXPORTED);
+        }
+        else
+        {
+            registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION));
+            registerReceiver(onAudioDeviceChange,new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
+        }
     }
 
     public void saveDefaults(MenuItem sender)
