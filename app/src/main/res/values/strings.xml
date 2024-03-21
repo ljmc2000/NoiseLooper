@@ -14,6 +14,7 @@
     <string name="load_custom">Load Custom Profile</string>
     <string name="no_profiles_saved">No profiles available to load</string>
     <string name="bad_profile_name_warning">Profile name must not be blank</string>
+    <string name="sleep_timer">Start Sleep Timer</string>
     <string name="settings_label">Settings</string>
     <string name="credits_label">Credits</string>
 
@@ -58,4 +59,10 @@
     <string name="confirm_delete_custom_sound">Confirm deletion of sound "%s"?</string>
     <string name="custom_sounds">Custom Sounds</string>
     <string name="add_sound_problem">Problem adding sound</string>
+
+
+    <string name="hours_hint">HH</string>
+    <string name="minutes_hint">MM</string>
+    <string name="seconds_hint">SS</string>
+    <string name="time_separator">:</string>
 </resources>

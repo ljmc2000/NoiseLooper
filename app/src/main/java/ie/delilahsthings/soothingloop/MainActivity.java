@@ -28,6 +28,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -70,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         populateCustomNoiselist();
 
         registerBroadcastReceivers();
+
+        SleepTimerThread.get().subscribe(this);
 
         if(settings.getBoolean(Constants.LOAD_DEFAULT_ON_START,false))
         {
@@ -167,6 +171,8 @@ public class MainActivity extends AppCompatActivity {
 
     void populateNoiselist()
     {
+        stock_noise_list.removeAllViews();
+
         try {
             Resources r=getResources();
             String pkg = getPackageName();
@@ -334,12 +340,46 @@ public class MainActivity extends AppCompatActivity {
         textbox.addTextChangedListener(saveDialog.getTextChangeListener());
     }
 
+    public void promptSleepTimer(MenuItem sender)
+    {
+        View view = View.inflate(this,R.layout.timespan_input,null);
+        TimerInput timerInput = new TimerInput(this, view);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setTitle(R.string.sleep_timer);
+        builder.setView(view);
+        builder.setPositiveButton(R.string.confirm, (dialogInterface, i) -> SleepTimerThread.get().setTime(timerInput.getSeconds()));
+        builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
+        builder.show();
+    }
+
     void registerBroadcastReceivers()
     {
+        //sleep timer
+        BroadcastReceiver sleepTimerEvent = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long remainingTime=intent.getLongExtra(Constants.REMAINING_TIME,0);
+
+                if(intent.getLongExtra(Constants.REMAINING_TIME,0)>0) {
+                    String sep = getString(R.string.time_separator);
+                    String title = String.format("%02d%s%02d%s%02d",
+                            remainingTime / 3600, sep,
+                            remainingTime / 60 % 60, sep,
+                            remainingTime % 60, 0);
+                    getSupportActionBar().setTitle(title);
+                }
+                else {
+                    getSupportActionBar().setTitle(R.string.app_name);
+                    fadeOut();
+                }
+            }
+        };
+
         //custom sounds list changed
         BroadcastReceiver onNoiseListChange = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                populateNoiselist();
                 populateCustomNoiselist();
             }
         };
@@ -353,11 +393,13 @@ public class MainActivity extends AppCompatActivity {
         };
 
         if (Build.VERSION.SDK_INT >= 26) {
+            registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(onAudioDeviceChange,new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY), Context.RECEIVER_EXPORTED);
         }
         else
         {
+            registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT));
             registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION));
             registerReceiver(onAudioDeviceChange,new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
         }
@@ -447,7 +489,9 @@ public class MainActivity extends AppCompatActivity {
             pausedSounds.putBoolean(Constants.ANY_PLAYING, false);
         }
 
-        SeekBar v;
+        SeekBar v = new SeekBar(this);
+        SoundEffectVolumeManager.stopAll(v);
+
 
         for(LinearLayout noise_list: noise_lists) {
             for (int i = 0; i < noise_list.getChildCount(); i++) {
@@ -457,7 +501,39 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
 
-        SoundEffectVolumeManager.stopAll(new SeekBar(this));
+    void fadeOut()
+    {
+        Toolbar mainToolbar = findViewById(R.id.main_toolbar);
+        Menu mainMenu = mainToolbar.getMenu();
+        MenuItem playPauseButton;
+        try {
+            playPauseButton = mainMenu.findItem(R.id.play_pause_button);
+            if(pausedSounds.getBoolean(Constants.ANY_PLAYING,true)) {
+                saveState(pausedSounds);
+                playPauseButton.setIcon(R.drawable.play_triangle);
+                playPauseButton.setTitle(R.string.resume_button_label);
+                pausedSounds.putBoolean(Constants.ANY_PLAYING, false);
+            }
+        }
+        catch (NullPointerException e) {
+        }
+
+        FadeOutThread fadeOutThread = new FadeOutThread(this);
+        fadeOutThread.start();
+    }
+
+   static class FadeOutThread extends Thread{
+        private Context context;
+        public FadeOutThread(Context context)
+        {
+            this.context=context;
+        }
+        @Override
+        public void run()
+        {
+            SoundEffectVolumeManager.fadeOut(3000, context);
+        }
     }
 }
