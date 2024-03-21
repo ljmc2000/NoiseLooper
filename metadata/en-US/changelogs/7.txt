@@ -1,0 +1,5 @@
+* Added sleep timer as requested by "roy-heinrich"
+* Fade out gently when sleep timer runs out
+* Fixed android 14 crashing on startup caused by deprecated IPC registration call
+* Fixed crash when user selects add custom sound but then hits back to return to app without selecting a file
+* User can no longer create profiles with blank names
