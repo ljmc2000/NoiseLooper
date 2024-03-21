@@ -489,10 +489,9 @@ public class MainActivity extends AppCompatActivity {
             pausedSounds.putBoolean(Constants.ANY_PLAYING, false);
         }
 
-        SeekBar v = new SeekBar(this);
-        SoundEffectVolumeManager.stopAll(v);
+        SoundEffectVolumeManager.stopAll();
 
-
+        SeekBar v;
         for(LinearLayout noise_list: noise_lists) {
             for (int i = 0; i < noise_list.getChildCount(); i++) {
                 v = noise_list.getChildAt(i).findViewById(R.id.volume);

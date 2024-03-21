@@ -49,11 +49,15 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
         }
     }
 
-    public static void stopAll(SeekBar seekbar)
+    public static void stopAll()
     {
         for(SoundEffectVolumeManager manager: cache.values())
         {
-            manager.onProgressChanged(seekbar,0,false);
+            if(manager.playbackId!=0)
+            {
+                soundPool.stop(manager.playbackId);
+                manager.playbackId=0;
+            }
         }
     }
 
@@ -80,12 +84,11 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
 
         for(SoundEffectVolumeManager manager: cache.values())
         {
-            manager.playbackId=0;
+            if(manager.playbackId!=0) {
+                soundPool.stop(manager.playbackId);
+                manager.playbackId = 0;
+            }
         }
-
-        soundPool.release();
-        soundPool=new SoundPool(SoundEffectVolumeManager.MAX_STREAMS, AudioManager.STREAM_MUSIC,0);
-        cache=new HashMap<>();
 
         Intent intent = new Intent(Constants.INVALIDATE_ACTION);
         intent.setPackage(context.getPackageName());
