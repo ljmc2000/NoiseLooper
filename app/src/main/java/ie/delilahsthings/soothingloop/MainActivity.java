@@ -27,6 +27,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -69,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
         populateCustomNoiselist();
 
         registerBroadcastReceivers();
+
+        SleepTimerThread.get().subscribe(this);
 
         if(settings.getBoolean(Constants.LOAD_DEFAULT_ON_START,false))
         {
@@ -334,12 +338,40 @@ public class MainActivity extends AppCompatActivity {
     public void promptSleepTimer(MenuItem sender)
     {
         View view = View.inflate(this,R.layout.timespan_input,null);
-        new TimerInput(this, view);
-        new SaveLoadDialog(this, view, R.string.sleep_timer,R.string.confirm,(foo)->{});
+        TimerInput timerInput = new TimerInput(this, view);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setTitle(R.string.sleep_timer);
+        builder.setView(view);
+        builder.setPositiveButton(R.string.confirm, (dialogInterface, i) -> startSleepTimer(timerInput.getSeconds()));
+        builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
+        builder.show();
     }
 
     void registerBroadcastReceivers()
     {
+        //sleep timer
+        BroadcastReceiver sleepTimerEvent = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String title;
+                long remainingTime=intent.getLongExtra(Constants.REMAINING_TIME,0);
+
+                if(intent.getLongExtra(Constants.REMAINING_TIME,0)>0) {
+                    String sep = getString(R.string.time_separator);
+                    title = String.format("%02d%s%02d%s%02d",
+                            remainingTime / 3600, sep,
+                            remainingTime / 60 % 60, sep,
+                            remainingTime % 60, 0);
+                }
+                else {
+                    title=getString(R.string.app_name);
+                    silenceAll();
+                }
+                getSupportActionBar().setTitle(title);
+            }
+        };
+        registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT));
+
         //custom sounds list changed
         BroadcastReceiver onNoiseListChange = new BroadcastReceiver() {
             @Override
@@ -455,5 +487,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         SoundEffectVolumeManager.stopAll(new SeekBar(this));
+    }
+
+    void startSleepTimer (long timeout)
+    {
+        SleepTimerThread timer = SleepTimerThread.get();
+        timer.setTime(timeout);
     }
 }

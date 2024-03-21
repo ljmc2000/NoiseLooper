@@ -32,6 +32,34 @@ public class TimerInput {
         realTimeInput.addTextChangedListener(onInput);
     }
 
+    public long getSeconds()
+    {
+        long hours, minutes, seconds;
+
+        try {
+            hours = Long.parseLong(hoursInput.getText().toString());
+        }
+        catch (NumberFormatException e) {
+            hours=0;
+        }
+
+        try {
+            minutes = Long.parseLong(minutesInput.getText().toString());
+        }
+        catch (NumberFormatException e) {
+            minutes=0;
+        }
+
+        try {
+            seconds = Long.parseLong(secondsInput.getText().toString());
+        }
+        catch (NumberFormatException e) {
+            seconds=0;
+        }
+
+        return (3600*hours) + (60*minutes) + seconds;
+    }
+
     final View.OnFocusChangeListener focusPass = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean focused) {
