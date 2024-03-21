@@ -12,7 +12,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class ProfileManager {
     final public static String prefix="profile-";
@@ -23,6 +26,8 @@ public abstract class ProfileManager {
     final private static String CUSTOM_SOUNDS = "/custom_sounds/";
     final private static String DATA = "/data/";
     final private static String SHARED_PREFS = "/shared_prefs/";
+
+    final private static Pattern profileNameValidationPattern = Pattern.compile("\\s*(.*[\\S])\\s*");
 
     static String getProfilePath(Context context)
     {
@@ -115,9 +120,24 @@ public abstract class ProfileManager {
         return result;
     }
 
+    public static String validateProfileName(CharSequence profileName) throws BadProfileNameException
+    {
+        Matcher matcher = profileNameValidationPattern.matcher(profileName);
+        if(matcher.find())
+            return matcher.group(1);
+        else
+            throw new BadProfileNameException();
+    }
+
     public static class AddedSoundResult
     {
         public String name;
         public int size;
+    }
+
+    public static class BadProfileNameException extends Exception {
+        public BadProfileNameException() {
+            super("Invalid Profile Name");
+        }
     }
 }
