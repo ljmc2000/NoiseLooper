@@ -10,6 +10,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.Gravity;
@@ -325,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
         if(profiles.length!=0) {
             ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, profiles);
             spinner.setAdapter(spinnerArrayAdapter);
-            new SaveLoadDialog(this, spinner, R.string.load_custom, R.string.load, (profileName) -> loadProfile(getSharedPreferences(profileName, MODE_PRIVATE)));
+            new SaveLoadDialog(this, spinner, R.string.load_custom, R.string.load, (profileName) -> loadProfile(getSharedPreferences(profileName, MODE_PRIVATE)), true);
         }
         else {
             Toast.makeText(this,R.string.no_profiles_saved,Toast.LENGTH_SHORT).show();
@@ -334,7 +335,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void promptSaveCustomProfile(MenuItem sender)
     {
-        new SaveLoadDialog(this, new EditText(this), R.string.save_custom, R.string.save,(profileName)->saveProfile(getSharedPreferences(profileName,MODE_PRIVATE)));
+        EditText textbox = new EditText(this);
+        SaveLoadDialog saveDialog = new SaveLoadDialog(this, textbox, R.string.save_custom, R.string.save,(profileName)->saveProfile(getSharedPreferences(profileName,MODE_PRIVATE)), false);
+        textbox.addTextChangedListener(saveDialog.getTextChangeListener());
     }
 
     public void promptSleepTimer(MenuItem sender)
@@ -371,7 +374,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-        registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT));
 
         //custom sounds list changed
         BroadcastReceiver onNoiseListChange = new BroadcastReceiver() {
@@ -381,7 +383,6 @@ public class MainActivity extends AppCompatActivity {
                 populateCustomNoiselist();
             }
         };
-        registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION));
 
         //headphones unplugged
         BroadcastReceiver onAudioDeviceChange=new BroadcastReceiver() {
@@ -390,7 +391,18 @@ public class MainActivity extends AppCompatActivity {
                 silenceAll();
             }
         };
-        registerReceiver(onAudioDeviceChange, new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
+
+        if (Build.VERSION.SDK_INT >= 26) {
+            registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT), Context.RECEIVER_NOT_EXPORTED);
+            registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION), Context.RECEIVER_NOT_EXPORTED);
+            registerReceiver(onAudioDeviceChange,new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY), Context.RECEIVER_EXPORTED);
+        }
+        else
+        {
+            registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT));
+            registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION));
+            registerReceiver(onAudioDeviceChange,new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
+        }
     }
 
     public void saveDefaults(MenuItem sender)

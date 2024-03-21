@@ -66,11 +66,15 @@ public class SettingsActivity extends AppCompatActivity {
             customSoundsView.addView(view);
             Intent intent = new Intent();
             intent.setAction(Constants.INVALIDATE_ACTION);
+            intent.setPackage(getPackageName());
             sendBroadcast(intent);
         }
         catch (IOException e)
         {
             Toast.makeText(this,getString(R.string.add_sound_problem),Toast.LENGTH_SHORT).show();
+        }
+        catch (NullPointerException e)
+        {
         }
     }
 
@@ -124,6 +128,7 @@ public class SettingsActivity extends AppCompatActivity {
             customSoundsView.removeView(sender);
             Intent intent = new Intent();
             intent.setAction(Constants.INVALIDATE_ACTION);
+            intent.setPackage(getPackageName());
             sendBroadcast(intent);
         });
 
