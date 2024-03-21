@@ -1,6 +1,7 @@
 package ie.delilahsthings.soothingloop;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.widget.SeekBar;
@@ -56,7 +57,7 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
         }
     }
 
-    public static void fadeOut(long smearLength)
+    public static void fadeOut(long smearLength, Context context)
     {
         long sleepCount = smearLength/50;
 
@@ -83,6 +84,10 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
         soundPool.release();
         soundPool=new SoundPool(SoundEffectVolumeManager.MAX_STREAMS, AudioManager.STREAM_MUSIC,0);
         cache=new HashMap<>();
+
+        Intent intent = new Intent(Constants.INVALIDATE_ACTION);
+        intent.setPackage(context.getPackageName());
+        context.sendBroadcast(intent);
     }
 
     @Override

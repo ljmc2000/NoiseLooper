@@ -377,6 +377,7 @@ public class MainActivity extends AppCompatActivity {
         BroadcastReceiver onNoiseListChange = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                populateNoiselist();
                 populateCustomNoiselist();
             }
         };
@@ -506,8 +507,21 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (NullPointerException e) {
         }
-        SoundEffectVolumeManager.fadeOut(3000);
-        populateNoiselist();
-        populateCustomNoiselist();
+
+        FadeOutThread fadeOutThread = new FadeOutThread(this);
+        fadeOutThread.start();
+    }
+
+   static class FadeOutThread extends Thread{
+        private Context context;
+        public FadeOutThread(Context context)
+        {
+            this.context=context;
+        }
+        @Override
+        public void run()
+        {
+            SoundEffectVolumeManager.fadeOut(3000, context);
+        }
     }
 }
