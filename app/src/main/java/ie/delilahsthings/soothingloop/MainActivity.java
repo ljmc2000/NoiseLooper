@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         registerBroadcastReceivers();
 
-        SleepTimerThread.get().subscribe(this);
+        SleepTimerThread.subscribe(this);
 
         if(settings.getBoolean(Constants.LOAD_DEFAULT_ON_START,false))
         {
@@ -347,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(R.string.sleep_timer);
         builder.setView(view);
-        builder.setPositiveButton(R.string.confirm, (dialogInterface, i) -> SleepTimerThread.get().setTime(timerInput.getSeconds()));
+        builder.setPositiveButton(R.string.confirm, (dialogInterface, i) -> SleepTimerThread.setTime(timerInput.getSeconds()));
         builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
         builder.show();
     }
