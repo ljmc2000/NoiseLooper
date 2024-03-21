@@ -70,6 +70,8 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
             for (SoundEffectVolumeManager manager : cache.values()) {
                 if (manager.playbackId != 0) {
                     manager.volumeF-=manager.smearStep;
+                    if(manager.volumeF<0)
+                        manager.volumeF=0;
                     soundPool.setVolume(manager.playbackId, manager.volumeF, manager.volumeF);
                 }
             }
