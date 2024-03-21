@@ -11,9 +11,11 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
 
     final static int MAX_STREAMS=32;
     private int playbackId=0;
+    private float volumeF, smearStep;
     private int soundPoolIndex;
+
     private static Runnable onPlayCallback;
-    private static SoundPool soundPool=new SoundPool(SoundEffectVolumeManager.MAX_STREAMS, AudioManager.STREAM_MUSIC,0);;
+    private static SoundPool soundPool=new SoundPool(SoundEffectVolumeManager.MAX_STREAMS, AudioManager.STREAM_MUSIC,0);
     private static HashMap<String,SoundEffectVolumeManager> cache = new HashMap<>();
     public static boolean EVER_PLAYED=false;
 
@@ -54,9 +56,38 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
         }
     }
 
+    public static void fadeOut(long smearLength)
+    {
+        long sleepCount = smearLength/50;
+
+        for(SoundEffectVolumeManager manager: cache.values())
+        {
+            manager.smearStep=manager.volumeF/sleepCount;
+        }
+
+        for(int i=0; i<sleepCount; i++) {
+            for (SoundEffectVolumeManager manager : cache.values()) {
+                if (manager.playbackId != 0) {
+                    manager.volumeF-=manager.smearStep;
+                    soundPool.setVolume(manager.playbackId, manager.volumeF, manager.volumeF);
+                }
+            }
+            Util.sleep(50);
+        }
+
+        for(SoundEffectVolumeManager manager: cache.values())
+        {
+            manager.playbackId=0;
+        }
+
+        soundPool.release();
+        soundPool=new SoundPool(SoundEffectVolumeManager.MAX_STREAMS, AudioManager.STREAM_MUSIC,0);
+        cache=new HashMap<>();
+    }
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int volume, boolean z) {
-        float volumeF=volume/100f;
+        volumeF=volume/100f;
         if(playbackId==0) {
             if (volume != 0) {
                 for(int i=0; i<10; i++) {

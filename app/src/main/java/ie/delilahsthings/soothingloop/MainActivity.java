@@ -170,6 +170,8 @@ public class MainActivity extends AppCompatActivity {
 
     void populateNoiselist()
     {
+        stock_noise_list.removeAllViews();
+
         try {
             Resources r=getResources();
             String pkg = getPackageName();
@@ -342,7 +344,7 @@ public class MainActivity extends AppCompatActivity {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(R.string.sleep_timer);
         builder.setView(view);
-        builder.setPositiveButton(R.string.confirm, (dialogInterface, i) -> startSleepTimer(timerInput.getSeconds()));
+        builder.setPositiveButton(R.string.confirm, (dialogInterface, i) -> SleepTimerThread.get().setTime(timerInput.getSeconds()));
         builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
         builder.show();
     }
@@ -353,21 +355,20 @@ public class MainActivity extends AppCompatActivity {
         BroadcastReceiver sleepTimerEvent = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String title;
                 long remainingTime=intent.getLongExtra(Constants.REMAINING_TIME,0);
 
                 if(intent.getLongExtra(Constants.REMAINING_TIME,0)>0) {
                     String sep = getString(R.string.time_separator);
-                    title = String.format("%02d%s%02d%s%02d",
+                    String title = String.format("%02d%s%02d%s%02d",
                             remainingTime / 3600, sep,
                             remainingTime / 60 % 60, sep,
                             remainingTime % 60, 0);
+                    getSupportActionBar().setTitle(title);
                 }
                 else {
-                    title=getString(R.string.app_name);
-                    silenceAll();
+                    getSupportActionBar().setTitle(R.string.app_name);
+                    fadeOut();
                 }
-                getSupportActionBar().setTitle(title);
             }
         };
         registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT));
@@ -475,7 +476,9 @@ public class MainActivity extends AppCompatActivity {
             pausedSounds.putBoolean(Constants.ANY_PLAYING, false);
         }
 
-        SeekBar v;
+        SeekBar v = new SeekBar(this);
+        SoundEffectVolumeManager.stopAll(v);
+
 
         for(LinearLayout noise_list: noise_lists) {
             for (int i = 0; i < noise_list.getChildCount(); i++) {
@@ -485,13 +488,26 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
-        SoundEffectVolumeManager.stopAll(new SeekBar(this));
     }
 
-    void startSleepTimer (long timeout)
+    void fadeOut()
     {
-        SleepTimerThread timer = SleepTimerThread.get();
-        timer.setTime(timeout);
+        Toolbar mainToolbar = findViewById(R.id.main_toolbar);
+        Menu mainMenu = mainToolbar.getMenu();
+        MenuItem playPauseButton;
+        try {
+            playPauseButton = mainMenu.findItem(R.id.play_pause_button);
+            if(pausedSounds.getBoolean(Constants.ANY_PLAYING,true)) {
+                saveState(pausedSounds);
+                playPauseButton.setIcon(R.drawable.play_triangle);
+                playPauseButton.setTitle(R.string.resume_button_label);
+                pausedSounds.putBoolean(Constants.ANY_PLAYING, false);
+            }
+        }
+        catch (NullPointerException e) {
+        }
+        SoundEffectVolumeManager.fadeOut(3000);
+        populateNoiselist();
+        populateCustomNoiselist();
     }
 }
