@@ -7,6 +7,7 @@
 
     <style name="AlertDialogTheme" parent="Theme.Material3.DayNight.Dialog.Alert">
         <item name="buttonBarNegativeButtonStyle">@style/alertButtonStyle</item>
+        <item name="buttonBarNeutralButtonStyle">@style/alertButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/alertButtonStyle</item>
     </style>
 
