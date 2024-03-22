@@ -26,6 +26,7 @@ public class SleepTimerThread  extends Thread{
 
         do {
             remainingTime = getRemainingTime();
+
             if (context != null) {
                 intent = new Intent(Constants.TIMER_EVENT);
                 intent.putExtra(Constants.REMAINING_TIME, remainingTime/1000);
@@ -33,11 +34,20 @@ public class SleepTimerThread  extends Thread{
                 context.sendBroadcast(intent);
             }
 
-            Util.sleep(500);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                return;
+            }
 
         } while(remainingTime>=0);
 
         singleton=null;
+    }
+
+    public static boolean isRunning()
+    {
+        return singleton!=null;
     }
 
     public static synchronized void setTime(long timeoutInSeconds)
@@ -50,6 +60,12 @@ public class SleepTimerThread  extends Thread{
         else {
             singleton.endTime=System.currentTimeMillis()+(1000*timeoutInSeconds);
         }
+    }
+
+    public static synchronized void stopSleepTimer()
+    {
+        singleton.interrupt();
+        singleton=null;
     }
 
     public static synchronized void subscribe(Context context)

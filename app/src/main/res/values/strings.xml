@@ -8,6 +8,7 @@
     <string name="load">Load</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="stop">Stop</string>
     <string name="save_default">Save Default Profile</string>
     <string name="load_default">Load Default Profile</string>
     <string name="save_custom">Save Custom Profile</string>

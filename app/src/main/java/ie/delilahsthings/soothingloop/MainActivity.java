@@ -349,6 +349,14 @@ public class MainActivity extends AppCompatActivity {
         builder.setView(view);
         builder.setPositiveButton(R.string.confirm, (dialogInterface, i) -> SleepTimerThread.setTime(timerInput.getSeconds()));
         builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
+        if(SleepTimerThread.isRunning())
+        {
+            builder.setNeutralButton(R.string.stop, (dialogInterface,i)->{
+                SleepTimerThread.stopSleepTimer();
+                getSupportActionBar().setTitle(R.string.app_name);
+            });
+        }
+
         builder.show();
     }
 
