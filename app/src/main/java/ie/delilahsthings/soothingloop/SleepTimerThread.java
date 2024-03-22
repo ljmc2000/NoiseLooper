@@ -13,8 +13,13 @@ public class SleepTimerThread  extends Thread{
     {
     }
 
+    private synchronized void updateTimer()
+    {
+        remainingTime--;
+    }
+
     @Override
-    public synchronized void run()
+    public void run()
     {
         Intent intent;
 
@@ -26,7 +31,7 @@ public class SleepTimerThread  extends Thread{
                 context.sendBroadcast(intent);
             }
 
-            remainingTime--;
+            updateTimer();
             Util.sleep(1000);
         }
 
@@ -45,7 +50,7 @@ public class SleepTimerThread  extends Thread{
         }
     }
 
-    public static void subscribe(Context context)
+    public static synchronized void subscribe(Context context)
     {
         SleepTimerThread.context=context;
     }
