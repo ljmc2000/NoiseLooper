@@ -1,0 +1,3 @@
+* Menu item for sleep timer now says "set sleep timer" to imply it's idempotence
+* Fixed problem where sounds that are fading out suddenly return to full volume
+* Optimized sleep timer thread to only run when needed
