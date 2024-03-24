@@ -55,6 +55,7 @@
 
 
     <string name="autoload_default_profile">Load default profile on launch?</string>
+    <string name="enable_extra_sounds">Show sounds with known issues?</string>
     <string name="edit_profiles">Custom Profiles</string>
     <string name="confirm_delete_profile">Confirm deletion of profile "%s"?</string>
     <string name="confirm_delete_custom_sound">Confirm deletion of sound "%s"?</string>

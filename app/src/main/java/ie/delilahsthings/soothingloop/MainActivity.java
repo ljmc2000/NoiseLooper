@@ -175,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
             Resources r=getResources();
             String pkg = getPackageName();
             String id;
+            boolean ENABLE_EXTRAS = settings.getBoolean(Constants.EXTRA_NOISES, false);
 
             InputStream creditsFile = getResources().openRawResource(R.raw.credits);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -191,6 +192,8 @@ public class MainActivity extends AppCompatActivity {
             for(int i=0; i<sounds.getLength(); i++) {
                 node = (Element) sounds.item(i);
                 id=node.getAttribute("id");
+                if(node.hasAttribute("hide") && !ENABLE_EXTRAS)
+                    continue;
                 switch(node.getAttribute("class"))
                 {
                     case "anti_sound":

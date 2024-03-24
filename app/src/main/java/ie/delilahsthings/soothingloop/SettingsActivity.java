@@ -40,6 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
         this.settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
 
         CheckboxBooleanToggle.build(settings, Constants.LOAD_DEFAULT_ON_START, findViewById(R.id.toggle_autostart));
+        CheckboxBooleanToggle.build(settings, Constants.EXTRA_NOISES, findViewById(R.id.toggle_extra_sounds), this::invalidateMainActivity);
 
         populateCustomProfiles();
         populateCustomSounds();
@@ -63,10 +64,7 @@ public class SettingsActivity extends AppCompatActivity {
             image.setOnClickListener((v)->promptDeleteCustomSound(view, sound.name));
 
             customSoundsView.addView(view);
-            Intent intent = new Intent();
-            intent.setAction(Constants.INVALIDATE_ACTION);
-            intent.setPackage(getPackageName());
-            sendBroadcast(intent);
+            invalidateMainActivity();
         }
         catch (IOException e)
         {
@@ -75,6 +73,14 @@ public class SettingsActivity extends AppCompatActivity {
         catch (NullPointerException e)
         {
         }
+    }
+
+    void invalidateMainActivity()
+    {
+        Intent intent = new Intent();
+        intent.setAction(Constants.INVALIDATE_ACTION);
+        intent.setPackage(getPackageName());
+        sendBroadcast(intent);
     }
 
     void populateCustomProfiles()
