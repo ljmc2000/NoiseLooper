@@ -39,9 +39,8 @@ public class SettingsActivity extends AppCompatActivity {
         this.getNewSound=registerForActivityResult(new ActivityResultContracts.GetContent(), (uri)->addCustomSound(uri));
         this.settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
 
-        CheckBox loadOnStart = ((CheckBox)findViewById(R.id.toggle_autostart));
-        loadOnStart.setChecked(settings.getBoolean(Constants.LOAD_DEFAULT_ON_START, false));
-        loadOnStart.setOnCheckedChangeListener((box,checked)->toggleLoadDefaultOnStart(box,checked));
+        CheckboxBooleanToggle.build(settings, Constants.LOAD_DEFAULT_ON_START, findViewById(R.id.toggle_autostart));
+
         populateCustomProfiles();
         populateCustomSounds();
     }
@@ -146,20 +145,5 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         builder.show();
-    }
-
-    public void toggleLoadDefaultOnStart(CompoundButton box, boolean checked)
-    {
-        SharedPreferences.Editor editor=settings.edit();
-        editor.putBoolean(Constants.LOAD_DEFAULT_ON_START,checked);
-        editor.commit();
-    }
-
-    public void toggleLoadDefaultOnStart(View sender)
-    {
-        CompoundButton box = sender.findViewById(R.id.toggle_autostart);
-        boolean checked = !box.isChecked();
-        box.toggle();
-        toggleLoadDefaultOnStart(box,checked);
     }
 }
