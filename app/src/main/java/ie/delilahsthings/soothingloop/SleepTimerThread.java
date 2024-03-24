@@ -5,8 +5,6 @@ import android.content.Intent;
 
 public class SleepTimerThread  extends Thread{
     static SleepTimerThread singleton = null;
-
-    public static volatile Context context;
     private volatile long endTime=-1;
 
     private SleepTimerThread()
@@ -23,9 +21,11 @@ public class SleepTimerThread  extends Thread{
     {
         Intent intent;
         long remainingTime;
+        Context context;
 
         do {
             remainingTime = getRemainingTime();
+            context=StaticContext.getAppContext();
 
             if (context != null) {
                 intent = new Intent(Constants.TIMER_EVENT);
@@ -67,10 +67,4 @@ public class SleepTimerThread  extends Thread{
         singleton.interrupt();
         singleton=null;
     }
-
-    public static synchronized void subscribe(Context context)
-    {
-        SleepTimerThread.context=context;
-    }
-
 }

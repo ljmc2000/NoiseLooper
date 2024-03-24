@@ -73,8 +73,6 @@ public class MainActivity extends AppCompatActivity {
 
         registerBroadcastReceivers();
 
-        SleepTimerThread.subscribe(this);
-
         if(settings.getBoolean(Constants.LOAD_DEFAULT_ON_START,false))
         {
             loadProfile(defaultProfile);
