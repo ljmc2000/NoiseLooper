@@ -34,7 +34,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/toggle_extra_sounds"
+            android:id="@+id/toggle_problem_sounds"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/enable_extra_sounds"
+                android:text="@string/disable_problem_sounds"
                 style="@style/largeText"/>
 
             <CheckBox

@@ -5,7 +5,7 @@ public abstract class Constants {
     public final static String APP_SETTINGS = "app_settings";
     public final static String CUSTOM_NOISE_PREFIX = "custom_";
     public final static String DEFAULT_PROFILE = "default";
-    public final static String EXTRA_NOISES = "enable_extra_noises";
+    public final static String DISABLE_PROBLEM_SOUNDS = "hide_problem_sounds";
     public final static String INVALIDATE_ACTION = "ie.delilahsthings.soothingloop.invalidate_custom";
     public final static String LOAD_DEFAULT_ON_START = "load_default_on_start";
     public static final int ONE_MEGABYTE = 1024*1024;

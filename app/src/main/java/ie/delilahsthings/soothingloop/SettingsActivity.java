@@ -40,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
         this.settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
 
         CheckboxBooleanToggle.build(settings, Constants.LOAD_DEFAULT_ON_START, findViewById(R.id.toggle_autostart));
-        CheckboxBooleanToggle.build(settings, Constants.EXTRA_NOISES, findViewById(R.id.toggle_extra_sounds), this::invalidateMainActivity);
+        CheckboxBooleanToggle.build(settings, Constants.DISABLE_PROBLEM_SOUNDS, findViewById(R.id.toggle_problem_sounds), this::invalidateMainActivity);
 
         populateCustomProfiles();
         populateCustomSounds();
