@@ -2,10 +2,10 @@ Intended to be an android port of <a href="https://github.com/rafaelmardojai/bla
 
 Features:
 <ul>
-	<li>Play any combination of more than 12 calming noises on loop mixed at volumes of your chosing</li>
+	<li>Play any combination of 15 calming noises on loop mixed at volumes of your chosing</li>
 	<li>Import custom audio assets</li>
 	<li>Save your favorite combinations and load them later</li>
-	<li>Start a default profile on launch (optional)</li>
+	<li>Start default profile on launch (optional)</li>
 	<li>Set a sleep timer and have all noises fade out after a delay</li>
 </ul>
 
