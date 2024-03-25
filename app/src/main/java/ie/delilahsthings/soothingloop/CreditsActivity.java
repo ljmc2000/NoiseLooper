@@ -100,19 +100,22 @@ public class CreditsActivity extends AppCompatActivity {
             icon = node.getAttribute("icon");
             license = node.getAttribute("license");
 
-            item=credits.createElement(A);
-            item.setTextContent(getString(nameId));
-            item.setAttribute(HREF,node.getAttribute("source"));
+            item=credits.createElement(DIV);
+            header=credits.createElement(A);
+            header.setTextContent(getString(nameId));
+            header.setAttribute(HREF,node.getAttribute("source"));
+            item.setAttribute(CLASS,"block");
+            item.appendChild(header);
             body.appendChild(item);
 
             if (!author.isEmpty())
-                doubleIndent(credits, body, Author+author);
+                doubleIndent(credits, item, Author+author);
             if (!editor.isEmpty())
-                doubleIndent(credits, body, Editor+editor);
+                doubleIndent(credits, item, Editor+editor);
             if (!icon.isEmpty())
-                doubleIndent(credits, body, Icon+icon);
+                doubleIndent(credits, item, Icon+icon);
             if (!license.isEmpty())
-                doubleIndent(credits, body, License+license);
+                doubleIndent(credits, item, License+license);
         }
 
         return getStringFromDocument(credits);
