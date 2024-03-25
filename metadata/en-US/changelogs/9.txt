@@ -1,4 +1,4 @@
+* All sounds cropped to 6 seconds or less (the application can only play 6 seconds of a sound anyway). This should drastically reduce the install size on disk.
 * The sleep timer is now syncronized to the system clock (before it would have been inaccurate by at least a millisecond on every second)
 * The sleep timer can now be canceled
 * The credits screen is now a webview with hyperlinks to download all included sounds
-* Added option to hide sounds that are known to loop badly
