@@ -49,6 +49,13 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
         }
     }
 
+    public static void unload(String sound) {
+        SoundEffectVolumeManager manager = cache.get(sound);
+        soundPool.stop(manager.playbackId);
+        soundPool.unload(manager.soundPoolIndex);
+        cache.remove(sound);
+    }
+
     public static void stopAll()
     {
         for(SoundEffectVolumeManager manager: cache.values())

@@ -133,6 +133,7 @@ public class SettingsActivity extends AppCompatActivity {
             customSoundsView.removeView(sender);
             Intent intent = new Intent();
             intent.setAction(Constants.INVALIDATE_ACTION);
+            intent.putExtra(Constants.NOISE_TO_REMOVE,sound);
             intent.setPackage(getPackageName());
             sendBroadcast(intent);
         });
