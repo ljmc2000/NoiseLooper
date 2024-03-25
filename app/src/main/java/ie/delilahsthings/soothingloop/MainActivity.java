@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     {
         custom_noise_list.removeAllViews();
 
-        String[] customNoises = ProfileManager.listCustomSounds(this);
+        String[] customNoises = ProfileManager.listCustomSounds();
         if(customNoises.length==0)
         {
             return;
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
             TextView noiseName = view.findViewById(R.id.noise_name);
             noiseName.setText(sound);
             SeekBar volume = view.findViewById(R.id.volume);
-            SoundEffectVolumeManager manager=SoundEffectVolumeManager.get(ProfileManager.getSoundPath(this)+sound);
+            SoundEffectVolumeManager manager=SoundEffectVolumeManager.get(ProfileManager.getSoundPath()+sound);
             volume.setOnSeekBarChangeListener(manager);
             volume.setTag(R.string.persist_key,Constants.CUSTOM_NOISE_PREFIX+sound);
         }
@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
     public void promptLoadCustomProfile(MenuItem sender)
     {
         Spinner spinner = new Spinner(this);
-        String profiles[] = ProfileManager.listProfiles(this);
+        String profiles[] = ProfileManager.listProfiles();
         if(profiles.length!=0) {
             ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, profiles);
             spinner.setAdapter(spinnerArrayAdapter);
@@ -393,7 +393,7 @@ public class MainActivity extends AppCompatActivity {
                 populateCustomNoiselist();
                 String noise_to_remove = intent.getStringExtra(Constants.NOISE_TO_REMOVE);
                 if(noise_to_remove!=null)
-                    SoundEffectVolumeManager.unload(ProfileManager.getSoundPath(context)+noise_to_remove);
+                    SoundEffectVolumeManager.unload(ProfileManager.getSoundPath()+noise_to_remove);
                 loadState(pausedSounds);
             }
         };

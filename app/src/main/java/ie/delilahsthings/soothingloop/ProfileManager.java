@@ -29,26 +29,26 @@ public abstract class ProfileManager {
 
     final private static Pattern profileNameValidationPattern = Pattern.compile("\\s*(.*[\\S])\\s*");
 
-    static String getProfilePath(Context context)
+    static String getProfilePath()
     {
-        return Environment.getDataDirectory().getPath()+DATA+context.getPackageName()+SHARED_PREFS;
+        return Environment.getDataDirectory().getPath()+DATA+StaticContext.getAppContext().getPackageName()+SHARED_PREFS;
     }
 
-    static String getSoundPath(Context context)
+    static String getSoundPath()
     {
-        return Environment.getDataDirectory().getPath()+DATA+context.getPackageName()+CUSTOM_SOUNDS;
+        return Environment.getDataDirectory().getPath()+DATA+StaticContext.getAppContext().getPackageName()+CUSTOM_SOUNDS;
     }
 
-    public static boolean deleteProfile(Context context, String profile)
+    public static boolean deleteProfile(String profile)
     {
-        String path = getProfilePath(context)+prefix+profile+suffix;
+        String path = getProfilePath()+prefix+profile+suffix;
         return new File(path).delete();
     }
 
-    public static String[] listProfiles(Context context)
+    public static String[] listProfiles()
     {
         ArrayList<String> files = new ArrayList();
-        String path = getProfilePath(context);
+        String path = getProfilePath();
         for(String file: new File(path).list()) {
             if (file.startsWith(ProfileManager.prefix))
                 files.add(file.substring(ProfileManager.prefix_length, file.length() - ProfileManager.suffix_length));
@@ -56,9 +56,10 @@ public abstract class ProfileManager {
         return files.toArray(new String[0]);
     }
 
-    public static AddedSoundResult addCustomSound(Context context, Uri uri) throws IOException {
+    public static AddedSoundResult addCustomSound(Uri uri) throws IOException {
+        Context context=StaticContext.getAppContext();
         AddedSoundResult result=new AddedSoundResult();
-        String path = getSoundPath(context);
+        String path = getSoundPath();
         File dir = new File(path);
         dir.mkdirs();
 
@@ -70,15 +71,15 @@ public abstract class ProfileManager {
         return result;
     }
 
-    public static boolean deleteCustomSound(Context context, String sound)
+    public static boolean deleteCustomSound(String sound)
     {
-        String path = getSoundPath(context)+sound;
+        String path = getSoundPath()+sound;
         return new File(path).delete();
     }
 
-    public static String[] listCustomSounds(Context context)
+    public static String[] listCustomSounds()
     {
-        String path = getSoundPath(context);
+        String path = getSoundPath();
         File dir = new File(path);
         dir.mkdirs();
         return dir.list();

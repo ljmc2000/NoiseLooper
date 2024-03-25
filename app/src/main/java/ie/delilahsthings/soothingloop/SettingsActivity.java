@@ -49,7 +49,7 @@ public class SettingsActivity extends AppCompatActivity {
     void addCustomSound(Uri uri)
     {
         try {
-            ProfileManager.AddedSoundResult sound=ProfileManager.addCustomSound(this,uri);
+            ProfileManager.AddedSoundResult sound=ProfileManager.addCustomSound(uri);
 
             if(sound.size>Constants.ONE_MEGABYTE)
             {
@@ -88,7 +88,7 @@ public class SettingsActivity extends AppCompatActivity {
         TextView text;
         ImageView image;
 
-        for(String profileName: ProfileManager.listProfiles(this)) {
+        for(String profileName: ProfileManager.listProfiles()) {
             ViewGroup view = new LinearLayout(this);
             View.inflate(this, R.layout.profile_config_item, view);
             text=view.findViewById(R.id.title);
@@ -105,7 +105,7 @@ public class SettingsActivity extends AppCompatActivity {
         TextView text;
         ImageView image;
 
-        for(String sound: ProfileManager.listCustomSounds(this))
+        for(String sound: ProfileManager.listCustomSounds())
         {
             ViewGroup view = new LinearLayout(this);
             View.inflate(this, R.layout.profile_config_item, view);
@@ -129,7 +129,7 @@ public class SettingsActivity extends AppCompatActivity {
         builder.setTitle(String.format(getString(R.string.confirm_delete_custom_sound),sound));
         builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
         builder.setPositiveButton(getString(R.string.confirm),(dialogInterface, i) -> {
-            ProfileManager.deleteCustomSound(this,sound);
+            ProfileManager.deleteCustomSound(sound);
             customSoundsView.removeView(sender);
             Intent intent = new Intent();
             intent.setAction(Constants.INVALIDATE_ACTION);
@@ -147,7 +147,7 @@ public class SettingsActivity extends AppCompatActivity {
         builder.setTitle(String.format(getString(R.string.confirm_delete_profile),profileName));
         builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
         builder.setPositiveButton(getString(R.string.confirm),(dialogInterface, i) -> {
-            ProfileManager.deleteProfile(this,profileName);
+            ProfileManager.deleteProfile(profileName);
             profilesView.removeView(sender);
         });
 
