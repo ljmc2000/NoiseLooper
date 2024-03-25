@@ -388,13 +388,18 @@ public class MainActivity extends AppCompatActivity {
         BroadcastReceiver onNoiseListChange = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                saveState(pausedSounds);
+                boolean restoreVolumes = intent.getBooleanExtra(Constants.RESTORE_VOLUMES,false);
+
+                if(restoreVolumes)
+                    saveState(pausedSounds);
+
                 populateNoiselist();
                 populateCustomNoiselist();
                 String noise_to_remove = intent.getStringExtra(Constants.NOISE_TO_REMOVE);
                 if(noise_to_remove!=null)
                     SoundEffectVolumeManager.unload(ProfileManager.getSoundPath()+noise_to_remove);
-                loadState(pausedSounds);
+                if(restoreVolumes)
+                    loadState(pausedSounds);
             }
         };
 

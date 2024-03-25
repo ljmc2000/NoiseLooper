@@ -79,6 +79,7 @@ public class SettingsActivity extends AppCompatActivity {
     {
         Intent intent = new Intent();
         intent.setAction(Constants.INVALIDATE_ACTION);
+        intent.putExtra(Constants.RESTORE_VOLUMES,true);
         intent.setPackage(getPackageName());
         sendBroadcast(intent);
     }
@@ -134,6 +135,7 @@ public class SettingsActivity extends AppCompatActivity {
             Intent intent = new Intent();
             intent.setAction(Constants.INVALIDATE_ACTION);
             intent.putExtra(Constants.NOISE_TO_REMOVE,sound);
+            intent.putExtra(Constants.RESTORE_VOLUMES,true);
             intent.setPackage(getPackageName());
             sendBroadcast(intent);
         });

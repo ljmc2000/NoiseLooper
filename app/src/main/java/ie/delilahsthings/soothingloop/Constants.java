@@ -11,5 +11,6 @@ public abstract class Constants {
     public final static String NOISE_TO_REMOVE = "noise_to_remove";
     public static final int ONE_MEGABYTE = 1024*1024;
     public static final String REMAINING_TIME = "remaining_time";
+    public static final String RESTORE_VOLUMES = "restore_volumes";
     public final static String TIMER_EVENT = "ie.delilahsthings.soothingloop.timer_event";
 }
