@@ -2,3 +2,4 @@
 * The sleep timer is now syncronized to the system clock (before it would have been inaccurate by at least a millisecond on every second)
 * The sleep timer can now be canceled
 * The credits screen is now a webview with hyperlinks to download all included sounds
+* Sounds are unloaded when removed from the custom list which should prevent the soundpool from hitting it's limit if a user repeatedly adds and removes custom sounds.
