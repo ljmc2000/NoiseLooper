@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.NoiseLooper" parent="Base.Theme.NoiseLooper.NoiseLooperAbstract">
         <item name="colorPrimary">#FDA2FF</item>
-        <item name="android:colorBackground">#FDF6E3</item>
+        <item name="android:colorBackground">@color/bg_color_light</item>
     </style>
 
     <style name="alertButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
