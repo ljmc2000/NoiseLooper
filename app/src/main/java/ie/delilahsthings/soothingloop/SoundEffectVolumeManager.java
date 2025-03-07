@@ -7,12 +7,13 @@ import android.media.SoundPool;
 import android.widget.SeekBar;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener {
 
     final static int MAX_STREAMS=32;
     private int playbackId=0;
-    private float volumeF, smearStep;
+    private float volumeF;
     private int soundPoolIndex;
 
     private static Runnable onPlayCallback;
@@ -70,19 +71,14 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
 
     public static void fadeOut(long smearLength, Context context)
     {
-        long sleepCount = smearLength/50;
+        long finishAt = System.currentTimeMillis()+smearLength;
+        float timeRemaining;
 
-        for(SoundEffectVolumeManager manager: cache.values())
-        {
-            manager.smearStep=manager.volumeF/sleepCount;
-        }
-
-        for(int i=0; i<sleepCount; i++) {
-            for (SoundEffectVolumeManager manager : cache.values()) {
+        while(System.currentTimeMillis()<finishAt) {
+            timeRemaining = finishAt - System.currentTimeMillis();
+            for (SoundEffectVolumeManager manager: cache.values()) {
                 if (manager.playbackId != 0) {
-                    manager.volumeF-=manager.smearStep;
-                    if(manager.volumeF<0)
-                        manager.volumeF=0;
+                    manager.volumeF=timeRemaining/smearLength;
                     soundPool.setVolume(manager.playbackId, manager.volumeF, manager.volumeF);
                 }
             }
