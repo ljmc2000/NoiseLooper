@@ -132,6 +132,8 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
     static class FadeOutThread extends Thread{
         private Context context;
         private long smearLength;
+
+        Intent afterFadeout;
         public FadeOutThread(Context context, long smearLength)
         {
             this.context=context;
@@ -140,6 +142,8 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
         @Override
         public void run()
         {
+            afterFadeout = new Intent(Constants.FADEOUT_ACTION);
+            afterFadeout.setPackage(context.getPackageName());
             long finishAt = System.currentTimeMillis()+smearLength;
             float timeRemaining;
 
@@ -156,6 +160,8 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
                 }
             }
             catch (InterruptedException ex) {
+                afterFadeout.putExtra(Constants.FADEOUT_INTERRUPTED, true);
+                context.sendBroadcast(afterFadeout);
                 return;
             }
 
@@ -167,9 +173,7 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
                 }
             }
 
-            Intent intent = new Intent(Constants.INVALIDATE_ACTION);
-            intent.setPackage(context.getPackageName());
-            context.sendBroadcast(intent);
+            context.sendBroadcast(afterFadeout);
         }
     }
 }
