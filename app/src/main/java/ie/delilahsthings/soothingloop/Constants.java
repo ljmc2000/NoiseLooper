@@ -6,6 +6,7 @@ public abstract class Constants {
     public final static String CUSTOM_NOISE_PREFIX = "custom_";
     public final static String DEFAULT_PROFILE = "default";
     public final static String DISABLE_PROBLEM_SOUNDS = "hide_problem_sounds";
+    public static final String FADEOUT_DURATION = "fadeout_duration";
     public final static String INVALIDATE_ACTION = "ie.delilahsthings.soothingloop.invalidate_custom";
     public final static String LOAD_DEFAULT_ON_START = "load_default_on_start";
     public final static String NOISE_TO_REMOVE = "noise_to_remove";

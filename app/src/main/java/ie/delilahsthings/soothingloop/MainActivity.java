@@ -538,6 +538,6 @@ public class MainActivity extends AppCompatActivity {
         catch (NullPointerException e) {
         }
 
-        SoundEffectVolumeManager.fadeOut(this, 3000);
+        SoundEffectVolumeManager.fadeOut(this, settings.getInt(Constants.FADEOUT_DURATION, 3)*1000);
     }
 }

@@ -5,10 +5,12 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Pair;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,6 +43,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         CheckboxBooleanToggle.build(settings, Constants.LOAD_DEFAULT_ON_START, findViewById(R.id.toggle_autostart));
         CheckboxBooleanToggle.build(settings, Constants.DISABLE_PROBLEM_SOUNDS, findViewById(R.id.toggle_problem_sounds), this::invalidateMainActivity);
+        EditText sleepTimerDuration = this.findViewById(R.id.sleep_timer_duration);
+        sleepTimerDuration.setText(Integer.toString(settings.getInt(Constants.FADEOUT_DURATION, 3)));
+        sleepTimerDuration.setOnKeyListener(new DurationChangeListener());
 
         populateCustomProfiles();
         populateCustomSounds();
@@ -154,5 +159,25 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    private class DurationChangeListener implements View.OnKeyListener {
+
+        @Override
+        public boolean onKey(View view, int i, KeyEvent keyEvent) {
+            EditText editText = (EditText) view;
+            try {
+                int duration = Integer.parseInt(editText.getText().toString());
+                if (duration >= 0) {
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putInt(Constants.FADEOUT_DURATION, duration);
+                    editor.commit();
+                }
+            }
+            catch (NumberFormatException ex) {
+
+            }
+            return false;
+        }
     }
 }
