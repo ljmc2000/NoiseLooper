@@ -11,15 +11,23 @@ import android.widget.TextView;
 
 public class TimerInput {
 
+    private TimerCallback callback;
     private Context context;
+    private long originalValue;
     private View parentView;
     private TextView hoursInput, minutesInput, secondsInput;
     private EditText realTimeInput;
 
-    public TimerInput(Context context, View view)
+    public TimerInput(Context context, View view) {
+        this(context, view, null, 0);
+    }
+
+    public TimerInput(Context context, View view, TimerCallback callback, long originalValue)
     {
         this.context=context;
         this.parentView=view;
+        this.callback=callback;
+        this.originalValue=originalValue;
 
         hoursInput = view.findViewById(R.id.hours_input);
         minutesInput = view.findViewById(R.id.minutes_input);
@@ -30,6 +38,7 @@ public class TimerInput {
         minutesInput.setOnFocusChangeListener(focusPass);
         secondsInput.setOnFocusChangeListener(focusPass);
         realTimeInput.addTextChangedListener(onInput);
+        setSeconds(originalValue);
     }
 
     public long getSeconds()
@@ -60,6 +69,59 @@ public class TimerInput {
         return (3600*hours) + (60*minutes) + seconds;
     }
 
+    public void setSeconds(long value) {
+        if(value>0) {
+            secondsInput.setText(String.format("%02d", value % 60));
+        }
+        else {
+            secondsInput.setText("");
+        }
+        if(value>59) {
+            minutesInput.setText(String.format("%02d", ((value % 3600) / 60)));
+        }
+        else {
+            minutesInput.setText("");
+        }
+        if(value>3599) {
+            hoursInput.setText("" + (value / 3600));
+        }
+        else {
+            hoursInput.setText("");
+        }
+    }
+
+    public void setSeconds(String all) {
+        int all_l=all.length();
+
+        if(all_l==0) {
+            setSeconds(originalValue);
+            return;
+        }
+
+        String hours="", minutes="", seconds="";
+        if(all_l>4)
+        {
+            hours=all.substring(0,all_l-4);
+            minutes=all.substring(all_l-4,all_l-2);
+            seconds=all.substring(all_l-2);
+        }
+
+        else if(all_l>2)
+        {
+            minutes=all.substring(0,all_l-2);
+            seconds=all.substring(all_l-2);
+        }
+
+        else
+        {
+            seconds=all;
+        }
+
+        hoursInput.setText(hours);
+        minutesInput.setText(minutes);
+        secondsInput.setText(seconds);
+    }
+
     final View.OnFocusChangeListener focusPass = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean focused) {
@@ -80,30 +142,12 @@ public class TimerInput {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String all = realTimeInput.getText().toString();
-            int all_l=all.length();
+            setSeconds(all);
 
-            String hours="", minutes="", seconds="";
-            if(all_l>4)
-            {
-                hours=all.substring(0,all_l-4);
-                minutes=all.substring(all_l-4,all_l-2);
-                seconds=all.substring(all_l-2);
+            if(callback!=null) {
+                callback.setSeconds(getSeconds());
+                callback.run();
             }
-
-            else if(all_l>2)
-            {
-                minutes=all.substring(0,all_l-2);
-                seconds=all.substring(all_l-2);
-            }
-
-            else
-            {
-                seconds=all;
-            }
-
-            hoursInput.setText(hours);
-            minutesInput.setText(minutes);
-            secondsInput.setText(seconds);
         }
 
         @Override
@@ -111,4 +155,13 @@ public class TimerInput {
 
         }
     };
+
+    public static abstract class TimerCallback implements Runnable {
+        long seconds;
+        public abstract void run();
+
+        public void setSeconds(long seconds) {
+            this.seconds=seconds;
+        }
+    }
 }

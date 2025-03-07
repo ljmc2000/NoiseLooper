@@ -66,11 +66,11 @@
                 android:text="@string/sleep_timer_fade_duration"
                 style="@style/largeText"/>
 
-            <EditText
+            <include
+                layout="@layout/timespan_input"
                 android:id="@+id/sleep_timer_duration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 style="@style/largeText"/>
         </LinearLayout>
 
