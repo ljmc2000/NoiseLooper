@@ -63,6 +63,7 @@
                 android:id="@+id/fadeout_duration_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?colorPrimary"
                 android:text="@string/sleep_timer_fade_duration"
                 style="@style/largeText"/>
 
