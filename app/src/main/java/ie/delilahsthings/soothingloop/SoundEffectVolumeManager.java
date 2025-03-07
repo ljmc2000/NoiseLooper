@@ -7,7 +7,6 @@ import android.media.SoundPool;
 import android.widget.SeekBar;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener {
 
@@ -17,6 +16,7 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
     private int soundPoolIndex;
 
     private static Runnable onPlayCallback;
+    private static FadeOutThread fadeOutThread;
     private static SoundPool soundPool=new SoundPool(SoundEffectVolumeManager.MAX_STREAMS, AudioManager.STREAM_MUSIC,0);
     private static HashMap<String,SoundEffectVolumeManager> cache = new HashMap<>();
     public static boolean EVER_PLAYED=false;
@@ -59,6 +59,8 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
 
     public static void stopAll()
     {
+        abortFadeout();
+
         for(SoundEffectVolumeManager manager: cache.values())
         {
             if(manager.playbackId!=0)
@@ -69,37 +71,24 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
         }
     }
 
-    public static void fadeOut(long smearLength, Context context)
+    public static void abortFadeout() {
+        if(fadeOutThread!=null && fadeOutThread.isAlive()) {
+            fadeOutThread.interrupt();
+        }
+    }
+
+    public static void fadeOut(Context context, long smearLength)
     {
-        long finishAt = System.currentTimeMillis()+smearLength;
-        float timeRemaining;
+        abortFadeout();
 
-        while(System.currentTimeMillis()<finishAt) {
-            timeRemaining = finishAt - System.currentTimeMillis();
-            for (SoundEffectVolumeManager manager: cache.values()) {
-                if (manager.playbackId != 0) {
-                    manager.volumeF=timeRemaining/smearLength;
-                    soundPool.setVolume(manager.playbackId, manager.volumeF, manager.volumeF);
-                }
-            }
-            Util.sleep(50);
-        }
-
-        for(SoundEffectVolumeManager manager: cache.values())
-        {
-            if(manager.playbackId!=0) {
-                soundPool.stop(manager.playbackId);
-                manager.playbackId = 0;
-            }
-        }
-
-        Intent intent = new Intent(Constants.INVALIDATE_ACTION);
-        intent.setPackage(context.getPackageName());
-        context.sendBroadcast(intent);
+        fadeOutThread = new FadeOutThread(context, smearLength);
+        fadeOutThread.start();
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int volume, boolean z) {
+        abortFadeout();
+
         volumeF=volume/100f;
         if(playbackId==0) {
             if (volume != 0) {
@@ -138,5 +127,49 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+    static class FadeOutThread extends Thread{
+        private Context context;
+        private long smearLength;
+        public FadeOutThread(Context context, long smearLength)
+        {
+            this.context=context;
+            this.smearLength=smearLength;
+        }
+        @Override
+        public void run()
+        {
+            long finishAt = System.currentTimeMillis()+smearLength;
+            float timeRemaining;
+
+            try {
+                while (System.currentTimeMillis() < finishAt) {
+                    timeRemaining = finishAt - System.currentTimeMillis();
+                    for (SoundEffectVolumeManager manager : cache.values()) {
+                        if (manager.playbackId != 0) {
+                            manager.volumeF = timeRemaining / smearLength;
+                            soundPool.setVolume(manager.playbackId, manager.volumeF, manager.volumeF);
+                        }
+                    }
+                    Thread.sleep(50);
+                }
+            }
+            catch (InterruptedException ex) {
+                return;
+            }
+
+            for(SoundEffectVolumeManager manager: cache.values())
+            {
+                if(manager.playbackId!=0) {
+                    soundPool.stop(manager.playbackId);
+                    manager.playbackId = 0;
+                }
+            }
+
+            Intent intent = new Intent(Constants.INVALIDATE_ACTION);
+            intent.setPackage(context.getPackageName());
+            context.sendBroadcast(intent);
+        }
     }
 }

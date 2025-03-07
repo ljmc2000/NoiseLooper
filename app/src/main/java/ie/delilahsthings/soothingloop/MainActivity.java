@@ -538,20 +538,6 @@ public class MainActivity extends AppCompatActivity {
         catch (NullPointerException e) {
         }
 
-        FadeOutThread fadeOutThread = new FadeOutThread(this);
-        fadeOutThread.start();
-    }
-
-   static class FadeOutThread extends Thread{
-        private Context context;
-        public FadeOutThread(Context context)
-        {
-            this.context=context;
-        }
-        @Override
-        public void run()
-        {
-            SoundEffectVolumeManager.fadeOut(3000, context);
-        }
+        SoundEffectVolumeManager.fadeOut(this, 3000);
     }
 }
