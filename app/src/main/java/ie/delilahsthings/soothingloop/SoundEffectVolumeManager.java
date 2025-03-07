@@ -79,10 +79,10 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
 
     public static void fadeOut(Context context, long smearLength)
     {
-        abortFadeout();
-
-        fadeOutThread = new FadeOutThread(context, smearLength);
-        fadeOutThread.start();
+        if(fadeOutThread==null || !fadeOutThread.isAlive()) {
+            fadeOutThread = new FadeOutThread(context, smearLength);
+            fadeOutThread.start();
+        }
     }
 
     @Override
