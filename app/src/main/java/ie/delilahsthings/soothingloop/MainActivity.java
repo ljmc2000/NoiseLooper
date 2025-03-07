@@ -363,6 +363,15 @@ public class MainActivity extends AppCompatActivity {
 
     void registerBroadcastReceivers()
     {
+        BroadcastReceiver fadeoutEvent = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                boolean interrupted = intent.getBooleanExtra(Constants.FADEOUT_INTERRUPTED, false);
+                if(interrupted)
+                    silenceAll();
+            }
+        };
+
         //sleep timer
         BroadcastReceiver sleepTimerEvent = new BroadcastReceiver() {
             @Override
@@ -412,12 +421,14 @@ public class MainActivity extends AppCompatActivity {
         };
 
         if (Build.VERSION.SDK_INT >= 26) {
+            registerReceiver(fadeoutEvent, new IntentFilter(Constants.FADEOUT_ACTION), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(onAudioDeviceChange,new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY), Context.RECEIVER_EXPORTED);
         }
         else
         {
+            registerReceiver(fadeoutEvent, new IntentFilter(Constants.FADEOUT_ACTION));
             registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT));
             registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION));
             registerReceiver(onAudioDeviceChange,new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
@@ -538,20 +549,8 @@ public class MainActivity extends AppCompatActivity {
         catch (NullPointerException e) {
         }
 
-        FadeOutThread fadeOutThread = new FadeOutThread(this);
-        fadeOutThread.start();
-    }
-
-   static class FadeOutThread extends Thread{
-        private Context context;
-        public FadeOutThread(Context context)
-        {
-            this.context=context;
-        }
-        @Override
-        public void run()
-        {
-            SoundEffectVolumeManager.fadeOut(3000, context);
-        }
+        populateNoiselist();
+        populateCustomNoiselist();
+        SoundEffectVolumeManager.fadeOut(this, settings.getLong(Constants.FADEOUT_DURATION, 3)*1000);
     }
 }

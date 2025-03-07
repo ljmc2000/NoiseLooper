@@ -37,21 +37,42 @@
             android:id="@+id/toggle_problem_sounds"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
             android:orientation="horizontal"
-            android:visibility="gone"
-            android:clickable="true" >
+            android:visibility="gone">
 
             <TextView
+                style="@style/largeText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/disable_problem_sounds"
-                style="@style/largeText"/>
+                android:text="@string/disable_problem_sounds" />
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/fadeout_duration_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?colorPrimary"
+                android:text="@string/sleep_timer_fade_duration"
+                style="@style/largeText"/>
+
+            <include
+                layout="@layout/timespan_input"
+                android:id="@+id/sleep_timer_duration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/largeText"/>
         </LinearLayout>
 
         <TextView

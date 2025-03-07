@@ -1,0 +1,3 @@
+* Add setting to change how long it takes to fade out after the sleep timer times out as requested by "not-nocturnal". Fadeouts are tested up to 30 seconds. A multi hour fadeout may work. Say hi to the dragons for me
+* Altering any volume while fadeout is occuring should skip the rest of the fadeout
+* Altered the maths behind the fade out to not use steps
