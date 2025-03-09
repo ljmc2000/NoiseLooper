@@ -1,0 +1,4 @@
+* 1.0.6 and 1.0.8 should both by rights have been minor version bumps, so skipping a few versions to catch up
+* Allow user to adjust length of fadeout after sleep timer timeout
+* Altering volume of any noise while fadeout is occurring should skip the rest of the fadeout
+* Remove DependencyInfoBlock in compliance with updated fdroid policies
