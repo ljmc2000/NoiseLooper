@@ -13,7 +13,7 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
 
     final static int MAX_STREAMS=32;
     private int playbackId=0;
-    private float volumeF;
+    private float volumeF, fadeStart;
     private int soundPoolIndex;
 
     private static Runnable onPlayCallback;
@@ -150,19 +150,16 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
             float timeRemaining;
 
             HashMap<String, Float> startVolumes = new HashMap<>();
-            for (Map.Entry<String, SoundEffectVolumeManager> it : cache.entrySet()) {
-                startVolumes.put(it.getKey(), it.getValue().volumeF);
+            for (SoundEffectVolumeManager manager : cache.values()) {
+               manager.fadeStart=manager.volumeF;
             }
 
             try {
-                SoundEffectVolumeManager manager;
-
                 while (System.currentTimeMillis() < finishAt) {
                     timeRemaining = finishAt - System.currentTimeMillis();
-                    for (Map.Entry<String, SoundEffectVolumeManager> it : cache.entrySet()) {
-                        manager = it.getValue();
+                    for (SoundEffectVolumeManager manager : cache.values()) {
                         if (manager.playbackId != 0) {
-                            manager.volumeF = timeRemaining * startVolumes.get(it.getKey()) / smearLength;
+                            manager.volumeF = manager.fadeStart * (timeRemaining / smearLength);
                             soundPool.setVolume(manager.playbackId, manager.volumeF, manager.volumeF);
                         }
                     }
