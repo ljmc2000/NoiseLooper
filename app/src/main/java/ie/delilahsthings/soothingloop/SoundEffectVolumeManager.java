@@ -7,6 +7,7 @@ import android.media.SoundPool;
 import android.widget.SeekBar;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener {
 
@@ -144,15 +145,24 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
         {
             afterFadeout = new Intent(Constants.FADEOUT_ACTION);
             afterFadeout.setPackage(context.getPackageName());
+
             long finishAt = System.currentTimeMillis()+smearLength;
             float timeRemaining;
 
+            HashMap<String, Float> startVolumes = new HashMap<>();
+            for (Map.Entry<String, SoundEffectVolumeManager> it : cache.entrySet()) {
+                startVolumes.put(it.getKey(), it.getValue().volumeF);
+            }
+
             try {
+                SoundEffectVolumeManager manager;
+
                 while (System.currentTimeMillis() < finishAt) {
                     timeRemaining = finishAt - System.currentTimeMillis();
-                    for (SoundEffectVolumeManager manager : cache.values()) {
+                    for (Map.Entry<String, SoundEffectVolumeManager> it : cache.entrySet()) {
+                        manager = it.getValue();
                         if (manager.playbackId != 0) {
-                            manager.volumeF = timeRemaining / smearLength;
+                            manager.volumeF = timeRemaining * startVolumes.get(it.getKey()) / smearLength;
                             soundPool.setVolume(manager.playbackId, manager.volumeF, manager.volumeF);
                         }
                     }
