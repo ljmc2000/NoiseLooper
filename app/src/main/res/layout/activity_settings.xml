@@ -111,6 +111,8 @@
             android:layout_width="match_parent"
             android:layout_height="54sp"
             android:clickable="true"
+            android:contentDescription="@string/add_button"
+            android:focusable="true"
             android:onClick="promptAddCustomSound"
             app:srcCompat="@drawable/plus_sign" />
 

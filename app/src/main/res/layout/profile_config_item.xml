@@ -23,6 +23,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:clickable="true"
+            android:contentDescription="@string/export_button"
+            android:focusable="true"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
             app:srcCompat="@drawable/download" />
 
         <ImageView
@@ -31,6 +35,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:clickable="true"
+            android:contentDescription="@string/delete_button"
+            android:focusable="true"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
             app:srcCompat="@drawable/trashcan" />
     </LinearLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>
