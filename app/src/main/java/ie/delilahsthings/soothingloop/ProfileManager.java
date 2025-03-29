@@ -49,7 +49,7 @@ public abstract class ProfileManager {
     {
         ArrayList<String> files = new ArrayList();
         String path = getProfilePath();
-        for(String file: new File(path).list()) {
+        for(String file: safe_list(new File(path))) {
             if (file.startsWith(ProfileManager.prefix))
                 files.add(file.substring(ProfileManager.prefix_length, file.length() - ProfileManager.suffix_length));
         }
@@ -82,7 +82,7 @@ public abstract class ProfileManager {
         String path = getSoundPath();
         File dir = new File(path);
         dir.mkdirs();
-        return dir.list();
+        return safe_list(dir);
     }
 
     static int copy(InputStream in, File dst) throws IOException {
@@ -119,6 +119,16 @@ public abstract class ProfileManager {
             }
         }
         return result;
+    }
+
+    public static String[] safe_list(File dir) {
+        String[] lst = dir.list();
+        if(lst==null){
+            return new String[0];
+        }
+        else {
+            return lst;
+        }
     }
 
     public static String validateProfileName(CharSequence profileName) throws BadProfileNameException
