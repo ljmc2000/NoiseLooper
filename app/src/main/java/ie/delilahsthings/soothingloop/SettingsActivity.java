@@ -118,6 +118,7 @@ public class SettingsActivity extends AppCompatActivity {
             deleteButton.setOnClickListener((v)->promptDeleteProfile(view, profileName));
             exportButton=view.findViewById(R.id.export_button);
             exportButton.setOnClickListener((View v)->promptExportProfile(profileName));
+            exportButton.setVisibility(View.VISIBLE);
 
             profilesView.addView(view);
         }
