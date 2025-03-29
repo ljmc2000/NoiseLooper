@@ -21,10 +21,12 @@ import java.io.IOException;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    private String exportedProfileName="";
     private ViewGroup profilesView;
     private ViewGroup customSoundsView;
     private SharedPreferences settings;
     private ActivityResultLauncher<String> getNewSound;
+    private ActivityResultLauncher<String> exportProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
         this.profilesView=findViewById(R.id.profiles);
         this.customSoundsView=findViewById(R.id.custom_sounds);
         this.getNewSound=registerForActivityResult(new ActivityResultContracts.GetContent(), (uri)->addCustomSound(uri));
+        this.exportProfile=registerForActivityResult(new ActivityResultContracts.CreateDocument("application/xml"), (uri)->ProfileManager.exportProfile(exportedProfileName, uri));
         this.settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
 
         CheckboxBooleanToggle.build(settings, Constants.LOAD_DEFAULT_ON_START, findViewById(R.id.toggle_autostart));
@@ -87,15 +90,17 @@ public class SettingsActivity extends AppCompatActivity {
     void populateCustomProfiles()
     {
         TextView text;
-        ImageView image;
+        ImageView deleteButton, exportButton;
 
         for(String profileName: ProfileManager.listProfiles()) {
             ViewGroup view = new LinearLayout(this);
             View.inflate(this, R.layout.profile_config_item, view);
             text=view.findViewById(R.id.title);
             text.setText(profileName);
-            image=view.findViewById(R.id.delete_button);
-            image.setOnClickListener((v)->promptDeleteProfile(view, profileName));
+            deleteButton=view.findViewById(R.id.delete_button);
+            deleteButton.setOnClickListener((v)->promptDeleteProfile(view, profileName));
+            exportButton=view.findViewById(R.id.export_button);
+            exportButton.setOnClickListener((View v)->promptExportProfile(profileName));
 
             profilesView.addView(view);
         }
@@ -154,6 +159,11 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    void promptExportProfile(String profileName) {
+        exportedProfileName=profileName;
+        exportProfile.launch(profileName+".xml");
     }
 
     private class DurationChangeListener extends TimerInput.TimerCallback {
