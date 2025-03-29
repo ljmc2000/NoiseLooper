@@ -327,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
         if(profiles.length!=0) {
             ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, profiles);
             spinner.setAdapter(spinnerArrayAdapter);
-            new SaveLoadDialog(this, spinner, R.string.load_custom, R.string.load, (profileName) -> loadProfile(getSharedPreferences(profileName, MODE_PRIVATE)), true);
+            new SaveLoadDialog(this, spinner, R.string.load_custom, R.string.load, (profileName) -> loadProfile(getSharedPreferences(ProfileManager.prefix+profileName, MODE_PRIVATE)), true);
         }
         else {
             Toast.makeText(this,R.string.no_profiles_saved,Toast.LENGTH_SHORT).show();
@@ -337,7 +337,7 @@ public class MainActivity extends AppCompatActivity {
     public void promptSaveCustomProfile(MenuItem sender)
     {
         EditText textbox = new EditText(this);
-        SaveLoadDialog saveDialog = new SaveLoadDialog(this, textbox, R.string.save_custom, R.string.save,(profileName)->saveProfile(getSharedPreferences(profileName,MODE_PRIVATE)), false);
+        SaveLoadDialog saveDialog = new SaveLoadDialog(this, textbox, R.string.save_custom, R.string.save,(profileName)->saveProfile(getSharedPreferences(ProfileManager.prefix+profileName,MODE_PRIVATE)), false);
         textbox.addTextChangedListener(saveDialog.getTextChangeListener());
     }
 

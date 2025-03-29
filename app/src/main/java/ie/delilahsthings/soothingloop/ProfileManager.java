@@ -45,6 +45,26 @@ public abstract class ProfileManager {
         return new File(path).delete();
     }
 
+    public static boolean importProfile(String profile, Uri uri) {
+        Context ctx=StaticContext.getAppContext();
+        String path = getProfilePath();
+        File dir = new File(path);
+        dir.mkdirs();
+        String destPath = path+prefix+profile+suffix;
+
+        try {
+            InputStream inputStream = ctx.getContentResolver().openInputStream(uri);
+            File dest = new File(destPath);
+            dest.createNewFile();
+            FileOutputStream out = new FileOutputStream(dest);
+            copy(inputStream, out);
+            return true;
+        }
+        catch (IOException ex) {
+            return false;
+        }
+    }
+
     public static boolean exportProfile(String profile, Uri uri) {
         String srcPath = getProfilePath()+prefix+profile+suffix;
         String destPath = uri.getPath();
