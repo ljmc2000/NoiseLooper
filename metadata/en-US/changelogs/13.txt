@@ -1,2 +1,2 @@
 * Fixed GrapheneOS crashing on startup, as reported by JaredTamada. However, I have opted to not fix several other bugs expected to occur on GrapheneOS in light of
-* It is now possible to backup saved profiles. If you have any you don't want to lose I'd recommend creating backups now. The next release is going to overhaul where things are stored and while I plan on implementing automatic migration, there is safety in redundency
+* It is now possible to backup saved profiles. If you have any you don't want to lose I'd recommend creating backups now. The next release is going to overhaul where things are stored and while I plan on implementing automatic migration, there is safety in redundancy
