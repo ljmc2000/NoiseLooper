@@ -8,11 +8,11 @@ import android.os.Environment;
 import android.provider.OpenableColumns;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,6 +45,24 @@ public abstract class ProfileManager {
         return new File(path).delete();
     }
 
+    public static boolean exportProfile(String profile, Uri uri) {
+        String srcPath = getProfilePath()+prefix+profile+suffix;
+        String destPath = uri.getPath();
+        if(destPath==null) {
+            return false;
+        }
+
+        try {
+            Context ctx = StaticContext.getAppContext();
+            InputStream in = new FileInputStream(srcPath);
+            OutputStream out = ctx.getContentResolver().openOutputStream(uri);
+            return copy(in, out)>0;
+        }
+        catch (IOException ex) {
+            return false;
+        }
+    }
+
     public static String[] listProfiles()
     {
         ArrayList<String> files = new ArrayList();
@@ -66,7 +84,8 @@ public abstract class ProfileManager {
         InputStream inputStream = context.getContentResolver().openInputStream(uri);
         File dest = new File(path+getFileName(context,uri));
         dest.createNewFile();
-        result.size = copy(inputStream,dest);
+        FileOutputStream out = new FileOutputStream(dest);
+        result.size = copy(inputStream, out);
         result.name=dest.getName();
         return result;
     }
@@ -85,17 +104,15 @@ public abstract class ProfileManager {
         return safe_list(dir);
     }
 
-    static int copy(InputStream in, File dst) throws IOException {
-        try (OutputStream out = new FileOutputStream(dst)) {
-            // Transfer bytes from in to out
-            byte[] buf = new byte[1024];
-            int len, total=0;
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
-                total+=len;
-            }
-            return total;
+    static int copy(InputStream in, OutputStream out) throws IOException {
+        // Transfer bytes from in to out
+        byte[] buf = new byte[1024];
+        int len, total=0;
+        while ((len = in.read(buf)) > 0) {
+            out.write(buf, 0, len);
+            total+=len;
         }
+        return total;
     }
 
     @SuppressLint("Range")
