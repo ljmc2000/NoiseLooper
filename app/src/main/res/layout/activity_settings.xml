@@ -91,6 +91,16 @@
 
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="54sp"
+            android:clickable="true"
+            android:contentDescription="@string/add_button"
+            android:focusable="true"
+            android:onClick="promptImportProfile"
+            app:srcCompat="@drawable/plus_sign" />
+
         <TextView
             android:id="@+id/custom_sounds_header"
             android:layout_width="match_parent"

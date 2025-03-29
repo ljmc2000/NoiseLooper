@@ -53,7 +53,7 @@ public class SaveLoadDialog implements DialogInterface.OnClickListener {
                 profileName = ((Spinner) input).getSelectedItem().toString();
             }
 
-            listener.action(ProfileManager.prefix + profileName);
+            listener.action(profileName);
         }
         catch (ProfileManager.BadProfileNameException ex)
         {

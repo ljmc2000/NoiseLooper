@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,8 +26,7 @@ public class SettingsActivity extends AppCompatActivity {
     private ViewGroup profilesView;
     private ViewGroup customSoundsView;
     private SharedPreferences settings;
-    private ActivityResultLauncher<String> getNewSound;
-    private ActivityResultLauncher<String> exportProfile;
+    private ActivityResultLauncher<String> getNewSound, exportProfile, prepareImportProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
         this.customSoundsView=findViewById(R.id.custom_sounds);
         this.getNewSound=registerForActivityResult(new ActivityResultContracts.GetContent(), (uri)->addCustomSound(uri));
         this.exportProfile=registerForActivityResult(new ActivityResultContracts.CreateDocument("application/xml"), (uri)->ProfileManager.exportProfile(exportedProfileName, uri));
+        this.prepareImportProfile=registerForActivityResult(new ActivityResultContracts.GetContent(), (uri)->importProfile(uri));
         this.settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
 
         CheckboxBooleanToggle.build(settings, Constants.LOAD_DEFAULT_ON_START, findViewById(R.id.toggle_autostart));
@@ -85,6 +86,22 @@ public class SettingsActivity extends AppCompatActivity {
         intent.putExtra(Constants.RESTORE_VOLUMES,true);
         intent.setPackage(getPackageName());
         sendBroadcast(intent);
+    }
+
+    void addCustomProfile(String profileName) {
+        TextView text;
+        ImageView deleteButton, exportButton;
+
+        ViewGroup view = new LinearLayout(this);
+        View.inflate(this, R.layout.profile_config_item, view);
+        text=view.findViewById(R.id.title);
+        text.setText(profileName);
+        deleteButton=view.findViewById(R.id.delete_button);
+        deleteButton.setOnClickListener((v)->promptDeleteProfile(view, profileName));
+        exportButton=view.findViewById(R.id.export_button);
+        exportButton.setOnClickListener((View v)->promptExportProfile(profileName));
+
+        profilesView.addView(view);
     }
 
     void populateCustomProfiles()
@@ -148,6 +165,10 @@ public class SettingsActivity extends AppCompatActivity {
         builder.show();
     }
 
+    public void promptImportProfile(View view) {
+        prepareImportProfile.launch("text/xml");
+    }
+
     void promptDeleteProfile(View sender, String profileName)
     {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
@@ -164,6 +185,16 @@ public class SettingsActivity extends AppCompatActivity {
     void promptExportProfile(String profileName) {
         exportedProfileName=profileName;
         exportProfile.launch(profileName+".xml");
+    }
+
+    void importProfile(Uri uri) {
+        if(uri==null) {
+            return;
+        }
+
+        EditText textbox = new EditText(this);
+        SaveLoadDialog saveDialog = new SaveLoadDialog(this, textbox, R.string.save_custom, R.string.save,(profileName)->{if(ProfileManager.importProfile(profileName, uri)) addCustomProfile(profileName);}, false);
+        textbox.addTextChangedListener(saveDialog.getTextChangeListener());
     }
 
     private class DurationChangeListener extends TimerInput.TimerCallback {
