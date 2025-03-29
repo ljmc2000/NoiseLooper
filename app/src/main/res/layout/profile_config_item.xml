@@ -27,6 +27,7 @@
             android:focusable="true"
             android:minWidth="48dp"
             android:minHeight="48dp"
+            android:visibility="gone"
             app:srcCompat="@drawable/download" />
 
         <ImageView
