@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     {
         custom_noise_list.removeAllViews();
 
-        String[] customNoises = ProfileManager.listCustomSounds();
+        String[] customNoises = CustomSoundsManager.listCustomSounds();
         if(customNoises.length==0)
         {
             return;
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
             TextView noiseName = view.findViewById(R.id.noise_name);
             noiseName.setText(sound);
             SeekBar volume = view.findViewById(R.id.volume);
-            SoundEffectVolumeManager manager=SoundEffectVolumeManager.get(ProfileManager.getSoundPath()+sound);
+            SoundEffectVolumeManager manager=SoundEffectVolumeManager.get(CustomSoundsManager.getSoundPath()+sound);
             volume.setOnSeekBarChangeListener(manager);
             volume.setTag(R.string.persist_key,Constants.CUSTOM_NOISE_PREFIX+sound);
         }
@@ -406,7 +406,7 @@ public class MainActivity extends AppCompatActivity {
                 populateCustomNoiselist();
                 String noise_to_remove = intent.getStringExtra(Constants.NOISE_TO_REMOVE);
                 if(noise_to_remove!=null)
-                    SoundEffectVolumeManager.unload(ProfileManager.getSoundPath()+noise_to_remove);
+                    SoundEffectVolumeManager.unload(CustomSoundsManager.getSoundPath()+noise_to_remove);
                 if(restoreVolumes)
                     loadState(pausedSounds);
             }

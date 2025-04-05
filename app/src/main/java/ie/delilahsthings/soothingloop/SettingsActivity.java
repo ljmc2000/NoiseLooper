@@ -53,7 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
     void addCustomSound(Uri uri)
     {
         try {
-            ProfileManager.AddedSoundResult sound=ProfileManager.addCustomSound(uri);
+            CustomSoundsManager.AddedSoundResult sound=CustomSoundsManager.addCustomSound(uri);
 
             if(sound.size>Constants.ONE_MEGABYTE)
             {
@@ -129,7 +129,7 @@ public class SettingsActivity extends AppCompatActivity {
         TextView text;
         ImageView image;
 
-        for(String sound: ProfileManager.listCustomSounds())
+        for(String sound: CustomSoundsManager.listCustomSounds())
         {
             ViewGroup view = new LinearLayout(this);
             View.inflate(this, R.layout.profile_config_item, view);
@@ -153,7 +153,7 @@ public class SettingsActivity extends AppCompatActivity {
         builder.setTitle(String.format(getString(R.string.confirm_delete_custom_sound),sound));
         builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
         builder.setPositiveButton(getString(R.string.confirm),(dialogInterface, i) -> {
-            ProfileManager.deleteCustomSound(sound);
+            CustomSoundsManager.deleteCustomSound(sound);
             customSoundsView.removeView(sender);
             Intent intent = new Intent();
             intent.setAction(Constants.INVALIDATE_ACTION);
