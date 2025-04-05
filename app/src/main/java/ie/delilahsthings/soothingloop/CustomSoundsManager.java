@@ -2,7 +2,6 @@ package ie.delilahsthings.soothingloop;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Environment;
 
 import java.io.File;
 import java.io.FileOutputStream;
