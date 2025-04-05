@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout stock_noise_list;
     private LinearLayout custom_noise_list;
     private Resources resources;
-    private SharedPreferences defaultProfile, settings;
+    private SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         noise_lists=new LinearLayout[]{stock_noise_list,custom_noise_list};
         resources=getResources();
 
-        defaultProfile=getSharedPreferences(Constants.DEFAULT_PROFILE,MODE_PRIVATE);
         settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
 
         SoundEffectVolumeManager.setOnPlayCallback(()->onPlaySounds());
@@ -75,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(settings.getBoolean(Constants.LOAD_DEFAULT_ON_START,false))
         {
-            loadProfile(defaultProfile);
+            applyDefaultProfile(null);
         }
     }
 
@@ -252,11 +251,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(showCredits);
     }
 
-    public void loadDefaults(MenuItem sender){
-        loadProfile(defaultProfile);
+    public void applyDefaultProfile(MenuItem sender){
+        applyProfile(ProfileManager.loadDefaultProfile());
     }
 
-    private void loadProfile(SharedPreferences profile)
+    private void applyProfile(ProfileManager.Profile profile)
     {
         SeekBar v;
         String persistKey;
@@ -266,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                 v = noise_list.getChildAt(i).findViewById(R.id.volume);
                 if (v != null) {
                     persistKey = (String) v.getTag(R.string.persist_key);
-                    v.setProgress(profile.getInt(persistKey, 0));
+                    v.setProgress(profile.get(persistKey));
                 }
             }
         }
@@ -327,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
         if(profiles.length!=0) {
             ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, profiles);
             spinner.setAdapter(spinnerArrayAdapter);
-            new SaveLoadDialog(this, spinner, R.string.load_custom, R.string.load, (profileName) -> loadProfile(getSharedPreferences(ProfileManager.prefix+profileName, MODE_PRIVATE)), true);
+            new SaveLoadDialog(this, spinner, R.string.load_custom, R.string.load, (profileName) -> applyProfile(ProfileManager.loadProfile(profileName)), true);
         }
         else {
             Toast.makeText(this,R.string.no_profiles_saved,Toast.LENGTH_SHORT).show();
@@ -337,7 +336,7 @@ public class MainActivity extends AppCompatActivity {
     public void promptSaveCustomProfile(MenuItem sender)
     {
         EditText textbox = new EditText(this);
-        SaveLoadDialog saveDialog = new SaveLoadDialog(this, textbox, R.string.save_custom, R.string.save,(profileName)->saveProfile(getSharedPreferences(ProfileManager.prefix+profileName,MODE_PRIVATE)), false);
+        SaveLoadDialog saveDialog = new SaveLoadDialog(this, textbox, R.string.save_custom, R.string.save,(profileName)->ProfileManager.saveProfile(profileName, pickleProfile()), false);
         textbox.addTextChangedListener(saveDialog.getTextChangeListener());
     }
 
@@ -437,26 +436,26 @@ public class MainActivity extends AppCompatActivity {
 
     public void saveDefaults(MenuItem sender)
     {
-        saveProfile(defaultProfile);
+        ProfileManager.saveDefaultProfile(pickleProfile());
     }
 
-    public void saveProfile(SharedPreferences profile)
+    private ProfileManager.Profile pickleProfile()
     {
         SeekBar v;
         String persistKey;
-        SharedPreferences.Editor editor = profile.edit();
+        ProfileManager.Profile profile = new ProfileManager.Profile();
 
         for(LinearLayout noise_list: noise_lists) {
             for (int i = 0; i < noise_list.getChildCount(); i++) {
                 v = noise_list.getChildAt(i).findViewById(R.id.volume);
                 if (v != null) {
                     persistKey = (String) v.getTag(R.string.persist_key);
-                    editor.putInt(persistKey, v.getProgress());
+                    profile.put(persistKey, v.getProgress());
                 }
             }
         }
 
-        editor.commit();
+        return profile;
     }
 
     public void saveState(Bundle state)
