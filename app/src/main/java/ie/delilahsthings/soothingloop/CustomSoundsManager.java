@@ -27,7 +27,7 @@ public class CustomSoundsManager {
         File dest = new File(path+Util.getFileName(context,uri));
         dest.createNewFile();
         FileOutputStream out = new FileOutputStream(dest);
-        result.size = copy(inputStream, out);
+        result.size = Util.copy(inputStream, out);
         result.name=dest.getName();
         return result;
     }
@@ -44,17 +44,6 @@ public class CustomSoundsManager {
         File dir = new File(path);
         dir.mkdirs();
         return Util.safe_list(dir);
-    }
-
-    static int copy(InputStream in, OutputStream out) throws IOException {
-        // Transfer bytes from in to out
-        byte[] buf = new byte[1024];
-        int len, total=0;
-        while ((len = in.read(buf)) > 0) {
-            out.write(buf, 0, len);
-            total+=len;
-        }
-        return total;
     }
 
     public static class AddedSoundResult
