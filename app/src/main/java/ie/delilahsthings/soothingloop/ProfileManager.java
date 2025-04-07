@@ -2,6 +2,7 @@ package ie.delilahsthings.soothingloop;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Environment;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -214,5 +215,41 @@ public abstract class ProfileManager {
         catch (IOException ex) {
             throw new ProfileSaveException(ex);
         }
+    }
+
+    //TODO: If after 2026-04-07 then remove this and anything that depends on it
+    @Deprecated
+    public static boolean migratePre1dot2Profiles() {
+        String oldProfilePath = Environment.getDataDirectory().getPath()+"/data/"+StaticContext.getAppContext().getPackageName()+"/shared_prefs/";
+        String newProfilePath = ProfileManager.getProfilePath();
+        File oldProfileDir = new File(oldProfilePath);
+        File newProfileDir = new File(newProfilePath);
+        File inFile;
+        newProfileDir.mkdirs();
+
+        if(!oldProfileDir.isDirectory()) {
+            return true;
+        }
+
+        try {
+            inFile = new File(oldProfilePath + "default.xml");
+
+            if(inFile.exists()) {
+                saveDefaultProfile(loadProfile(new FileInputStream(inFile)));
+                inFile.delete();
+            }
+
+            for (String profileName : Util.safe_list(oldProfileDir)) {
+                if(profileName.startsWith("profile-")) {
+                    inFile = new File(oldProfilePath + profileName);
+                    saveProfile(profileName.substring(8, profileName.length()-4), loadProfile(new FileInputStream(inFile)));
+                    inFile.delete();
+                }
+            }
+        } catch (IOException | ProfileIOException e) {
+            return false;
+        }
+
+        return true;
     }
 }
