@@ -65,6 +65,8 @@
     <string name="confirm_delete_custom_sound">Confirm deletion of sound "%s"?</string>
     <string name="custom_sounds">Custom Sounds</string>
     <string name="add_sound_problem">Problem adding sound</string>
+    <string name="load_profile_problem">Problem loading profile</string>
+    <string name="save_profile_problem">Problem saving profile</string>
 
 
     <string name="hours_hint">HH</string>

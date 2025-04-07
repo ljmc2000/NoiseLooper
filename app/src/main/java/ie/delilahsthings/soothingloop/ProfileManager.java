@@ -53,15 +53,15 @@ public abstract class ProfileManager {
         return new File(path).delete();
     }
 
-    public static boolean exportProfile(String exportedProfileName, Uri uri) {
+    public static void exportProfile(String exportedProfileName, Uri uri) throws ProfileIOException {
         try {
             Context ctx = StaticContext.getAppContext();
             OutputStream out = ctx.getContentResolver().openOutputStream(uri);
             File in = getProfileFile(exportedProfileName);
-            return saveProfile(out, loadProfile(in));
+            saveProfile(out, loadProfile(in));
         }
         catch (IOException ex) {
-            return false;
+            throw new ProfileSaveException(ex);
         }
     }
 
@@ -70,9 +70,10 @@ public abstract class ProfileManager {
             Context ctx = StaticContext.getAppContext();
             File out = getProfileFile(profileName);
             InputStream in = ctx.getContentResolver().openInputStream(uri);
-            return saveProfile(out, loadProfile(in));
+            saveProfile(out, loadProfile(in));
+            return true;
         }
-        catch (IOException ex) {
+        catch (ProfileIOException | IOException ex) {
             return false;
         }
     }
@@ -87,20 +88,25 @@ public abstract class ProfileManager {
         return files.toArray(new String[0]);
     }
 
-    public static Profile loadProfile(String profileName) {
+    public static Profile loadProfile(String profileName) throws ProfileLoadException {
         return loadProfile(getProfileFile(profileName));
     }
 
-    public static boolean saveProfile(String profileName, Profile profile) {
-        return saveProfile(getProfileFile(profileName), profile);
+    public static void saveProfile(String profileName, Profile profile) throws ProfileSaveException {
+        saveProfile(getProfileFile(profileName), profile);
     }
 
     public static Profile loadDefaultProfile() {
-        return loadProfile(getDefaultProfileFile());
+        try {
+            return loadProfile(getDefaultProfileFile());
+        }
+        catch (ProfileLoadException ex) {
+            return new Profile();
+        }
     }
 
-    public static boolean saveDefaultProfile(Profile profile) {
-        return saveProfile(getDefaultProfileFile(), profile);
+    public static void saveDefaultProfile(Profile profile) throws ProfileSaveException {
+        saveProfile(getDefaultProfileFile(), profile);
     }
 
     public static String validateProfileName(CharSequence profileName) throws BadProfileNameException
@@ -118,6 +124,24 @@ public abstract class ProfileManager {
         }
     }
 
+    public static class ProfileIOException extends Exception {
+        public ProfileIOException(Exception e) {
+            super(e);
+        }
+    }
+
+    public static class ProfileLoadException extends ProfileIOException {
+        public ProfileLoadException(Exception e) {
+            super(e);
+        }
+    }
+
+    public static class ProfileSaveException extends ProfileIOException {
+        public ProfileSaveException(Exception e) {
+            super(e);
+        }
+    }
+
     public static class Profile extends HashMap<String, Integer> {
         Integer get(String key) {
             Integer i = super.get(key);
@@ -125,7 +149,7 @@ public abstract class ProfileManager {
         }
     }
 
-    private static Profile loadProfile(InputStream profileXml) {
+    private static Profile loadProfile(InputStream profileXml) throws ProfileLoadException {
         try {
             Profile profile = new Profile();
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -140,26 +164,22 @@ public abstract class ProfileManager {
             }
 
             return profile;
-        } catch (ParserConfigurationException | IOException | SAXException e) {
-            return null;
+        } catch (ParserConfigurationException | IOException | SAXException ex) {
+            throw new ProfileLoadException(ex);
         }
     }
 
-    private static Profile loadProfile(File profileFile) {
+    private static Profile loadProfile(File profileFile) throws ProfileLoadException {
         try {
             InputStream profileXml = new FileInputStream(profileFile);
             return loadProfile(profileXml);
         }
         catch (IOException ex) {
-            return null;
+            throw new ProfileLoadException(ex);
         }
     }
 
-    private static boolean saveProfile(OutputStream out, Profile profile) {
-        if(profile==null) {
-            return false;
-        }
-
+    private static void saveProfile(OutputStream out, Profile profile) throws ProfileSaveException {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -180,21 +200,19 @@ public abstract class ProfileManager {
             StreamResult result = new StreamResult(out);
 
             transformer.transform(source, result);
-
-            return true;
         }
-        catch (ParserConfigurationException | TransformerException e) {
-            return false;
+        catch (ParserConfigurationException | TransformerException ex) {
+            throw new ProfileSaveException(ex);
         }
     }
 
-    private static boolean saveProfile(File outFile, Profile profile) {
+    private static void saveProfile(File outFile, Profile profile) throws ProfileSaveException {
         try {
             OutputStream out = new FileOutputStream(outFile);
-            return saveProfile(out, profile);
+            saveProfile(out, profile);
         }
         catch (IOException ex) {
-            return false;
+            throw new ProfileSaveException(ex);
         }
     }
 }

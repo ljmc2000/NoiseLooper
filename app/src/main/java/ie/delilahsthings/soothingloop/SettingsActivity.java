@@ -36,7 +36,13 @@ public class SettingsActivity extends AppCompatActivity {
         this.profilesView=findViewById(R.id.profiles);
         this.customSoundsView=findViewById(R.id.custom_sounds);
         this.getNewSound=registerForActivityResult(new ActivityResultContracts.GetContent(), (uri)->addCustomSound(uri));
-        this.exportProfile=registerForActivityResult(new ActivityResultContracts.CreateDocument("application/xml"), (uri)->ProfileManager.exportProfile(exportedProfileName, uri));
+        this.exportProfile=registerForActivityResult(new ActivityResultContracts.CreateDocument("application/xml"), (uri)-> {
+            try {
+                ProfileManager.exportProfile(exportedProfileName, uri);
+            } catch (ProfileManager.ProfileIOException e) {
+                Toast.makeText(this, R.string.save_profile_problem, Toast.LENGTH_SHORT).show();
+            }
+        });
         this.prepareImportProfile=registerForActivityResult(new ActivityResultContracts.GetContent(), (uri)->importProfile(uri));
         this.settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
 

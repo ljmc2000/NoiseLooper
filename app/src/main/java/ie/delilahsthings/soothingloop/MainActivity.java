@@ -326,7 +326,13 @@ public class MainActivity extends AppCompatActivity {
         if(profiles.length!=0) {
             ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, profiles);
             spinner.setAdapter(spinnerArrayAdapter);
-            new SaveLoadDialog(this, spinner, R.string.load_custom, R.string.load, (profileName) -> applyProfile(ProfileManager.loadProfile(profileName)), true);
+            new SaveLoadDialog(this, spinner, R.string.load_custom, R.string.load, (profileName) -> {
+                try {
+                    applyProfile(ProfileManager.loadProfile(profileName));
+                } catch (ProfileManager.ProfileLoadException e) {
+                    Toast.makeText(this, R.string.load_profile_problem, Toast.LENGTH_SHORT).show();
+                }
+            }, true);
         }
         else {
             Toast.makeText(this,R.string.no_profiles_saved,Toast.LENGTH_SHORT).show();
@@ -336,7 +342,13 @@ public class MainActivity extends AppCompatActivity {
     public void promptSaveCustomProfile(MenuItem sender)
     {
         EditText textbox = new EditText(this);
-        SaveLoadDialog saveDialog = new SaveLoadDialog(this, textbox, R.string.save_custom, R.string.save,(profileName)->ProfileManager.saveProfile(profileName, pickleProfile()), false);
+        SaveLoadDialog saveDialog = new SaveLoadDialog(this, textbox, R.string.save_custom, R.string.save,(profileName)-> {
+            try {
+                ProfileManager.saveProfile(profileName, pickleProfile());
+            } catch (ProfileManager.ProfileSaveException e) {
+                Toast.makeText(this, R.string.save_profile_problem, Toast.LENGTH_SHORT).show();
+            }
+        }, false);
         textbox.addTextChangedListener(saveDialog.getTextChangeListener());
     }
 
@@ -436,7 +448,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void saveDefaults(MenuItem sender)
     {
-        ProfileManager.saveDefaultProfile(pickleProfile());
+        try {
+            ProfileManager.saveDefaultProfile(pickleProfile());
+        } catch (ProfileManager.ProfileSaveException e) {
+            Toast.makeText(this, R.string.save_profile_problem, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private ProfileManager.Profile pickleProfile()
