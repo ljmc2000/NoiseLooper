@@ -66,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
 
         settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
 
+        Util.run_once(settings, Util::migratePre1dot2Noises, Constants.PRE_1DOT3_NOISE_MIGRATION_COMPLETE);
+        Util.run_once(settings, Util::migratePre1dot2Profiles, Constants.PRE_1DOT3_PROFILE_MIGRATION_COMPLETE);
+
         SoundEffectVolumeManager.setOnPlayCallback(this::onPlaySounds);
         populateNoiselist();
         populateCustomNoiselist();
