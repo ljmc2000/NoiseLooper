@@ -35,15 +35,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         this.profilesView=findViewById(R.id.profiles);
         this.customSoundsView=findViewById(R.id.custom_sounds);
-        this.getNewSound=registerForActivityResult(new ActivityResultContracts.GetContent(), (uri)->addCustomSound(uri));
-        this.exportProfile=registerForActivityResult(new ActivityResultContracts.CreateDocument("application/xml"), (uri)-> {
-            try {
-                ProfileManager.exportProfile(exportedProfileName, uri);
-            } catch (ProfileManager.ProfileIOException e) {
-                Toast.makeText(this, R.string.save_profile_problem, Toast.LENGTH_SHORT).show();
-            }
-        });
-        this.prepareImportProfile=registerForActivityResult(new ActivityResultContracts.GetContent(), (uri)->importProfile(uri));
+        this.getNewSound=registerForActivityResult(new ActivityResultContracts.GetContent(), this::addCustomSound);
+        this.exportProfile=registerForActivityResult(new ActivityResultContracts.CreateDocument("application/xml"), this::exportProfile);
+        this.prepareImportProfile=registerForActivityResult(new ActivityResultContracts.GetContent(), this::importProfile);
         this.settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
 
         CheckboxBooleanToggle.build(settings, Constants.LOAD_DEFAULT_ON_START, findViewById(R.id.toggle_autostart));
@@ -79,9 +73,6 @@ public class SettingsActivity extends AppCompatActivity {
         catch (IOException e)
         {
             Toast.makeText(this,getString(R.string.add_sound_problem),Toast.LENGTH_SHORT).show();
-        }
-        catch (NullPointerException e)
-        {
         }
     }
 
@@ -192,6 +183,14 @@ public class SettingsActivity extends AppCompatActivity {
     void promptExportProfile(String profileName) {
         exportedProfileName=profileName;
         exportProfile.launch(profileName+".xml");
+    }
+
+    void exportProfile(Uri uri) {
+        try {
+            ProfileManager.exportProfile(exportedProfileName, uri);
+        } catch (ProfileManager.ProfileIOException e) {
+            Toast.makeText(this, R.string.save_profile_problem, Toast.LENGTH_SHORT).show();
+        }
     }
 
     void importProfile(Uri uri) {

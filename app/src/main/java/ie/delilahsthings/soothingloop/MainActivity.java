@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
 
-        SoundEffectVolumeManager.setOnPlayCallback(()->onPlaySounds());
+        SoundEffectVolumeManager.setOnPlayCallback(this::onPlaySounds);
         populateNoiselist();
         populateCustomNoiselist();
 
