@@ -19,9 +19,9 @@
         android:title="@string/save_custom" />
 
     <item
-        android:onClick="loadDefaults"
-        android:title="@string/load_default"
-        android:icon="@drawable/play_triangle" />
+        android:icon="@drawable/play_triangle"
+        android:onClick="applyDefaultProfile"
+        android:title="@string/load_default" />
 
     <item
         android:onClick="promptLoadCustomProfile"

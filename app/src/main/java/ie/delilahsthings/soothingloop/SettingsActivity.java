@@ -35,9 +35,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         this.profilesView=findViewById(R.id.profiles);
         this.customSoundsView=findViewById(R.id.custom_sounds);
-        this.getNewSound=registerForActivityResult(new ActivityResultContracts.GetContent(), (uri)->addCustomSound(uri));
-        this.exportProfile=registerForActivityResult(new ActivityResultContracts.CreateDocument("application/xml"), (uri)->ProfileManager.exportProfile(exportedProfileName, uri));
-        this.prepareImportProfile=registerForActivityResult(new ActivityResultContracts.GetContent(), (uri)->importProfile(uri));
+        this.getNewSound=registerForActivityResult(new ActivityResultContracts.GetContent(), this::addCustomSound);
+        this.exportProfile=registerForActivityResult(new ActivityResultContracts.CreateDocument("application/xml"), this::exportProfile);
+        this.prepareImportProfile=registerForActivityResult(new ActivityResultContracts.GetContent(), this::importProfile);
         this.settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
 
         CheckboxBooleanToggle.build(settings, Constants.LOAD_DEFAULT_ON_START, findViewById(R.id.toggle_autostart));
@@ -53,7 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
     void addCustomSound(Uri uri)
     {
         try {
-            ProfileManager.AddedSoundResult sound=ProfileManager.addCustomSound(uri);
+            CustomSoundsManager.AddedSoundResult sound=CustomSoundsManager.addCustomSound(uri);
 
             if(sound.size>Constants.ONE_MEGABYTE)
             {
@@ -73,9 +73,6 @@ public class SettingsActivity extends AppCompatActivity {
         catch (IOException e)
         {
             Toast.makeText(this,getString(R.string.add_sound_problem),Toast.LENGTH_SHORT).show();
-        }
-        catch (NullPointerException e)
-        {
         }
     }
 
@@ -129,7 +126,7 @@ public class SettingsActivity extends AppCompatActivity {
         TextView text;
         ImageView image;
 
-        for(String sound: ProfileManager.listCustomSounds())
+        for(String sound: CustomSoundsManager.listCustomSounds())
         {
             ViewGroup view = new LinearLayout(this);
             View.inflate(this, R.layout.profile_config_item, view);
@@ -153,7 +150,7 @@ public class SettingsActivity extends AppCompatActivity {
         builder.setTitle(String.format(getString(R.string.confirm_delete_custom_sound),sound));
         builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
         builder.setPositiveButton(getString(R.string.confirm),(dialogInterface, i) -> {
-            ProfileManager.deleteCustomSound(sound);
+            CustomSoundsManager.deleteCustomSound(sound);
             customSoundsView.removeView(sender);
             Intent intent = new Intent();
             intent.setAction(Constants.INVALIDATE_ACTION);
@@ -188,6 +185,14 @@ public class SettingsActivity extends AppCompatActivity {
         exportProfile.launch(profileName+".xml");
     }
 
+    void exportProfile(Uri uri) {
+        try {
+            ProfileManager.exportProfile(exportedProfileName, uri);
+        } catch (ProfileManager.ProfileIOException e) {
+            Toast.makeText(this, R.string.save_profile_problem, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     void importProfile(Uri uri) {
         if(uri==null) {
             return;
@@ -196,6 +201,29 @@ public class SettingsActivity extends AppCompatActivity {
         EditText textbox = new EditText(this);
         SaveLoadDialog saveDialog = new SaveLoadDialog(this, textbox, R.string.save_custom, R.string.save,(profileName)->{if(ProfileManager.importProfile(profileName, uri)) addCustomProfile(profileName);}, false);
         textbox.addTextChangedListener(saveDialog.getTextChangeListener());
+    }
+
+    public void restorePre1dot3Profiles(View view) {
+        if(ProfileManager.migratePre1dot2Profiles()) {
+            Toast.makeText(this, R.string.recovery_success, Toast.LENGTH_SHORT).show();
+            profilesView.removeAllViews();
+            populateCustomProfiles();
+        }
+        else {
+            Toast.makeText(this, R.string.recovery_failure, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void restorePre1dot3Sounds(View view) {
+        if(CustomSoundsManager.migratePre1dot2Noises()) {
+            Toast.makeText(this, R.string.recovery_success, Toast.LENGTH_SHORT).show();
+            invalidateMainActivity();
+            customSoundsView.removeAllViews();
+            populateCustomSounds();
+        }
+        else {
+            Toast.makeText(this, R.string.recovery_failure, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private class DurationChangeListener extends TimerInput.TimerCallback {

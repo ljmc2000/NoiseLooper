@@ -15,6 +15,8 @@
     <string name="load_custom">Load Custom Profile</string>
     <string name="no_profiles_saved">No profiles available to load</string>
     <string name="bad_profile_name_warning">Profile name must not be blank</string>
+    <string name="load_profile_problem">Problem loading profile</string>
+    <string name="save_profile_problem">Problem saving profile</string>
     <string name="sleep_timer">Set Sleep Timer</string>
     <string name="settings_label">Settings</string>
     <string name="credits_label">Credits</string>
@@ -65,7 +67,11 @@
     <string name="confirm_delete_custom_sound">Confirm deletion of sound "%s"?</string>
     <string name="custom_sounds">Custom Sounds</string>
     <string name="add_sound_problem">Problem adding sound</string>
-
+    <string name="recovery">Recovery</string>
+    <string name="recoverpre1dot3profiles">Recover pre 1.3.1 profiles</string>
+    <string name="recoverpre1dot3sounds">Recover pre 1.3.1 sounds</string>
+    <string name="recovery_success">Recovery Success</string>
+    <string name="recovery_failure">Nothing Recovered</string>
 
     <string name="hours_hint">HH</string>
     <string name="minutes_hint">MM</string>

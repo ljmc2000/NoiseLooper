@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout stock_noise_list;
     private LinearLayout custom_noise_list;
     private Resources resources;
-    private SharedPreferences defaultProfile, settings;
+    private SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +64,12 @@ public class MainActivity extends AppCompatActivity {
         noise_lists=new LinearLayout[]{stock_noise_list,custom_noise_list};
         resources=getResources();
 
-        defaultProfile=getSharedPreferences(Constants.DEFAULT_PROFILE,MODE_PRIVATE);
         settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
 
-        SoundEffectVolumeManager.setOnPlayCallback(()->onPlaySounds());
+        Util.run_once(settings, CustomSoundsManager::migratePre1dot2Noises, Constants.PRE_1DOT3_NOISE_MIGRATION_COMPLETE);
+        Util.run_once(settings, ProfileManager::migratePre1dot2Profiles, Constants.PRE_1DOT3_PROFILE_MIGRATION_COMPLETE);
+
+        SoundEffectVolumeManager.setOnPlayCallback(this::onPlaySounds);
         populateNoiselist();
         populateCustomNoiselist();
 
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(settings.getBoolean(Constants.LOAD_DEFAULT_ON_START,false))
         {
-            loadProfile(defaultProfile);
+            applyDefaultProfile(null);
         }
     }
 
@@ -137,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
     {
         custom_noise_list.removeAllViews();
 
-        String[] customNoises = ProfileManager.listCustomSounds();
+        String[] customNoises = CustomSoundsManager.listCustomSounds();
         if(customNoises.length==0)
         {
             return;
@@ -161,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
             TextView noiseName = view.findViewById(R.id.noise_name);
             noiseName.setText(sound);
             SeekBar volume = view.findViewById(R.id.volume);
-            SoundEffectVolumeManager manager=SoundEffectVolumeManager.get(ProfileManager.getSoundPath()+sound);
+            SoundEffectVolumeManager manager=SoundEffectVolumeManager.get(CustomSoundsManager.getSoundPath()+sound);
             volume.setOnSeekBarChangeListener(manager);
             volume.setTag(R.string.persist_key,Constants.CUSTOM_NOISE_PREFIX+sound);
         }
@@ -252,11 +254,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(showCredits);
     }
 
-    public void loadDefaults(MenuItem sender){
-        loadProfile(defaultProfile);
+    public void applyDefaultProfile(MenuItem sender){
+        applyProfile(ProfileManager.loadDefaultProfile());
     }
 
-    private void loadProfile(SharedPreferences profile)
+    private void applyProfile(ProfileManager.Profile profile)
     {
         SeekBar v;
         String persistKey;
@@ -266,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
                 v = noise_list.getChildAt(i).findViewById(R.id.volume);
                 if (v != null) {
                     persistKey = (String) v.getTag(R.string.persist_key);
-                    v.setProgress(profile.getInt(persistKey, 0));
+                    v.setProgress(profile.get(persistKey));
                 }
             }
         }
@@ -327,7 +329,13 @@ public class MainActivity extends AppCompatActivity {
         if(profiles.length!=0) {
             ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, profiles);
             spinner.setAdapter(spinnerArrayAdapter);
-            new SaveLoadDialog(this, spinner, R.string.load_custom, R.string.load, (profileName) -> loadProfile(getSharedPreferences(ProfileManager.prefix+profileName, MODE_PRIVATE)), true);
+            new SaveLoadDialog(this, spinner, R.string.load_custom, R.string.load, (profileName) -> {
+                try {
+                    applyProfile(ProfileManager.loadProfile(profileName));
+                } catch (ProfileManager.ProfileLoadException e) {
+                    Toast.makeText(this, R.string.load_profile_problem, Toast.LENGTH_SHORT).show();
+                }
+            }, true);
         }
         else {
             Toast.makeText(this,R.string.no_profiles_saved,Toast.LENGTH_SHORT).show();
@@ -337,7 +345,13 @@ public class MainActivity extends AppCompatActivity {
     public void promptSaveCustomProfile(MenuItem sender)
     {
         EditText textbox = new EditText(this);
-        SaveLoadDialog saveDialog = new SaveLoadDialog(this, textbox, R.string.save_custom, R.string.save,(profileName)->saveProfile(getSharedPreferences(ProfileManager.prefix+profileName,MODE_PRIVATE)), false);
+        SaveLoadDialog saveDialog = new SaveLoadDialog(this, textbox, R.string.save_custom, R.string.save,(profileName)-> {
+            try {
+                ProfileManager.saveProfile(profileName, pickleProfile());
+            } catch (ProfileManager.ProfileSaveException e) {
+                Toast.makeText(this, R.string.save_profile_problem, Toast.LENGTH_SHORT).show();
+            }
+        }, false);
         textbox.addTextChangedListener(saveDialog.getTextChangeListener());
     }
 
@@ -406,7 +420,7 @@ public class MainActivity extends AppCompatActivity {
                 populateCustomNoiselist();
                 String noise_to_remove = intent.getStringExtra(Constants.NOISE_TO_REMOVE);
                 if(noise_to_remove!=null)
-                    SoundEffectVolumeManager.unload(ProfileManager.getSoundPath()+noise_to_remove);
+                    SoundEffectVolumeManager.unload(CustomSoundsManager.getSoundPath()+noise_to_remove);
                 if(restoreVolumes)
                     loadState(pausedSounds);
             }
@@ -437,26 +451,30 @@ public class MainActivity extends AppCompatActivity {
 
     public void saveDefaults(MenuItem sender)
     {
-        saveProfile(defaultProfile);
+        try {
+            ProfileManager.saveDefaultProfile(pickleProfile());
+        } catch (ProfileManager.ProfileSaveException e) {
+            Toast.makeText(this, R.string.save_profile_problem, Toast.LENGTH_SHORT).show();
+        }
     }
 
-    public void saveProfile(SharedPreferences profile)
+    private ProfileManager.Profile pickleProfile()
     {
         SeekBar v;
         String persistKey;
-        SharedPreferences.Editor editor = profile.edit();
+        ProfileManager.Profile profile = new ProfileManager.Profile();
 
         for(LinearLayout noise_list: noise_lists) {
             for (int i = 0; i < noise_list.getChildCount(); i++) {
                 v = noise_list.getChildAt(i).findViewById(R.id.volume);
                 if (v != null) {
                     persistKey = (String) v.getTag(R.string.persist_key);
-                    editor.putInt(persistKey, v.getProgress());
+                    profile.put(persistKey, v.getProgress());
                 }
             }
         }
 
-        editor.commit();
+        return profile;
     }
 
     public void saveState(Bundle state)

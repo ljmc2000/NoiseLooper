@@ -126,5 +126,31 @@
             android:onClick="promptAddCustomSound"
             app:srcCompat="@drawable/plus_sign" />
 
+        <TextView
+            android:id="@+id/recovery_header"
+            style="@style/largeText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?colorPrimary"
+            android:text="@string/recovery" />
+
+        <TextView
+            android:id="@+id/recover_profiles"
+            style="@style/largeText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="restorePre1dot3Profiles"
+            android:text="@string/recoverpre1dot3profiles" />
+
+        <TextView
+            android:id="@+id/recover_sounds"
+            style="@style/largeText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="restorePre1dot3Sounds"
+            android:text="@string/recoverpre1dot3sounds" />
+
     </LinearLayout>
 </android.widget.ScrollView>
