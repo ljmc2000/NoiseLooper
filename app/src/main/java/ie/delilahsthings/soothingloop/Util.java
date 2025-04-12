@@ -73,17 +73,17 @@ public abstract class Util {
      * @param pref key to lookup previous success in prefs
      */
     public static void run_once(SharedPreferences prefs, Callable<Boolean> func, String pref) {
-        try {
-            if (!prefs.getBoolean(pref, false)) {
-                Boolean success = func.call();
-                if(success) {
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putBoolean(pref, true);
-                    editor.apply();
-                }
+        if (!prefs.getBoolean(pref, false)) {
+            try {
+                    Boolean success = func.call();
             }
-        }
-        catch (Exception ex) {
+            catch (Exception ex) {
+            }
+            finally {
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean(pref, true);
+                editor.apply();
+            }
         }
     }
 
