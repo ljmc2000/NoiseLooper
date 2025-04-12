@@ -1,0 +1,3 @@
+* Fixed custom sounds and profiles on GrapheneOS. Big thanks to "JaredTamana" for testing those patches.
+* Changed location for custom sounds and profiles. They should be migrated automatically upon first launch. You may also try to migrate them manually from the settings menu.
+* XML of imported profiles evaluated before saving to disk which may help in ensuring only valid profiles can be imported.
