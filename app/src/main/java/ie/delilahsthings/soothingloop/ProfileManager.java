@@ -226,9 +226,10 @@ public abstract class ProfileManager {
         File newProfileDir = new File(newProfilePath);
         File inFile;
         newProfileDir.mkdirs();
+        int count=0;
 
         if(!oldProfileDir.isDirectory()) {
-            return true;
+            return false;
         }
 
         try {
@@ -237,6 +238,7 @@ public abstract class ProfileManager {
             if(inFile.exists()) {
                 saveDefaultProfile(loadProfile(new FileInputStream(inFile)));
                 inFile.delete();
+                count++;
             }
 
             for (String profileName : Util.safe_list(oldProfileDir)) {
@@ -244,12 +246,13 @@ public abstract class ProfileManager {
                     inFile = new File(oldProfilePath + profileName);
                     saveProfile(profileName.substring(8, profileName.length()-4), loadProfile(new FileInputStream(inFile)));
                     inFile.delete();
+                    count++;
                 }
             }
-        } catch (IOException | ProfileIOException e) {
-            return false;
+        }
+        catch (IOException | ProfileIOException e) {
         }
 
-        return true;
+        return count>0;
     }
 }

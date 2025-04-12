@@ -61,6 +61,7 @@ public class CustomSoundsManager {
         File oldSoundDir = new File(oldSoundPath);
         File newSoundDir = new File(newSoundPath);
         File inFile, outFile;
+        int count=0;
 
         if(oldSoundDir.isDirectory()) {
             newSoundDir.mkdir();
@@ -71,14 +72,14 @@ public class CustomSoundsManager {
                     outFile = new File(newSoundPath + sound);
                     Util.copy(new FileInputStream(inFile), new FileOutputStream(outFile));
                     inFile.delete();
+                    count++;
                 }
 
                 oldSoundDir.delete();
             } catch (IOException e) {
-                return false;
             }
         }
 
-        return true;
+        return count>0;
     }
 }
