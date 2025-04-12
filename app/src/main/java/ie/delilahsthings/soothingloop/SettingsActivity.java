@@ -203,6 +203,29 @@ public class SettingsActivity extends AppCompatActivity {
         textbox.addTextChangedListener(saveDialog.getTextChangeListener());
     }
 
+    public void restorePre1dot3Profiles(View view) {
+        if(ProfileManager.migratePre1dot2Profiles()) {
+            Toast.makeText(this, R.string.recovery_success, Toast.LENGTH_SHORT).show();
+            profilesView.removeAllViews();
+            populateCustomProfiles();
+        }
+        else {
+            Toast.makeText(this, R.string.recovery_failure, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void restorePre1dot3Sounds(View view) {
+        if(CustomSoundsManager.migratePre1dot2Noises()) {
+            Toast.makeText(this, R.string.recovery_success, Toast.LENGTH_SHORT).show();
+            invalidateMainActivity();
+            customSoundsView.removeAllViews();
+            populateCustomSounds();
+        }
+        else {
+            Toast.makeText(this, R.string.recovery_failure, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private class DurationChangeListener extends TimerInput.TimerCallback {
         @Override
         public void run() {
