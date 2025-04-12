@@ -217,7 +217,7 @@ public abstract class ProfileManager {
         }
     }
 
-    //TODO: If after 2026-04-07 then remove this and anything that depends on it
+    //TODO: If after 2026-04-12 then remove this and anything that depends on it
     @Deprecated
     public static boolean migratePre1dot2Profiles() {
         String oldProfilePath = Environment.getDataDirectory().getPath()+"/data/"+StaticContext.getAppContext().getPackageName()+"/shared_prefs/";
