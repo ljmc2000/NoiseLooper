@@ -358,12 +358,17 @@ public class MainActivity extends AppCompatActivity {
     public void promptSleepTimer(MenuItem sender)
     {
         View view = View.inflate(this,R.layout.timespan_input,null);
-        TimerInput timerInput = new TimerInput(this, view);
+        TimerInput timerInput = new TimerInput(this, view, null, settings.getLong(Constants.LAST_TIMER_VALUE, 0));
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(R.string.sleep_timer);
         builder.setView(view);
-        builder.setPositiveButton(R.string.confirm, (dialogInterface, i) -> SleepTimerThread.setTime(timerInput.getSeconds()));
         builder.setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.cancel());
+        builder.setPositiveButton(R.string.confirm, (dialogInterface, i) -> {
+            SleepTimerThread.setTime(timerInput.getSeconds());
+            SharedPreferences.Editor edit = settings.edit();
+            edit.putLong(Constants.LAST_TIMER_VALUE, timerInput.getSeconds());
+            edit.commit();
+        });
         if(SleepTimerThread.isRunning())
         {
             builder.setNeutralButton(R.string.stop, (dialogInterface,i)->{

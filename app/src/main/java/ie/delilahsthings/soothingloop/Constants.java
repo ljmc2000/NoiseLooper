@@ -9,6 +9,7 @@ public abstract class Constants {
     public static final String FADEOUT_INTERRUPTED = "fadeout_interrupted";
     public static final String FADEOUT_DURATION = "fadeout_duration";
     public final static String INVALIDATE_ACTION = "ie.delilahsthings.soothingloop.invalidate_custom";
+    public final static String LAST_TIMER_VALUE = "last_timer_value";
     public final static String LOAD_DEFAULT_ON_START = "load_default_on_start";
     public final static String PRE_1DOT3_NOISE_MIGRATION_COMPLETE = "1.2_to_1.3_noise_migration_complete";
     public final static String PRE_1DOT3_PROFILE_MIGRATION_COMPLETE = "1.2_to_1.3_profile_migration_complete";

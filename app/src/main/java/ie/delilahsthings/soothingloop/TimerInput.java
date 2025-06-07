@@ -18,10 +18,6 @@ public class TimerInput {
     private TextView hoursInput, minutesInput, secondsInput;
     private EditText realTimeInput;
 
-    public TimerInput(Context context, View view) {
-        this(context, view, null, 0);
-    }
-
     public TimerInput(Context context, View view, TimerCallback callback, long originalValue)
     {
         this.context=context;
