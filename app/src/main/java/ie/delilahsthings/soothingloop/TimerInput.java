@@ -14,6 +14,7 @@ public class TimerInput {
     private TimerCallback callback;
     private Context context;
     private long originalValue;
+    private int originalColour, placeholderColour;
     private View parentView;
     private TextView hoursInput, minutesInput, secondsInput;
     private EditText realTimeInput;
@@ -29,12 +30,17 @@ public class TimerInput {
         minutesInput = view.findViewById(R.id.minutes_input);
         secondsInput = view.findViewById(R.id.seconds_input);
         realTimeInput = view.findViewById(R.id.real_time_input);
+        this.originalColour = hoursInput.getCurrentTextColor();
+        this.placeholderColour = parentView.getResources().getColor(R.color.gray);
 
         hoursInput.setOnFocusChangeListener(focusPass);
         minutesInput.setOnFocusChangeListener(focusPass);
         secondsInput.setOnFocusChangeListener(focusPass);
         realTimeInput.addTextChangedListener(onInput);
         setSeconds(originalValue);
+        if(originalValue!=0) {
+            setTextColour(placeholderColour);
+        }
     }
 
     public long getSeconds()
@@ -91,6 +97,7 @@ public class TimerInput {
 
         if(all_l==0) {
             setSeconds(originalValue);
+            setTextColour(placeholderColour);
             return;
         }
 
@@ -116,6 +123,13 @@ public class TimerInput {
         hoursInput.setText(hours);
         minutesInput.setText(minutes);
         secondsInput.setText(seconds);
+        setTextColour(originalColour);
+    }
+
+    void setTextColour(int colour) {
+         hoursInput.setTextColor(colour);
+        minutesInput.setTextColor(colour);
+        secondsInput.setTextColor(colour);
     }
 
     final View.OnFocusChangeListener focusPass = new View.OnFocusChangeListener() {
