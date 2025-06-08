@@ -10,26 +10,31 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:onClick="saveDefaults"
-        android:title="@string/save_default"
-        android:icon="@drawable/save" />
+        android:onClick="promptSleepTimer"
+        android:title="@string/sleep_timer"
+        android:icon="@drawable/timer"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/load_button"
+        android:onClick="promptLoadCustomProfile"
+        android:title="@string/load_custom"
+        android:icon="@drawable/cd_load"
+        app:showAsAction="ifRoom" />
 
     <item
         android:onClick="promptSaveCustomProfile"
-        android:title="@string/save_custom" />
+        android:title="@string/save_custom"
+        android:icon="@drawable/save"
+        app:showAsAction="ifRoom"/>
 
     <item
-        android:icon="@drawable/play_triangle"
         android:onClick="applyDefaultProfile"
         android:title="@string/load_default" />
 
     <item
-        android:onClick="promptLoadCustomProfile"
-        android:title="@string/load_custom" />
-
-    <item
-        android:onClick="promptSleepTimer"
-        android:title="@string/sleep_timer" />
+        android:onClick="saveDefaults"
+        android:title="@string/save_default" />
 
     <item
         android:onClick="displaySettings"
