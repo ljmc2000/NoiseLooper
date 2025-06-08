@@ -7,20 +7,20 @@
         android:title="@string/pause_button_label"
         android:icon="@drawable/pause"
         android:visible="false"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:onClick="promptSleepTimer"
         android:title="@string/sleep_timer"
         android:icon="@drawable/timer"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/load_button"
         android:onClick="promptLoadCustomProfile"
         android:title="@string/load_custom"
         android:icon="@drawable/cd_load"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:onClick="promptSaveCustomProfile"
