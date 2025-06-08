@@ -1,1 +1,4 @@
-* Enabled support for themed icons courtesy of ᡠᠵᡠᡳ ᡠᠵᡠ ᠮᠠᠨᡩ᠋ᠠᠨ
+* Enabled support for app icon matching device theme courtesy of "ᡠᠵᡠᡳ ᡠᠵᡠ ᠮᠠᠨᡩ᠋ᠠᠨ"
+* Sleep timer prefills with last value as requested by "bertbesser"
+* Sleep timer given permanent place on screen as requested by "bertbesser"
+* Load profile dialog simplified to 2 clicks as requested by "bertbesser"
