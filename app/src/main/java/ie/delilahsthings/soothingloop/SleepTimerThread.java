@@ -45,7 +45,7 @@ public class SleepTimerThread  extends Thread{
         singleton=null;
     }
 
-    public static boolean isRunning()
+    public static synchronized boolean isRunning()
     {
         return singleton!=null;
     }
@@ -64,7 +64,9 @@ public class SleepTimerThread  extends Thread{
 
     public static synchronized void stopSleepTimer()
     {
-        singleton.interrupt();
-        singleton=null;
+        if(singleton!=null) {
+            singleton.interrupt();
+            singleton = null;
+        }
     }
 }
