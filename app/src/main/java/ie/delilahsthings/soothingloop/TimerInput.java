@@ -97,7 +97,6 @@ public class TimerInput {
 
         if(all_l==0) {
             setSeconds(originalValue);
-            setTextColour(placeholderColour);
             return;
         }
 
@@ -123,11 +122,10 @@ public class TimerInput {
         hoursInput.setText(hours);
         minutesInput.setText(minutes);
         secondsInput.setText(seconds);
-        setTextColour(originalColour);
     }
 
     void setTextColour(int colour) {
-         hoursInput.setTextColor(colour);
+        hoursInput.setTextColor(colour);
         minutesInput.setTextColor(colour);
         secondsInput.setTextColor(colour);
     }
@@ -153,6 +151,7 @@ public class TimerInput {
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String all = realTimeInput.getText().toString();
             setSeconds(all);
+            setTextColour(originalColour);
 
             if(callback!=null) {
                 callback.setSeconds(getSeconds());
