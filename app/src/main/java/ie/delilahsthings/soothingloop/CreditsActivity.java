@@ -68,6 +68,16 @@ public class CreditsActivity extends AppCompatActivity {
         }
 
 
+        NodeList otherContributors=document.getElementsByTagName("other_contributor");
+        header=credits.getElementById("other_credits_header");
+        header.setTextContent(String.format(HEADER, getString(R.string.other_contributors)));
+        body=credits.getElementById("other_credits");
+        for(int i=0; i<otherContributors.getLength(); i++) {
+            node=(Element) otherContributors.item(i);
+            developer(credits,body,node);
+        }
+
+
         NodeList upstreamCredits=document.getElementsByTagName("upstream_developer");
         header=credits.getElementById("upstream_application_credits_header");
         header.setTextContent(String.format(HEADER,getString(R.string.upstream_application)));

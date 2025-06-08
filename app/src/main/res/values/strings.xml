@@ -48,6 +48,7 @@
     <string name="big_file_warning">Warning: sound effects should be a megabyte or less</string>
     <string name="credits_header">"%s: "</string>
     <string name="developers">Developers</string>
+    <string name="other_contributors">Other Contributors great and small</string>
     <string name="upstream_application">Upstream application</string>
     <string name="sounds">Sounds</string>
     <string name="author">Author</string>
