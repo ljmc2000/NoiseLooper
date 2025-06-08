@@ -2,3 +2,4 @@
 * Sleep timer prefills with last value as requested by "bertbesser"
 * Sleep timer given permanent place on screen as requested by "bertbesser"
 * Load profile dialog simplified to 2 clicks as requested by "bertbesser"
+* Fixed app crashing if you tried to cancel a non running sleep timer
