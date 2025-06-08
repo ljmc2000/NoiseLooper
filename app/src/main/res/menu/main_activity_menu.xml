@@ -16,11 +16,14 @@
         app:showAsAction="always"/>
 
     <item
-        android:id="@+id/load_button"
-        android:onClick="promptLoadCustomProfile"
+        android:id="@+id/load_profile_button"
         android:title="@string/load_custom"
         android:icon="@drawable/cd_load"
-        app:showAsAction="always" />
+        android:visible="false"
+        app:showAsAction="always">
+        <menu
+            android:id="@+id/load_profile_menu" />
+    </item>
 
     <item
         android:onClick="promptSaveCustomProfile"

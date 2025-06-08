@@ -99,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.main_activity_menu, menu);
         MenuItem playPauseButton = menu.findItem(R.id.play_pause_button);
         setPauseVisibility(playPauseButton);
+        MenuItem profilesMenuButton = menu.findItem(R.id.load_profile_button);
+        setupProfilesMenu(profilesMenuButton);
         return true;
     }
 
@@ -322,24 +324,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void promptLoadCustomProfile(MenuItem sender)
+    public boolean loadCustomProfile(MenuItem sender)
     {
-        Spinner spinner = new Spinner(this);
-        String profiles[] = ProfileManager.listProfiles();
-        if(profiles.length!=0) {
-            ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, profiles);
-            spinner.setAdapter(spinnerArrayAdapter);
-            new SaveLoadDialog(this, spinner, R.string.load_custom, R.string.load, (profileName) -> {
-                try {
-                    applyProfile(ProfileManager.loadProfile(profileName));
-                } catch (ProfileManager.ProfileLoadException e) {
-                    Toast.makeText(this, R.string.load_profile_problem, Toast.LENGTH_SHORT).show();
-                }
-            }, true);
+        try {
+            applyProfile(ProfileManager.loadProfile(sender.getTitle().toString()));
+        } catch (ProfileManager.ProfileLoadException e) {
+            Toast.makeText(this, R.string.load_profile_problem, Toast.LENGTH_SHORT).show();
         }
-        else {
-            Toast.makeText(this,R.string.no_profiles_saved,Toast.LENGTH_SHORT).show();
-        }
+        return true;
     }
 
     public void promptSaveCustomProfile(MenuItem sender)
@@ -518,6 +510,25 @@ public class MainActivity extends AppCompatActivity {
         {
             playPauseButton.setTitle(R.string.resume_button_label);
             playPauseButton.setIcon(R.drawable.play_triangle);
+        }
+    }
+
+    void setupProfilesMenu(MenuItem profilesMenuButton) {
+        String profiles[] = ProfileManager.listProfiles();
+        Menu menu = profilesMenuButton.getSubMenu();
+        MenuItem item;
+
+        if(profiles.length!=0) {
+            menu.clear();
+            for(String profile: profiles) {
+                item = menu.add(profile);
+                item.setOnMenuItemClickListener(this::loadCustomProfile);
+            }
+
+            profilesMenuButton.setVisible(true);
+        }
+        else {
+            profilesMenuButton.setVisible(false);
         }
     }
 
