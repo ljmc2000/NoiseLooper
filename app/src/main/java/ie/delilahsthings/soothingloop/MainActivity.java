@@ -104,6 +104,13 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem profilesMenuButton = menu.findItem(R.id.load_profile_button);
+        setupProfilesMenu(profilesMenuButton);
+        return true;
+    }
+
     void addDivider()
     {
         ViewGroup view = new LinearLayout(this);
@@ -340,6 +347,7 @@ public class MainActivity extends AppCompatActivity {
         SaveLoadDialog saveDialog = new SaveLoadDialog(this, textbox, R.string.save_custom, R.string.save,(profileName)-> {
             try {
                 ProfileManager.saveProfile(profileName, pickleProfile());
+                invalidateOptionsMenu();
             } catch (ProfileManager.ProfileSaveException e) {
                 Toast.makeText(this, R.string.save_profile_problem, Toast.LENGTH_SHORT).show();
             }
@@ -423,6 +431,14 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        //custom profiles added or removed
+        BroadcastReceiver onProfileAddedOrRemoved=new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                invalidateOptionsMenu();
+            }
+        };
+
         //headphones unplugged
         BroadcastReceiver onAudioDeviceChange=new BroadcastReceiver() {
             @Override
@@ -435,6 +451,7 @@ public class MainActivity extends AppCompatActivity {
             registerReceiver(fadeoutEvent, new IntentFilter(Constants.FADEOUT_ACTION), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION), Context.RECEIVER_NOT_EXPORTED);
+            registerReceiver(onProfileAddedOrRemoved,new IntentFilter(Constants.INVALIDATE_PROFILES), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(onAudioDeviceChange,new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY), Context.RECEIVER_EXPORTED);
         }
         else
@@ -442,6 +459,7 @@ public class MainActivity extends AppCompatActivity {
             registerReceiver(fadeoutEvent, new IntentFilter(Constants.FADEOUT_ACTION));
             registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT));
             registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION));
+            registerReceiver(onProfileAddedOrRemoved,new IntentFilter(Constants.INVALIDATE_PROFILES));
             registerReceiver(onAudioDeviceChange,new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
         }
     }

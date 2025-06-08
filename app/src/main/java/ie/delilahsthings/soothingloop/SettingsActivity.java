@@ -97,8 +97,12 @@ public class SettingsActivity extends AppCompatActivity {
         deleteButton.setOnClickListener((v)->promptDeleteProfile(view, profileName));
         exportButton=view.findViewById(R.id.export_button);
         exportButton.setOnClickListener((View v)->promptExportProfile(profileName));
-
         profilesView.addView(view);
+
+        Intent intent = new Intent();
+        intent.setAction(Constants.INVALIDATE_PROFILES);
+        intent.setPackage(getPackageName());
+        sendBroadcast(intent);
     }
 
     void populateCustomProfiles()
@@ -175,6 +179,11 @@ public class SettingsActivity extends AppCompatActivity {
         builder.setPositiveButton(getString(R.string.confirm),(dialogInterface, i) -> {
             ProfileManager.deleteProfile(profileName);
             profilesView.removeView(sender);
+
+            Intent intent = new Intent();
+            intent.setAction(Constants.INVALIDATE_PROFILES);
+            intent.setPackage(getPackageName());
+            sendBroadcast(intent);
         });
 
         builder.show();
