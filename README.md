@@ -6,13 +6,13 @@
 Play soothing sound effects to help you relax and drown out background noise. Intended to be an android port of [Blanket](https://github.com/rafaelmardojai/blanket).
 
 # Preview
-<img src="metadata/en-US/images/phoneScreenshots/1.png">
-<img src="metadata/en-US/images/phoneScreenshots/2.png">
+<img src="metadata/en-US/images/phoneScreenshots/1.png" width="300">
+<img src="metadata/en-US/images/phoneScreenshots/2.png" width="300">
 
 
 
-<img src="metadata/en-US/images/phoneScreenshots/3.png">
-<img src="metadata/en-US/images/phoneScreenshots/4.png">
+<img src="metadata/en-US/images/phoneScreenshots/3.png" width="300">
+<img src="metadata/en-US/images/phoneScreenshots/4.png" width="300">
 
 
 # Install
