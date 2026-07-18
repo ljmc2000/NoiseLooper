@@ -5,6 +5,16 @@
 # Description
 Play soothing sound effects to help you relax and drown out background noise. Intended to be an android port of [Blanket](https://github.com/rafaelmardojai/blanket).
 
+# Preview
+<img src="metadata/en-US/images/phoneScreenshots/1.png">
+<img src="metadata/en-US/images/phoneScreenshots/2.png">
+
+
+
+<img src="metadata/en-US/images/phoneScreenshots/3.png">
+<img src="metadata/en-US/images/phoneScreenshots/4.png">
+
+
 # Install
 * Get it on [F-Droid](https://f-droid.org/en/packages/ie.delilahsthings.soothingloop/) (recommended)
 * Download an APK from [Releases](https://github.com/ljmc2000/NoiseLooper/releases)
