@@ -3,12 +3,16 @@ package ie.delilahsthings.soothingloop;
 public abstract class Constants {
     public final static String ANY_PLAYING="any_playing";
     public final static String APP_SETTINGS = "app_settings";
+    public final static String CONTROL_NOTIFICATION = "control_notification";
+    public final static int CONTROL_NOTIFICATION_ID = 1;
     public final static String CUSTOM_NOISE_PREFIX = "custom_";
     public final static String DISABLE_PROBLEM_SOUNDS = "hide_problem_sounds";
+    public final static String ENABLE_CONTROL_NOTIFICATION = "enable_control_notification";
     public static final String FADEOUT_ACTION = "ie.delilahsthings.soothingloop.fadeout_action";
     public static final String FADEOUT_INTERRUPTED = "fadeout_interrupted";
     public static final String FADEOUT_DURATION = "fadeout_duration";
     public final static String INVALIDATE_ACTION = "ie.delilahsthings.soothingloop.invalidate_custom_sounds";
+    public final static String INVALIDATE_CONTROL_NOTIFICATION = "ie.delilahsthings.soothingloop.invalidate_control_notification";
     public final static String INVALIDATE_PROFILES = "ie.delilahsthings.soothingloop.invalidate_profiles";
     public final static String LAST_TIMER_VALUE = "last_timer_value";
     public final static String LOAD_DEFAULT_ON_START = "load_default_on_start";

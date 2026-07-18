@@ -7,11 +7,11 @@ import android.widget.CompoundButton;
 
 public class CheckboxBooleanToggle {
     private CompoundButton box;
-    private Runnable callback;
+    private CheckboxConsumer callback;
     private String field;
     private SharedPreferences settings;
 
-    private CheckboxBooleanToggle(SharedPreferences settings, String field, CompoundButton box, Runnable callback)
+    private CheckboxBooleanToggle(SharedPreferences settings, String field, CompoundButton box, CheckboxConsumer callback)
     {
         this.settings=settings;
         this.field=field;
@@ -24,7 +24,7 @@ public class CheckboxBooleanToggle {
         SharedPreferences.Editor editor=settings.edit();
         editor.putBoolean(field,checked);
         editor.commit();
-        callback.run();
+        callback.onCheckboxClicked(checked);
     }
 
     public void onClickOther(View sender)
@@ -34,7 +34,7 @@ public class CheckboxBooleanToggle {
         onClickBox(box,checked);
     }
 
-    public static void build(SharedPreferences settings, String field, ViewGroup viewGroup, Runnable callback)
+    public static void build(SharedPreferences settings, String field, ViewGroup viewGroup, CheckboxConsumer callback)
     {
         CompoundButton box = Util.getChildOfType(viewGroup, CompoundButton.class);
         CheckboxBooleanToggle setting = new CheckboxBooleanToggle(settings, field, box, callback);
@@ -45,6 +45,10 @@ public class CheckboxBooleanToggle {
 
     public static void build(SharedPreferences settings, String field, ViewGroup viewGroup)
     {
-        build(settings, field, viewGroup, ()->{});
+        build(settings, field, viewGroup, (checked)->{});
+    }
+
+    public static interface CheckboxConsumer {
+        void onCheckboxClicked(boolean checked);
     }
 }

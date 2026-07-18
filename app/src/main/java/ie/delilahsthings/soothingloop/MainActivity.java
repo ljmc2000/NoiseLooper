@@ -2,12 +2,19 @@ package ie.delilahsthings.soothingloop;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 
+import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.os.Build;
@@ -19,12 +26,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         populateCustomNoiselist();
 
         registerBroadcastReceivers();
+        registerNotifications(settings.getBoolean(Constants.ENABLE_CONTROL_NOTIFICATION, false));
 
         if(settings.getBoolean(Constants.LOAD_DEFAULT_ON_START,false))
         {
@@ -431,6 +437,14 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        //enable or disable control notification
+        BroadcastReceiver onControlNotificationToggled = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                registerNotifications(intent.getBooleanExtra(Constants.ENABLE_CONTROL_NOTIFICATION, false));
+            }
+        };
+
         //custom profiles added or removed
         BroadcastReceiver onProfileAddedOrRemoved=new BroadcastReceiver() {
             @Override
@@ -451,6 +465,7 @@ public class MainActivity extends AppCompatActivity {
             registerReceiver(fadeoutEvent, new IntentFilter(Constants.FADEOUT_ACTION), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION), Context.RECEIVER_NOT_EXPORTED);
+            registerReceiver(onControlNotificationToggled,new IntentFilter(Constants.INVALIDATE_CONTROL_NOTIFICATION), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(onProfileAddedOrRemoved,new IntentFilter(Constants.INVALIDATE_PROFILES), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(onAudioDeviceChange,new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY), Context.RECEIVER_EXPORTED);
         }
@@ -459,8 +474,38 @@ public class MainActivity extends AppCompatActivity {
             registerReceiver(fadeoutEvent, new IntentFilter(Constants.FADEOUT_ACTION));
             registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT));
             registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION));
+            registerReceiver(onControlNotificationToggled,new IntentFilter(Constants.INVALIDATE_CONTROL_NOTIFICATION));
             registerReceiver(onProfileAddedOrRemoved,new IntentFilter(Constants.INVALIDATE_PROFILES));
             registerReceiver(onAudioDeviceChange,new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
+        }
+    }
+
+
+    void registerNotifications(boolean enableControlNotification)
+    {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED)
+        {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            if(!enableControlNotification) {
+                notificationManager.cancel(Constants.CONTROL_NOTIFICATION_ID);
+                return;
+            }
+
+            if(Build.VERSION.SDK_INT>=26) {
+                NotificationChannel notificationChannel = new NotificationChannel(Constants.CONTROL_NOTIFICATION, getString(R.string.control_notification_channel_name), NotificationManager.IMPORTANCE_LOW);
+                notificationManager.createNotificationChannel(notificationChannel);
+            }
+
+            Notification controlNotification = new NotificationCompat.Builder(this, Constants.CONTROL_NOTIFICATION)
+                    .setContentText(getString(R.string.control_notification_label))
+                    .setPriority(NotificationCompat.PRIORITY_LOW)
+                    .setSmallIcon(R.drawable.app_icon_foreground)
+                    .setStyle(new NotificationCompat.BigTextStyle())
+                    .setOngoing(true)
+                    .build();
+
+            notificationManager.notify(Constants.CONTROL_NOTIFICATION_ID, controlNotification);
         }
     }
 
