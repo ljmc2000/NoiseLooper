@@ -2,12 +2,19 @@ package ie.delilahsthings.soothingloop;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.media.AudioManager;
 import android.os.Build;
@@ -19,12 +26,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         noise_lists=new LinearLayout[]{stock_noise_list,custom_noise_list};
         resources=getResources();
 
-        settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
+        settings=getSharedPreferences(Constants.APP_SETTINGS, MODE_MULTI_PROCESS);
 
         Util.run_once(settings, CustomSoundsManager::migratePre1dot2Noises, Constants.PRE_1DOT3_NOISE_MIGRATION_COMPLETE);
         Util.run_once(settings, ProfileManager::migratePre1dot2Profiles, Constants.PRE_1DOT3_PROFILE_MIGRATION_COMPLETE);
@@ -97,10 +102,8 @@ public class MainActivity extends AppCompatActivity {
     {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_activity_menu, menu);
-        MenuItem playPauseButton = menu.findItem(R.id.play_pause_button);
-        setPauseVisibility(playPauseButton);
-        MenuItem profilesMenuButton = menu.findItem(R.id.load_profile_button);
-        setupProfilesMenu(profilesMenuButton);
+        runOnButton(R.id.play_pause_button, this::setPauseVisibility);
+        runOnButton(R.id.load_profile_button, this::setupProfilesMenu);
         return true;
     }
 
@@ -309,6 +312,7 @@ public class MainActivity extends AppCompatActivity {
             playPauseButton.setVisible(true);
             playPauseButton.setIcon(R.drawable.pause);
             playPauseButton.setTitle(R.string.pause_button_label);
+            updateControlNotification(true);
         }
         catch (NullPointerException e) {
         }
@@ -316,10 +320,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void playPause(MenuItem sender)
     {
-        if(pausedSounds.getBoolean(Constants.ANY_PLAYING,true)) {
-            silenceAll(sender);
-            sender.setIcon(R.drawable.play_triangle);
-            sender.setTitle(R.string.resume_button_label);
+        boolean anyPlaying = pausedSounds.getBoolean(Constants.ANY_PLAYING,true);
+        if(anyPlaying) {
+            silenceAll(sender); //set icon and set title implied
             pausedSounds.putBoolean(Constants.ANY_PLAYING,false);
         }
 
@@ -329,6 +332,8 @@ public class MainActivity extends AppCompatActivity {
             sender.setTitle(R.string.pause_button_label);
             pausedSounds.putBoolean(Constants.ANY_PLAYING,true);
         }
+
+        updateControlNotification(!anyPlaying);
     }
 
     public boolean loadCustomProfile(MenuItem sender)
@@ -387,7 +392,7 @@ public class MainActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 boolean interrupted = intent.getBooleanExtra(Constants.FADEOUT_INTERRUPTED, false);
                 if(interrupted)
-                    silenceAll();
+                    runOnButton(R.id.play_pause_button, (playPauseButton)->silenceAll(playPauseButton));
             }
         };
 
@@ -431,6 +436,22 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        //enable or disable control notification
+        BroadcastReceiver onControlNotificationToggled = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                boolean anyPlaying = pausedSounds.getBoolean(Constants.ANY_PLAYING, true);
+                updateControlNotification(intent.getBooleanExtra(Constants.ENABLE_CONTROL_NOTIFICATION, false), anyPlaying);
+            }
+        };
+
+        BroadcastReceiver onPlayPause = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                runOnButton(R.id.play_pause_button, button->playPause(button));
+            }
+        };
+
         //custom profiles added or removed
         BroadcastReceiver onProfileAddedOrRemoved=new BroadcastReceiver() {
             @Override
@@ -443,24 +464,70 @@ public class MainActivity extends AppCompatActivity {
         BroadcastReceiver onAudioDeviceChange=new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                silenceAll();
+                runOnButton(R.id.play_pause_button, button->silenceAll(button));
             }
         };
 
         if (Build.VERSION.SDK_INT >= 26) {
             registerReceiver(fadeoutEvent, new IntentFilter(Constants.FADEOUT_ACTION), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT), Context.RECEIVER_NOT_EXPORTED);
-            registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION), Context.RECEIVER_NOT_EXPORTED);
-            registerReceiver(onProfileAddedOrRemoved,new IntentFilter(Constants.INVALIDATE_PROFILES), Context.RECEIVER_NOT_EXPORTED);
-            registerReceiver(onAudioDeviceChange,new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY), Context.RECEIVER_EXPORTED);
+            registerReceiver(onNoiseListChange, new IntentFilter(Constants.INVALIDATE_ACTION), Context.RECEIVER_NOT_EXPORTED);
+            registerReceiver(onControlNotificationToggled,new IntentFilter(Constants.INVALIDATE_CONTROL_NOTIFICATION), Context.RECEIVER_NOT_EXPORTED);
+            registerReceiver(onPlayPause, new IntentFilter(Constants.PLAY_PAUSE), Context.RECEIVER_NOT_EXPORTED);
+            registerReceiver(onProfileAddedOrRemoved, new IntentFilter(Constants.INVALIDATE_PROFILES), Context.RECEIVER_NOT_EXPORTED);
+            registerReceiver(onAudioDeviceChange, new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY), Context.RECEIVER_EXPORTED);
         }
         else
         {
             registerReceiver(fadeoutEvent, new IntentFilter(Constants.FADEOUT_ACTION));
             registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT));
-            registerReceiver(onNoiseListChange,new IntentFilter(Constants.INVALIDATE_ACTION));
-            registerReceiver(onProfileAddedOrRemoved,new IntentFilter(Constants.INVALIDATE_PROFILES));
-            registerReceiver(onAudioDeviceChange,new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
+            registerReceiver(onNoiseListChange, new IntentFilter(Constants.INVALIDATE_ACTION));
+            registerReceiver(onControlNotificationToggled, new IntentFilter(Constants.INVALIDATE_CONTROL_NOTIFICATION));
+            registerReceiver(onPlayPause, new IntentFilter(Constants.PLAY_PAUSE));
+            registerReceiver(onProfileAddedOrRemoved, new IntentFilter(Constants.INVALIDATE_PROFILES));
+            registerReceiver(onAudioDeviceChange, new IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY));
+        }
+    }
+
+    void updateControlNotification(boolean anyPlaying) {
+        boolean enableControlNotification = settings.getBoolean(Constants.ENABLE_CONTROL_NOTIFICATION, false);
+        updateControlNotification(enableControlNotification, anyPlaying);
+    }
+    void updateControlNotification(boolean enableControlNotification, Boolean isPlaying)
+    {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED)
+        {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            if(!enableControlNotification) {
+                notificationManager.cancel(Constants.CONTROL_NOTIFICATION_ID);
+                return;
+            }
+
+            if(Build.VERSION.SDK_INT>=26) {
+                NotificationChannel notificationChannel = new NotificationChannel(Constants.CONTROL_NOTIFICATION, getString(R.string.control_notification_channel_name), NotificationManager.IMPORTANCE_LOW);
+                notificationManager.createNotificationChannel(notificationChannel);
+            }
+
+            PendingIntent playPause = PendingIntent.getBroadcast(this, Constants.CONTROL_NOTIFICATION_ID, new Intent(Constants.PLAY_PAUSE), PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+
+            NotificationCompat.Builder controlNotification = new NotificationCompat.Builder(this, Constants.CONTROL_NOTIFICATION)
+                    .setContentText(getString(R.string.control_notification_label))
+                    .setPriority(NotificationCompat.PRIORITY_LOW)
+                    .setSmallIcon(R.drawable.app_icon_foreground)
+                    .setStyle(new NotificationCompat.BigTextStyle())
+                    .setOngoing(true);
+
+            if(isPlaying)
+            {
+                controlNotification.addAction(R.drawable.pause, getString(R.string.pause_button_label), playPause);
+            }
+            else
+            {
+                controlNotification.addAction(R.drawable.play_triangle, getString(R.string.resume_button_label), playPause);
+            }
+
+            notificationManager.notify(Constants.CONTROL_NOTIFICATION_ID, controlNotification.build());
         }
     }
 
@@ -512,22 +579,22 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        state.putBoolean(Constants.ANY_PLAYING,anyPlaying);
+        state.putBoolean(Constants.ANY_PLAYING, anyPlaying);
     }
 
     void setPauseVisibility(MenuItem playPauseButton)
     {
-        playPauseButton.setVisible(SoundEffectVolumeManager.EVER_PLAYED);
-
-        if(pausedSounds.getBoolean(Constants.ANY_PLAYING,true))
-        {
-            playPauseButton.setTitle(R.string.pause_button_label);
-            playPauseButton.setIcon(R.drawable.pause);
-        }
-        else
-        {
-            playPauseButton.setTitle(R.string.resume_button_label);
-            playPauseButton.setIcon(R.drawable.play_triangle);
+        if(SoundEffectVolumeManager.EVER_PLAYED) {
+            playPauseButton.setVisible(true);
+            if (pausedSounds.getBoolean(Constants.ANY_PLAYING, true)) {
+                playPauseButton.setTitle(R.string.pause_button_label);
+                playPauseButton.setIcon(R.drawable.pause);
+                updateControlNotification(false);
+            } else {
+                playPauseButton.setTitle(R.string.resume_button_label);
+                playPauseButton.setIcon(R.drawable.play_triangle);
+                updateControlNotification(true);
+            }
         }
     }
 
@@ -550,21 +617,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void silenceAll()
+    private void runOnButton(int buttonId, ButtonMethod method)
     {
-        Toolbar mainToolbar = findViewById(R.id.main_toolbar);
-        Menu mainMenu = mainToolbar.getMenu();
-        MenuItem playPauseButton;
         try {
-            playPauseButton = mainMenu.findItem(R.id.play_pause_button);
-            silenceAll(playPauseButton);
+            Toolbar mainToolbar = findViewById(R.id.main_toolbar);
+            Menu mainMenu = mainToolbar.getMenu();
+            MenuItem button = mainMenu.findItem(buttonId);
+            method.runWithButton(button);
         }
         catch (NullPointerException e) {
         }
     }
     public void silenceAll(MenuItem playPauseButton)
     {
-        if(pausedSounds.getBoolean(Constants.ANY_PLAYING,true)) {
+        boolean any_playing = pausedSounds.getBoolean(Constants.ANY_PLAYING,true);
+
+        if(any_playing) {
             saveState(pausedSounds);
             playPauseButton.setIcon(R.drawable.play_triangle);
             playPauseButton.setTitle(R.string.resume_button_label);
@@ -589,13 +657,15 @@ public class MainActivity extends AppCompatActivity {
         Toolbar mainToolbar = findViewById(R.id.main_toolbar);
         Menu mainMenu = mainToolbar.getMenu();
         MenuItem playPauseButton;
+        boolean anyPlaying = pausedSounds.getBoolean(Constants.ANY_PLAYING,true);
         try {
             playPauseButton = mainMenu.findItem(R.id.play_pause_button);
-            if(pausedSounds.getBoolean(Constants.ANY_PLAYING,true)) {
+            if(anyPlaying) {
                 saveState(pausedSounds);
                 playPauseButton.setIcon(R.drawable.play_triangle);
                 playPauseButton.setTitle(R.string.resume_button_label);
                 pausedSounds.putBoolean(Constants.ANY_PLAYING, false);
+                updateControlNotification(false);
             }
         }
         catch (NullPointerException e) {
@@ -604,5 +674,9 @@ public class MainActivity extends AppCompatActivity {
         populateNoiselist();
         populateCustomNoiselist();
         SoundEffectVolumeManager.fadeOut(this, settings.getLong(Constants.FADEOUT_DURATION, 3)*1000);
+    }
+
+    public interface ButtonMethod {
+        void runWithButton(MenuItem button);
     }
 }

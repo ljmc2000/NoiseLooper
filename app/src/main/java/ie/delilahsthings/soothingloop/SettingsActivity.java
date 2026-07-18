@@ -41,7 +41,8 @@ public class SettingsActivity extends AppCompatActivity {
         this.settings=getSharedPreferences(Constants.APP_SETTINGS,MODE_MULTI_PROCESS);
 
         CheckboxBooleanToggle.build(settings, Constants.LOAD_DEFAULT_ON_START, findViewById(R.id.toggle_autostart));
-        CheckboxBooleanToggle.build(settings, Constants.DISABLE_PROBLEM_SOUNDS, findViewById(R.id.toggle_problem_sounds), this::invalidateMainActivity);
+        CheckboxBooleanToggle.build(settings, Constants.ENABLE_CONTROL_NOTIFICATION, findViewById(R.id.toggle_control_notification), this::invalidateControlNotification);
+        CheckboxBooleanToggle.build(settings, Constants.DISABLE_PROBLEM_SOUNDS, findViewById(R.id.toggle_problem_sounds), (checked) -> this.invalidateMainActivity());
 
         LinearLayout sleepTimerDuration = this.findViewById(R.id.sleep_timer_duration);
         TimerInput timerInput = new TimerInput(this, sleepTimerDuration,  new DurationChangeListener(), settings.getLong(Constants.FADEOUT_DURATION, 3));
@@ -81,6 +82,15 @@ public class SettingsActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setAction(Constants.INVALIDATE_ACTION);
         intent.putExtra(Constants.RESTORE_VOLUMES,true);
+        intent.setPackage(getPackageName());
+        sendBroadcast(intent);
+    }
+
+    void invalidateControlNotification(boolean checked)
+    {
+        Intent intent = new Intent();
+        intent.setAction(Constants.INVALIDATE_CONTROL_NOTIFICATION);
+        intent.putExtra(Constants.ENABLE_CONTROL_NOTIFICATION, checked);
         intent.setPackage(getPackageName());
         sendBroadcast(intent);
     }
