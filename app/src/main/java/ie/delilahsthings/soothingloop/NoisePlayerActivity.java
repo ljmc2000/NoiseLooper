@@ -84,6 +84,7 @@ public class NoisePlayerActivity extends AppCompatActivity {
         String startWithProfile = intent.getStringExtra(Constants.START_WITH_PROFILE);
         if (startWithProfile != null) {
             int startDuration = intent.getIntExtra(Constants.FADE_DURATION, 0);
+            SoundEffectVolumeManager.stopAll();
             loadCustomProfile(startWithProfile);
             SoundEffectVolumeManager.fadeIn(this, startDuration);
             return;
