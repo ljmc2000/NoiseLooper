@@ -156,6 +156,17 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
             afterFade.putExtra(Constants.FADE_TYPE, Constants.FADE_OUT);
         }
 
+        @Override
+        protected void afterFadeCallback() {
+            for(SoundEffectVolumeManager manager: cache.values())
+            {
+                if(manager.playbackId!=0) {
+                    soundPool.stop(manager.playbackId);
+                    manager.playbackId = 0;
+                }
+            }
+        }
+
         protected float calculateVolumeForTimeRemaining(float fadeStart, float timeRemaining) {
             return fadeStart * (timeRemaining / smearLength);
         }
@@ -173,6 +184,7 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
             this.context=context;
             this.smearLength=smearLength;
         }
+        protected void afterFadeCallback() {}
         @Override
         public void run()
         {
@@ -204,13 +216,7 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
                 return;
             }
 
-            for(SoundEffectVolumeManager manager: cache.values())
-            {
-                if(manager.playbackId!=0) {
-                    soundPool.stop(manager.playbackId);
-                    manager.playbackId = 0;
-                }
-            }
+            afterFadeCallback();
 
             context.sendBroadcast(afterFade);
         }

@@ -26,5 +26,6 @@ public abstract class Constants {
     public static final int ONE_MEGABYTE = 1024*1024;
     public static final String REMAINING_TIME = "remaining_time";
     public static final String RESTORE_VOLUMES = "restore_volumes";
+    public static final String START_WITH_PROFILE = "start_with_profile";
     public final static String TIMER_EVENT = "ie.delilahsthings.soothingloop.timer_event";
 }

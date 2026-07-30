@@ -80,6 +80,15 @@ public class MainActivity extends AppCompatActivity {
 
         registerBroadcastReceivers();
 
+        Intent intent = getIntent();
+        String startWithProfile = intent.getStringExtra(Constants.START_WITH_PROFILE);
+        if (startWithProfile != null) {
+            int startDuration = intent.getIntExtra(Constants.FADE_DURATION, 0);
+            loadCustomProfile(startWithProfile);
+            SoundEffectVolumeManager.fadeIn(this, startDuration);
+            return;
+        }
+
         if(settings.getBoolean(Constants.LOAD_DEFAULT_ON_START,false))
         {
             applyDefaultProfile(null);
@@ -336,14 +345,19 @@ public class MainActivity extends AppCompatActivity {
         updateControlNotification(!anyPlaying);
     }
 
-    public boolean loadCustomProfile(MenuItem sender)
+    public boolean loadCustomProfile(String profileName)
     {
         try {
-            applyProfile(ProfileManager.loadProfile(sender.getTitle().toString()));
+            applyProfile(ProfileManager.loadProfile(profileName));
         } catch (ProfileManager.ProfileLoadException e) {
             Toast.makeText(this, R.string.load_profile_problem, Toast.LENGTH_SHORT).show();
         }
         return true;
+    }
+
+    public boolean loadCustomProfile(MenuItem sender)
+    {
+        return loadCustomProfile(sender.getTitle().toString());
     }
 
     public void promptSaveCustomProfile(MenuItem sender)
