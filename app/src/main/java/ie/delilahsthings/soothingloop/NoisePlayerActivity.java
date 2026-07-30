@@ -48,7 +48,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class MainActivity extends AppCompatActivity {
+public class NoisePlayerActivity extends AppCompatActivity {
 
     private Bundle pausedSounds = new Bundle();
     private LinearLayout[] noise_lists;
@@ -79,6 +79,16 @@ public class MainActivity extends AppCompatActivity {
         populateCustomNoiselist();
 
         registerBroadcastReceivers();
+
+        Intent intent = getIntent();
+        String startWithProfile = intent.getStringExtra(Constants.START_WITH_PROFILE);
+        if (startWithProfile != null) {
+            int startDuration = intent.getIntExtra(Constants.FADE_DURATION, 0);
+            SoundEffectVolumeManager.stopAll();
+            loadCustomProfile(startWithProfile);
+            SoundEffectVolumeManager.fadeIn(this, startDuration);
+            return;
+        }
 
         if(settings.getBoolean(Constants.LOAD_DEFAULT_ON_START,false))
         {
@@ -336,14 +346,19 @@ public class MainActivity extends AppCompatActivity {
         updateControlNotification(!anyPlaying);
     }
 
-    public boolean loadCustomProfile(MenuItem sender)
+    public boolean loadCustomProfile(String profileName)
     {
         try {
-            applyProfile(ProfileManager.loadProfile(sender.getTitle().toString()));
+            applyProfile(ProfileManager.loadProfile(profileName));
         } catch (ProfileManager.ProfileLoadException e) {
             Toast.makeText(this, R.string.load_profile_problem, Toast.LENGTH_SHORT).show();
         }
         return true;
+    }
+
+    public boolean loadCustomProfile(MenuItem sender)
+    {
+        return loadCustomProfile(sender.getTitle().toString());
     }
 
     public void promptSaveCustomProfile(MenuItem sender)
@@ -387,11 +402,12 @@ public class MainActivity extends AppCompatActivity {
 
     void registerBroadcastReceivers()
     {
-        BroadcastReceiver fadeoutEvent = new BroadcastReceiver() {
+        BroadcastReceiver fadeCompleteEvent = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                boolean interrupted = intent.getBooleanExtra(Constants.FADEOUT_INTERRUPTED, false);
-                if(interrupted)
+                boolean interrupted = intent.getBooleanExtra(Constants.FADE_INTERRUPTED, false);
+                int fadeType = intent.getIntExtra(Constants.FADE_TYPE, 0);
+                if((fadeType==Constants.FADE_OUT) && interrupted)
                     runOnButton(R.id.play_pause_button, (playPauseButton)->silenceAll(playPauseButton));
             }
         };
@@ -469,7 +485,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         if (Build.VERSION.SDK_INT >= 26) {
-            registerReceiver(fadeoutEvent, new IntentFilter(Constants.FADEOUT_ACTION), Context.RECEIVER_NOT_EXPORTED);
+            registerReceiver(fadeCompleteEvent, new IntentFilter(Constants.FADE_COMPLETED_ACTION), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(onNoiseListChange, new IntentFilter(Constants.INVALIDATE_ACTION), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(onControlNotificationToggled,new IntentFilter(Constants.INVALIDATE_CONTROL_NOTIFICATION), Context.RECEIVER_NOT_EXPORTED);
@@ -479,7 +495,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            registerReceiver(fadeoutEvent, new IntentFilter(Constants.FADEOUT_ACTION));
+            registerReceiver(fadeCompleteEvent, new IntentFilter(Constants.FADE_COMPLETED_ACTION));
             registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT));
             registerReceiver(onNoiseListChange, new IntentFilter(Constants.INVALIDATE_ACTION));
             registerReceiver(onControlNotificationToggled, new IntentFilter(Constants.INVALIDATE_CONTROL_NOTIFICATION));
@@ -673,7 +689,7 @@ public class MainActivity extends AppCompatActivity {
 
         populateNoiselist();
         populateCustomNoiselist();
-        SoundEffectVolumeManager.fadeOut(this, settings.getLong(Constants.FADEOUT_DURATION, 3)*1000);
+        SoundEffectVolumeManager.fadeOut(this, settings.getLong(Constants.FADE_DURATION, 3)*1000);
     }
 
     public interface ButtonMethod {

@@ -45,7 +45,7 @@ public class SettingsActivity extends AppCompatActivity {
         CheckboxBooleanToggle.build(settings, Constants.DISABLE_PROBLEM_SOUNDS, findViewById(R.id.toggle_problem_sounds), (checked) -> this.invalidateMainActivity());
 
         LinearLayout sleepTimerDuration = this.findViewById(R.id.sleep_timer_duration);
-        TimerInput timerInput = new TimerInput(this, sleepTimerDuration,  new DurationChangeListener(), settings.getLong(Constants.FADEOUT_DURATION, 3));
+        TimerInput timerInput = new TimerInput(this, sleepTimerDuration,  new DurationChangeListener(), settings.getLong(Constants.FADE_DURATION, 3));
 
         populateCustomProfiles();
         populateCustomSounds();
@@ -249,7 +249,7 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void run() {
             SharedPreferences.Editor editor = settings.edit();
-            editor.putLong(Constants.FADEOUT_DURATION, seconds);
+            editor.putLong(Constants.FADE_DURATION, seconds);
             editor.apply();
         }
     }

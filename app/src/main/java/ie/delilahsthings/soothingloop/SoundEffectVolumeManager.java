@@ -17,7 +17,7 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
     private int soundPoolIndex;
 
     private static Runnable onPlayCallback;
-    private static FadeOutThread fadeOutThread;
+    private static FadeSmearThread fadeSmearThread;
     private static SoundPool soundPool=new SoundPool(SoundEffectVolumeManager.MAX_STREAMS, AudioManager.STREAM_MUSIC,0);
     private static HashMap<String,SoundEffectVolumeManager> cache = new HashMap<>();
     public static boolean EVER_PLAYED=false;
@@ -60,7 +60,7 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
 
     public static void stopAll()
     {
-        abortFadeout();
+        abortFade();
 
         for(SoundEffectVolumeManager manager: cache.values())
         {
@@ -72,23 +72,30 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
         }
     }
 
-    public static void abortFadeout() {
-        if(fadeOutThread!=null && fadeOutThread.isAlive()) {
-            fadeOutThread.interrupt();
+    public static void abortFade() {
+        if(fadeSmearThread!=null && fadeSmearThread.isAlive()) {
+            fadeSmearThread.interrupt();
         }
     }
 
+    public static void fadeIn(Context context, long smearLength)
+    {
+        if(fadeSmearThread==null || !fadeSmearThread.isAlive()) {
+            fadeSmearThread = new FadeInThread(context, smearLength);
+            fadeSmearThread.start();
+        }
+    }
     public static void fadeOut(Context context, long smearLength)
     {
-        if(fadeOutThread==null || !fadeOutThread.isAlive()) {
-            fadeOutThread = new FadeOutThread(context, smearLength);
-            fadeOutThread.start();
+        if(fadeSmearThread==null || !fadeSmearThread.isAlive()) {
+            fadeSmearThread = new FadeOutThread(context, smearLength);
+            fadeSmearThread.start();
         }
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int volume, boolean z) {
-        abortFadeout();
+        abortFade();
 
         volumeF=volume/100f;
         if(playbackId==0) {
@@ -130,48 +137,27 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
 
     }
 
-    static class FadeOutThread extends Thread{
-        private Context context;
-        private long smearLength;
+    static class FadeInThread extends FadeSmearThread{
+        public FadeInThread(Context context, long smearLength)
+        {
+            super(context, smearLength);
+            afterFade.putExtra(Constants.FADE_TYPE, Constants.FADE_IN);
+        }
 
-        Intent afterFadeout;
+        protected float calculateVolumeForTimeRemaining(float fadeStart, float timeRemaining) {
+            return 1 - (fadeStart * (timeRemaining / smearLength));
+        }
+    }
+
+    static class FadeOutThread extends FadeSmearThread{
         public FadeOutThread(Context context, long smearLength)
         {
-            this.context=context;
-            this.smearLength=smearLength;
+            super(context, smearLength);
+            afterFade.putExtra(Constants.FADE_TYPE, Constants.FADE_OUT);
         }
+
         @Override
-        public void run()
-        {
-            afterFadeout = new Intent(Constants.FADEOUT_ACTION);
-            afterFadeout.setPackage(context.getPackageName());
-
-            long finishAt = System.currentTimeMillis()+smearLength;
-            float timeRemaining;
-
-            HashMap<String, Float> startVolumes = new HashMap<>();
-            for (SoundEffectVolumeManager manager : cache.values()) {
-               manager.fadeStart=manager.volumeF;
-            }
-
-            try {
-                while (System.currentTimeMillis() < finishAt) {
-                    timeRemaining = finishAt - System.currentTimeMillis();
-                    for (SoundEffectVolumeManager manager : cache.values()) {
-                        if (manager.playbackId != 0) {
-                            manager.volumeF = manager.fadeStart * (timeRemaining / smearLength);
-                            soundPool.setVolume(manager.playbackId, manager.volumeF, manager.volumeF);
-                        }
-                    }
-                    Thread.sleep(50);
-                }
-            }
-            catch (InterruptedException ex) {
-                afterFadeout.putExtra(Constants.FADEOUT_INTERRUPTED, true);
-                context.sendBroadcast(afterFadeout);
-                return;
-            }
-
+        protected void afterFadeCallback() {
             for(SoundEffectVolumeManager manager: cache.values())
             {
                 if(manager.playbackId!=0) {
@@ -179,8 +165,60 @@ public class SoundEffectVolumeManager implements SeekBar.OnSeekBarChangeListener
                     manager.playbackId = 0;
                 }
             }
+        }
 
-            context.sendBroadcast(afterFadeout);
+        protected float calculateVolumeForTimeRemaining(float fadeStart, float timeRemaining) {
+            return fadeStart * (timeRemaining / smearLength);
+        }
+    }
+
+    static abstract class FadeSmearThread extends Thread{
+        protected Context context;
+        protected long smearLength;
+        Intent afterFade = new Intent(Constants.FADE_COMPLETED_ACTION);
+
+        protected abstract float calculateVolumeForTimeRemaining(float fadeStart, float timeRemaining);
+
+        protected FadeSmearThread(Context context, long smearLength)
+        {
+            this.context=context;
+            this.smearLength=smearLength;
+        }
+        protected void afterFadeCallback() {}
+        @Override
+        public void run()
+        {
+            afterFade.setPackage(context.getPackageName());
+
+            long finishAt = System.currentTimeMillis()+smearLength;
+            float timeRemaining;
+
+            HashMap<String, Float> startVolumes = new HashMap<>();
+            for (SoundEffectVolumeManager manager : cache.values()) {
+                manager.fadeStart=manager.volumeF;
+            }
+
+            try {
+                while (System.currentTimeMillis() < finishAt) {
+                    timeRemaining = finishAt - System.currentTimeMillis();
+                    for (SoundEffectVolumeManager manager : cache.values()) {
+                        if (manager.playbackId != 0) {
+                            manager.volumeF = calculateVolumeForTimeRemaining(manager.fadeStart, timeRemaining);
+                            soundPool.setVolume(manager.playbackId, manager.volumeF, manager.volumeF);
+                        }
+                    }
+                    Thread.sleep(50);
+                }
+            }
+            catch (InterruptedException ex) {
+                afterFade.putExtra(Constants.FADE_INTERRUPTED, true);
+                context.sendBroadcast(afterFade);
+                return;
+            }
+
+            afterFadeCallback();
+
+            context.sendBroadcast(afterFade);
         }
     }
 }
