@@ -48,7 +48,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-public class MainActivity extends AppCompatActivity {
+public class NoisePlayerActivity extends AppCompatActivity {
 
     private Bundle pausedSounds = new Bundle();
     private LinearLayout[] noise_lists;
