@@ -8,9 +8,12 @@ public abstract class Constants {
     public final static String CUSTOM_NOISE_PREFIX = "custom_";
     public final static String DISABLE_PROBLEM_SOUNDS = "hide_problem_sounds";
     public final static String ENABLE_CONTROL_NOTIFICATION = "enable_control_notification";
-    public static final String FADEOUT_ACTION = "ie.delilahsthings.soothingloop.fadeout_action";
-    public static final String FADEOUT_INTERRUPTED = "fadeout_interrupted";
-    public static final String FADEOUT_DURATION = "fadeout_duration";
+    public static final String FADE_COMPLETED_ACTION = "ie.delilahsthings.soothingloop.fade_completed_action";
+    public static final String FADE_DURATION = "fade_duration";
+    public static final int FADE_IN = 1;
+    public static final String FADE_INTERRUPTED = "fade_interrupted";
+    public static final int FADE_OUT = 0;
+    public static final String FADE_TYPE = "fade_type";
     public final static String INVALIDATE_ACTION = "ie.delilahsthings.soothingloop.invalidate_custom_sounds";
     public final static String INVALIDATE_CONTROL_NOTIFICATION = "ie.delilahsthings.soothingloop.invalidate_control_notification";
     public final static String INVALIDATE_PROFILES = "ie.delilahsthings.soothingloop.invalidate_profiles";

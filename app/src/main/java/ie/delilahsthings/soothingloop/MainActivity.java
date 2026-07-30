@@ -387,11 +387,12 @@ public class MainActivity extends AppCompatActivity {
 
     void registerBroadcastReceivers()
     {
-        BroadcastReceiver fadeoutEvent = new BroadcastReceiver() {
+        BroadcastReceiver fadeCompleteEvent = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                boolean interrupted = intent.getBooleanExtra(Constants.FADEOUT_INTERRUPTED, false);
-                if(interrupted)
+                boolean interrupted = intent.getBooleanExtra(Constants.FADE_INTERRUPTED, false);
+                int fadeType = intent.getIntExtra(Constants.FADE_TYPE, 0);
+                if((fadeType==Constants.FADE_OUT) && interrupted)
                     runOnButton(R.id.play_pause_button, (playPauseButton)->silenceAll(playPauseButton));
             }
         };
@@ -469,7 +470,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         if (Build.VERSION.SDK_INT >= 26) {
-            registerReceiver(fadeoutEvent, new IntentFilter(Constants.FADEOUT_ACTION), Context.RECEIVER_NOT_EXPORTED);
+            registerReceiver(fadeCompleteEvent, new IntentFilter(Constants.FADE_COMPLETED_ACTION), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(onNoiseListChange, new IntentFilter(Constants.INVALIDATE_ACTION), Context.RECEIVER_NOT_EXPORTED);
             registerReceiver(onControlNotificationToggled,new IntentFilter(Constants.INVALIDATE_CONTROL_NOTIFICATION), Context.RECEIVER_NOT_EXPORTED);
@@ -479,7 +480,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            registerReceiver(fadeoutEvent, new IntentFilter(Constants.FADEOUT_ACTION));
+            registerReceiver(fadeCompleteEvent, new IntentFilter(Constants.FADE_COMPLETED_ACTION));
             registerReceiver(sleepTimerEvent, new IntentFilter(Constants.TIMER_EVENT));
             registerReceiver(onNoiseListChange, new IntentFilter(Constants.INVALIDATE_ACTION));
             registerReceiver(onControlNotificationToggled, new IntentFilter(Constants.INVALIDATE_CONTROL_NOTIFICATION));
@@ -673,7 +674,7 @@ public class MainActivity extends AppCompatActivity {
 
         populateNoiselist();
         populateCustomNoiselist();
-        SoundEffectVolumeManager.fadeOut(this, settings.getLong(Constants.FADEOUT_DURATION, 3)*1000);
+        SoundEffectVolumeManager.fadeOut(this, settings.getLong(Constants.FADE_DURATION, 3)*1000);
     }
 
     public interface ButtonMethod {
