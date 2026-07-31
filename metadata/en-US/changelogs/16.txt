@@ -1,0 +1,3 @@
+* Allow start/stop noise from a notification (enabled from settings)
+* Added freedroid lockdown warning
+* Other minor tweaks
