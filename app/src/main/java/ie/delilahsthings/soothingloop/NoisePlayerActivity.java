@@ -48,6 +48,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.woheller69.freeDroidWarn.FreeDroidWarn;
+
 public class NoisePlayerActivity extends AppCompatActivity {
 
     private Bundle pausedSounds = new Bundle();
@@ -73,6 +75,7 @@ public class NoisePlayerActivity extends AppCompatActivity {
 
         Util.run_once(settings, CustomSoundsManager::migratePre1dot2Noises, Constants.PRE_1DOT3_NOISE_MIGRATION_COMPLETE);
         Util.run_once(settings, ProfileManager::migratePre1dot2Profiles, Constants.PRE_1DOT3_PROFILE_MIGRATION_COMPLETE);
+        FreeDroidWarn.showWarningOnUpgrade(this, ie.delilahsthings.soothingloop.BuildConfig.VERSION_CODE);
 
         SoundEffectVolumeManager.setOnPlayCallback(this::onPlaySounds);
         populateNoiselist();
