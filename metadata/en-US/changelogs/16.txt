@@ -1,3 +1,3 @@
-* Allow start/stop noise from a notification (enabled from settings)
+* Allow start/stop noise from a notification (enabled from settings) as requested by Chepycou
 * Added freedroid lockdown warning
 * Other minor tweaks
