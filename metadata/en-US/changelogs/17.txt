@@ -1,0 +1,6 @@
+* Changed java version to comply with f-droid requirements
+
+--from version 1.5.0
+* Allow start/stop noise from a notification (enabled from settings) as requested by Chepycou
+* Added freedroid lockdown warning
+* Other minor tweaks
