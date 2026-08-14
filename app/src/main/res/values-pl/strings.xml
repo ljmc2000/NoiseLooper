@@ -1,0 +1,84 @@
+<resources>
+    <string name="app_name">Soothing Noise Player</string>
+    <string name="persist_key">PersistKey</string>
+
+    <string name="pause_button_label">Zatrzymaj wszystko</string>
+    <string name="resume_button_label">Wznów</string>
+    <string name="save">Zapisz</string>
+    <string name="load">Wczytaj</string>
+    <string name="cancel">Anuluj</string>
+    <string name="confirm">Potwierdź</string>
+    <string name="stop">Stop</string>
+    <string name="save_default">Zapisz profil domyślny</string>
+    <string name="load_default">Wczytaj profil domyślny</string>
+    <string name="save_custom">Zapisz profil własny</string>
+    <string name="load_custom">Wczytaj profil własny</string>
+    <string name="no_profiles_saved">Brak dostępnych profili do wczytania</string>
+    <string name="bad_profile_name_warning">Nazwa profilu nie może być pusta</string>
+    <string name="load_profile_problem">Problem podczas wczytywania profilu</string>
+    <string name="save_profile_problem">Problem podczas zapisywania profilu</string>
+    <string name="sleep_timer">Ustaw wyłącznik czasowy</string>
+    <string name="settings_label">Ustawienia</string>
+    <string name="credits_label">O autorach</string>
+
+
+    <string name="header_antisound">Szumy</string>
+    <string name="header_nature">Natura</string>
+    <string name="header_travel">Podróże</string>
+    <string name="header_interiors">Wnętrza</string>
+
+    <string name="birds">Ptaki</string>
+    <string name="brown_noise">Brązowy szum</string>
+    <string name="boat">Łódź</string>
+    <string name="city">Miasto</string>
+    <string name="coffee_shop">Kawiarnia</string>
+    <string name="fireplace">Kominek</string>
+    <string name="pink_noise">Różowy szum</string>
+    <string name="rain">Deszcz</string>
+    <string name="storm">Burza</string>
+    <string name="stream">Strumyk</string>
+    <string name="summer_night">Letnia noc</string>
+    <string name="train">Pociąg</string>
+    <string name="waves">Fale</string>
+    <string name="white_noise">Biały szum</string>
+    <string name="wind">Wiatr</string>
+
+
+    <string name="credits_error">Błąd podczas wczytywania informacji o autorach…</string>
+    <string name="big_file_warning">Ostrzeżenie: pliki efektów dźwiękowych powinny mieć rozmiar do 1 MB</string>
+    <string name="control_notification_channel_name">Powiadomienie sterujące</string>
+    <string name="control_notification_label">Odtwarzacz relaksujących szumów jest uruchomiony</string>
+    <string name="credits_header">"%s: "</string>
+    <string name="developers">Twórcy</string>
+    <string name="enable_control_notification">Włącz powiadomienie sterujące</string>
+    <string name="other_contributors">Inni współtwórcy, więksi i mniejsi</string>
+    <string name="upstream_application">Aplikacja nadrzędna</string>
+    <string name="sounds">Dźwięki</string>
+    <string name="author">Autor</string>
+    <string name="icon">Ikona</string>
+    <string name="editor">Edytor</string>
+    <string name="license">Licencja</string>
+
+
+    <string name="add_button">Dodaj</string>
+    <string name="delete_button">Usuń</string>
+    <string name="export_button">Eksportuj</string>
+    <string name="autoload_default_profile">Wczytać profil domyślny przy uruchomieniu?</string>
+    <string name="disable_problem_sounds">Wyłączyć dźwięki ze znanymi problemami?</string>
+    <string name="sleep_timer_fade_duration">Czas wyciszania wyłącznika czasowego</string>
+    <string name="edit_profiles">Profile własne</string>
+    <string name="confirm_delete_profile">Czy na pewno chcesz usunąć profil „%s”?</string>
+    <string name="confirm_delete_custom_sound">Czy na pewno chcesz usunąć dźwięk „%s”?</string>
+    <string name="custom_sounds">Dźwięki własne</string>
+    <string name="add_sound_problem">Problem podczas dodawania dźwięku</string>
+    <string name="recovery">Odzyskiwanie</string>
+    <string name="recoverpre1dot3profiles">Odzyskaj profile sprzed wersji 1.3.1</string>
+    <string name="recoverpre1dot3sounds">Odzyskaj dźwięki sprzed wersji 1.3.1</string>
+    <string name="recovery_success">Pomyślnie odzyskano dane</string>
+    <string name="recovery_failure">Nic nie odzyskano</string>
+
+    <string name="hours_hint">GG</string>
+    <string name="minutes_hint">MM</string>
+    <string name="seconds_hint">SS</string>
+    <string name="time_separator">:</string>
+</resources>
