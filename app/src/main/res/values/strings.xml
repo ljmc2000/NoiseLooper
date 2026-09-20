@@ -50,6 +50,7 @@
     <string name="control_notification_label">Soothing Noise Player is Running</string>
     <string name="credits_header">"%s: "</string>
     <string name="developers">Developers</string>
+    <string name="translators">Translators</string>
     <string name="enable_control_notification">Enable control notification</string>
     <string name="other_contributors">Other Contributors great and small</string>
     <string name="upstream_application">Upstream application</string>

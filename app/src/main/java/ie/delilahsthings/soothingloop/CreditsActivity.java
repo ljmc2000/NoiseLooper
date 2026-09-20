@@ -67,6 +67,15 @@ public class CreditsActivity extends AppCompatActivity {
             developer(credits,body,node);
         }
 
+        NodeList translatorCredits=document.getElementsByTagName("translator");
+        header=credits.getElementById("localization_credits_header");
+        header.setTextContent(String.format(HEADER,getString(R.string.translators)));
+        body=credits.getElementById("localization_credits");
+        for(int i=0; i<translatorCredits.getLength(); i++) {
+            node=(Element) translatorCredits.item(i);
+            developer(credits,body,node);
+        }
+
 
         NodeList otherContributors=document.getElementsByTagName("other_contributor");
         header=credits.getElementById("other_credits_header");
