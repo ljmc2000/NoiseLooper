@@ -50,6 +50,7 @@
     <string name="control_notification_label">Odtwarzacz relaksujących szumów jest uruchomiony</string>
     <string name="credits_header">"%s: "</string>
     <string name="developers">Twórcy</string>
+    <string name="translators">Tłumacze</string>
     <string name="enable_control_notification">Włącz powiadomienie sterujące</string>
     <string name="other_contributors">Inni współtwórcy, więksi i mniejsi</string>
     <string name="upstream_application">Aplikacja nadrzędna</string>
